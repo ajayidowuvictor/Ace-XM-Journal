@@ -73,7 +73,13 @@ describe('journal repository', () => {
 
   it('finds entries by title, text or tag, ignoring case', () => {
     createEntry(db, 'a', '2026-10-14', input, t1);
-    createEntry(db, 'b', '2026-10-13', { title: 'Quiet', body: 'Rested', mood: null, tags: ['health'] }, t1);
+    createEntry(
+      db,
+      'b',
+      '2026-10-13',
+      { title: 'Quiet', body: 'Rested', mood: null, tags: ['health'] },
+      t1,
+    );
 
     expect(listEntries(db, 'GOOD DAY').map((e) => e.id)).toEqual(['a']);
     expect(listEntries(db, 'rested').map((e) => e.id)).toEqual(['b']);

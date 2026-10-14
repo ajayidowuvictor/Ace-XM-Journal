@@ -37,7 +37,9 @@ export function escapeLike(text: string): string {
 
 /** True when there is nothing worth saving yet. */
 export function isEmptyEntry(input: EntryInput): boolean {
-  return !input.title.trim() && !input.body.trim() && input.mood === null && input.tags.length === 0;
+  return (
+    !input.title.trim() && !input.body.trim() && input.mood === null && input.tags.length === 0
+  );
 }
 
 /** The line shown for an entry in the list: its title, else the start of its text. */
