@@ -2,8 +2,12 @@ import { afterEach, beforeEach, describe, expect, it, jest } from '@jest/globals
 
 import { createAutosaver } from '../autosave';
 
-beforeEach(() => jest.useFakeTimers());
-afterEach(() => jest.useRealTimers());
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+afterEach(() => {
+  jest.useRealTimers();
+});
 
 describe('createAutosaver', () => {
   it('saves once after typing pauses, not on every edit', () => {
