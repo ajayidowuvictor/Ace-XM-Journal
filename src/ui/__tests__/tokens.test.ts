@@ -35,10 +35,15 @@ describe.each([
     ['text on background', c.text, c.background],
     ['text on surface', c.text, c.surface],
     ['muted text on background', c.textMuted, c.background],
+    ['muted text on surface', c.textMuted, c.surface],
     ['primary on background', c.primary, c.background],
+    ['primary on surface', c.primary, c.surface],
     ['onPrimary on primary', c.onPrimary, c.primary],
     ['success on background', c.success, c.background],
+    ['success on surface', c.success, c.surface],
     ['danger on background', c.danger, c.background],
+    ['danger on surface', c.danger, c.surface],
+    ['onDanger on danger', c.onDanger, c.danger],
   ])('%s', (_label, fg, bg) => {
     expect(contrast(fg, bg)).toBeGreaterThanOrEqual(4.5);
   });

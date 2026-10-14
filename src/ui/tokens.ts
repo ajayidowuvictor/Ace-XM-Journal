@@ -20,6 +20,7 @@ export type ColorTokens = {
   onPrimary: string;
   success: string;
   danger: string;
+  onDanger: string;
   border: string;
 };
 
@@ -32,6 +33,7 @@ export const lightColors: ColorTokens = {
   onPrimary: '#FFFFFF',
   success: '#1F7A2A',
   danger: '#C41A20',
+  onDanger: '#FFFFFF',
   border: '#E3E1DE',
 };
 
@@ -44,6 +46,7 @@ export const darkColors: ColorTokens = {
   onPrimary: '#12141F',
   success: brand.green,
   danger: '#FF6B70',
+  onDanger: '#12141F',
   border: '#2C3045',
 };
 
