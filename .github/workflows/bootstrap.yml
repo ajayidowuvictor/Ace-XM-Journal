@@ -54,13 +54,15 @@ jobs:
 
       - name: Install, format and verify
         run: |
-          set -e
-          npm ci
-          npx prettier --write . > /dev/null
-          npm run typecheck
-          npm run lint
-          npm run format:check
-          npm test -- --ci
+          set -o pipefail
+          {
+            echo "== npm ci";            npm ci
+            echo "== prettier --write";  npx prettier --write . > /dev/null
+            echo "== typecheck";         npm run typecheck
+            echo "== lint";              npm run lint
+            echo "== format:check";      npm run format:check
+            echo "== test";              npm test -- --ci
+          } 2>&1 | tee /tmp/verify.log
 
       - name: Commit result
         run: |
@@ -70,3 +72,17 @@ jobs:
           git diff --cached --quiet && echo "nothing to commit" && exit 0
           git commit -m "chore: bootstrap Expo project (Phase 1)"
           git push
+
+      - name: Save check results to the bootstrap-logs branch
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp /tmp/verify.log /tmp/verify-copy.log 2>/dev/null || echo "no log produced" > /tmp/verify-copy.log
+          git checkout -q --orphan bootstrap-logs
+          git rm -rf -q --cached . > /dev/null 2>&1 || true
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp /tmp/verify-copy.log ./verify.log
+          git add verify.log
+          git commit -q -m "bootstrap verification log"
+          git push -f origin bootstrap-logs
