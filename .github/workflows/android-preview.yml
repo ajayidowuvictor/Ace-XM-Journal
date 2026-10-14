@@ -33,7 +33,12 @@ jobs:
       - name: Link project to the Expo account
         env:
           ACCOUNT: ${{ inputs.account }}
-        run: eas init --non-interactive --force --account "$ACCOUNT" 2>&1 | tee -a /tmp/eas.log
+        run: |
+          if grep -q '"projectId"' app.json; then
+            echo "Project is already linked; skipping eas init." | tee -a /tmp/eas.log
+          else
+            eas init --non-interactive --force --account "$ACCOUNT" 2>&1 | tee -a /tmp/eas.log
+          fi
       - name: Save project link (app.json) if it changed
         run: |
           git config user.name "github-actions[bot]"
