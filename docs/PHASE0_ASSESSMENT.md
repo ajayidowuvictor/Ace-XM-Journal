@@ -4,15 +4,15 @@ Date: 2026-10-14
 
 ## 1. Repository assessment
 
-| Item | Finding |
-| --- | --- |
-| Repository | `ajayidowuvictor/Ace-XM-Journal` (public) |
-| Contents | Completely empty. No commits, no files, no branches except an unborn `main`. |
-| Existing frameworks / dependencies | None |
-| Existing code, docs, tests, workflows | None |
-| Overwrite risk | None. Clean start. |
-| Workspace tooling | Node 22.22.0, npm 10.9.4, git 2.43, Java present. No `eas` CLI, no `adb`. |
-| Write access | **Pushing is currently refused** (see Blockers). Reading and cloning work. |
+| Item                                  | Finding                                                                      |
+| ------------------------------------- | ---------------------------------------------------------------------------- |
+| Repository                            | `ajayidowuvictor/Ace-XM-Journal` (public)                                    |
+| Contents                              | Completely empty. No commits, no files, no branches except an unborn `main`. |
+| Existing frameworks / dependencies    | None                                                                         |
+| Existing code, docs, tests, workflows | None                                                                         |
+| Overwrite risk                        | None. Clean start.                                                           |
+| Workspace tooling                     | Node 22.22.0, npm 10.9.4, git 2.43, Java present. No `eas` CLI, no `adb`.    |
+| Write access                          | **Pushing is currently refused** (see Blockers). Reading and cloning work.   |
 
 Because the repo is empty, the preferred architecture from the master prompt applies with no conflicts.
 
@@ -47,19 +47,19 @@ Onboarding is built alongside Phase 2 and finished in Phase 6 (reminder permissi
 
 ## 4. Dependencies (planned) and purpose
 
-| Package | Purpose |
-| --- | --- |
-| expo, react-native, expo-router | App runtime and navigation |
-| typescript | Strict type checking |
-| expo-sqlite | Local database |
-| react-native-reanimated, react-native-gesture-handler | Subtle animations and gestures |
-| react-hook-form + zod | Form handling and validation |
-| expo-notifications | Optional reminders (permission requested explicitly) |
-| expo-image-picker | Journal photo attachments |
-| expo-file-system, expo-sharing | Data export |
-| eslint, prettier | Linting and formatting |
-| jest, jest-expo, @testing-library/react-native | Unit and component tests |
-| @supabase/supabase-js | Phase 7 only, if cloud is approved |
+| Package                                               | Purpose                                              |
+| ----------------------------------------------------- | ---------------------------------------------------- |
+| expo, react-native, expo-router                       | App runtime and navigation                           |
+| typescript                                            | Strict type checking                                 |
+| expo-sqlite                                           | Local database                                       |
+| react-native-reanimated, react-native-gesture-handler | Subtle animations and gestures                       |
+| react-hook-form + zod                                 | Form handling and validation                         |
+| expo-notifications                                    | Optional reminders (permission requested explicitly) |
+| expo-image-picker                                     | Journal photo attachments                            |
+| expo-file-system, expo-sharing                        | Data export                                          |
+| eslint, prettier                                      | Linting and formatting                               |
+| jest, jest-expo, @testing-library/react-native        | Unit and component tests                             |
+| @supabase/supabase-js                                 | Phase 7 only, if cloud is approved                   |
 
 Each dependency is verified against current official documentation at the moment it is added.
 
