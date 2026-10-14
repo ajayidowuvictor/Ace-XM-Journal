@@ -14,6 +14,11 @@ on:
 permissions:
   contents: write
 
+# Fail a step when any command in a pipeline (such as `npm test | tee`) fails.
+defaults:
+  run:
+    shell: bash
+
 jobs:
   build:
     runs-on: ubuntu-latest

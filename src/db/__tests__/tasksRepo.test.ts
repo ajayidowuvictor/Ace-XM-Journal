@@ -4,7 +4,7 @@ import type { TaskInput } from '../../features/tasks/types';
 import { migrate } from '../migrations';
 import { createTask, deleteTask, listTasks, setTaskCompleted, updateTask } from '../tasksRepo';
 import type { SqlDatabase } from '../types';
-import { createTestDatabase } from './testDatabase';
+import { createTestDatabase } from '../testing/testDatabase';
 
 const input: TaskInput = {
   title: 'Call the bank',

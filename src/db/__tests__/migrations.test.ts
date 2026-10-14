@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 
 import { migrate, migrations } from '../migrations';
-import { createTestDatabase } from './testDatabase';
+import { createTestDatabase } from '../testing/testDatabase';
 
 describe('migrations', () => {
   it('have unique, increasing version numbers starting at 1', () => {
