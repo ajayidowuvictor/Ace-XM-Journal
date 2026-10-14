@@ -1,0 +1,24 @@
+node_modules/
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+*.log
+.DS_Store
+
+# Native build output
+android/
+ios/
+*.apk
+*.aab
+*.ipa
+*.keystore
+*.jks
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Test output
+coverage/

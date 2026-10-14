@@ -1,0 +1,72 @@
+name: Bootstrap Expo project (one-time)
+
+# Creates the Expo + TypeScript + Expo Router project on GitHub's servers
+# (which have npm access), applies ACE XM JOURNAL settings, verifies it,
+# and commits the result. Safe to re-run: existing files are never overwritten.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create Expo project from the official template
+        run: |
+          set -e
+          if [ -f package.json ]; then echo "package.json already exists; nothing to do"; exit 0; fi
+          npx --yes create-expo-app@latest _scaffold --template default --no-install
+          cd _scaffold
+          npm install
+          npx expo install jest-expo jest @types/jest @testing-library/react-native
+          npm install --save-dev prettier
+          node -e "
+            const fs = require('fs');
+            const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+            pkg.scripts = Object.assign(pkg.scripts || {}, {
+              typecheck: 'tsc --noEmit',
+              'format:check': 'prettier --check .',
+              format: 'prettier --write .',
+              test: 'jest'
+            });
+            pkg.jest = { preset: 'jest-expo' };
+            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
+            const app = JSON.parse(fs.readFileSync('app.json', 'utf8'));
+            app.expo.name = 'ACE XM JOURNAL';
+            app.expo.slug = 'ace-xm-journal';
+            app.expo.scheme = 'acexmjournal';
+            app.expo.userInterfaceStyle = 'automatic';
+            app.expo.android = Object.assign(app.expo.android || {}, { package: 'com.ajayidowuvictor.acexmjournal' });
+            app.expo.ios = Object.assign(app.expo.ios || {}, { bundleIdentifier: 'com.ajayidowuvictor.acexmjournal' });
+            fs.writeFileSync('app.json', JSON.stringify(app, null, 2) + '\n');
+          "
+          cd ..
+          rsync -a --ignore-existing --exclude node_modules --exclude .git _scaffold/ ./
+          rm -rf _scaffold
+
+      - name: Install, format and verify
+        run: |
+          set -e
+          npm ci
+          npx prettier --write . > /dev/null
+          npm run typecheck
+          npm run lint
+          npm run format:check
+          npm test -- --ci
+
+      - name: Commit result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && echo "nothing to commit" && exit 0
+          git commit -m "chore: bootstrap Expo project (Phase 1)"
+          git push
