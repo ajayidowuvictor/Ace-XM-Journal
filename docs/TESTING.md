@@ -21,6 +21,8 @@ The CI workflow also checks that the Android JavaScript bundle builds, and saves
 - Database: migrations (new database, repeat run, upgrade, failed migration) and the tasks repository, run against a real in-memory SQLite (`better-sqlite3`, dev-only; helper in `src/db/testing/`).
 - Task logic (grouping, sorting, title checks, due-date choices), local date helpers, id format.
 
+- Journal: repository (save, list order, search incl. % and _, update, erase on delete), journal migrations, key creation/reuse/refusal to overwrite, tags, mood, autosave timing. These run on plain SQLite; encryption itself still needs a device check.
+
 ## Planned (by phase)
 
 - Date helpers, streaks and review calculations (Phase 5/6).
