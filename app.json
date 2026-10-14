@@ -19,7 +19,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.ajayidowuvictor.acexmjournal"
+      "package": "com.ajayidowuvictor.acexmjournal",
+      "allowBackup": false
     },
     "web": {
       "output": "static",
@@ -35,8 +36,17 @@
           "imageWidth": 76
         }
       ],
+<<<<<<< Updated upstream
       "expo-sqlite",
       "expo-secure-store"
+=======
+      [
+        "expo-sqlite",
+        {
+          "useSQLCipher": true
+        }
+      ]
+>>>>>>> Stashed changes
     ],
     "experiments": {
       "typedRoutes": true,

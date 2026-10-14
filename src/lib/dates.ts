@@ -32,3 +32,10 @@ export function formatShortDate(value: string, locale?: string): string {
     month: 'short',
   });
 }
+
+/** The local Date for a `YYYY-MM-DD` string (midnight, device time zone). Null if invalid. */
+export function parseLocalDate(value: string): Date | null {
+  if (!isValidDateString(value)) return null;
+  const [year, month, day] = value.split('-').map(Number);
+  return new Date(year, month - 1, day);
+}

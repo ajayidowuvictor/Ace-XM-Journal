@@ -35,7 +35,7 @@ export default function HomeScreen() {
         <Button
           label="New journal entry"
           variant="secondary"
-          onPress={() => router.push('/journal')}
+          onPress={() => router.push('/entry')}
           style={styles.action}
         />
       </View>
