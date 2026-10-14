@@ -18,6 +18,9 @@ npm test              # Jest with the jest-expo preset
 
 The CI workflow also checks that the Android JavaScript bundle builds, and saves its output to the `ci-logs` branch.
 
+- Database: migrations (new database, repeat run, upgrade, failed migration) and the tasks repository, run against a real in-memory SQLite (`better-sqlite3`, dev-only; helper in `src/db/testing/`).
+- Task logic (grouping, sorting, title checks, due-date choices), local date helpers, id format.
+
 ## Planned (by phase)
 
 - Date helpers, streaks and review calculations (Phase 5/6).
