@@ -16,10 +16,11 @@ Phase 2: Design system and navigation. Built and verified by automated checks; n
 - Home screen shows a greeting by time of day (with the name if given), the date, and quick actions.
 - Settings screen has working appearance control, privacy statement and app version.
 - Automated checks pass: type check, lint, format, 63 tests, Android JavaScript bundle build.
+- An installable Android test build (preview .apk) was built successfully on Expo's servers (project `@ajayidowu/ace-xm-journal`). Expo created and stores the app's signing key. Built by the manually started "Android preview build" workflow, which needs the `EXPO_TOKEN` repository secret.
 
 ## Not yet verified
 
-- The app has not been run on a device or emulator. Layout, spacing, the tab bar icons and colours, onboarding flow and theme switching have not been looked at on a screen.
+- The test build has been produced but its installation and behaviour on a phone have not been confirmed yet. The app has not been run on a device or emulator by me. Layout, spacing, the tab bar icons and colours, onboarding flow and theme switching have not been looked at on a screen.
 - Tasks, Journal and Habits tabs are placeholders with "coming soon" messages. Home's "New task" and "New journal entry" buttons only switch to those tabs for now. The Home cards show empty states because no data exists yet.
 - Placeholder icon from the starter template is still in use (real icon is Phase 9). Splash colour is brand navy but the splash image is still the starter's.
 - Onboarding has no reminder permission step yet (planned with notification settings in Phase 6).
