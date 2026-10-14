@@ -13,7 +13,13 @@ export const MOODS: readonly { value: Mood; emoji: string; label: string }[] = [
 
 /** One tag: lower case, no leading #, inner spaces collapsed. Empty when nothing is left. */
 export function normalizeTag(raw: string): string {
-  return raw.trim().replace(/^#+/, '').trim().replace(/\s+/g, ' ').toLowerCase().slice(0, MAX_TAG_LENGTH);
+  return raw
+    .trim()
+    .replace(/^#+/, '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLowerCase()
+    .slice(0, MAX_TAG_LENGTH);
 }
 
 /** Turns "Work, #Family, work" into ["work", "family"]: unique, in order, at most MAX_TAGS. */
