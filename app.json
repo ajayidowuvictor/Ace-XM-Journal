@@ -36,17 +36,13 @@
           "imageWidth": 76
         }
       ],
-<<<<<<< Updated upstream
-      "expo-sqlite",
-      "expo-secure-store"
-=======
       [
         "expo-sqlite",
         {
           "useSQLCipher": true
         }
-      ]
->>>>>>> Stashed changes
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
