@@ -1,0 +1,63 @@
+name: Android preview build (installable test app)
+
+# Manually started. Links the project to the owner's Expo account (first run), then builds an
+# installable Android test app (.apk) on Expo's servers and waits for it to finish.
+# Needs the repository secret EXPO_TOKEN (an Expo personal access token).
+
+on:
+  workflow_dispatch:
+    inputs:
+      account:
+        description: 'Expo account username that will own the project'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Set up Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - run: npm ci
+      - name: Link project to the Expo account
+        env:
+          ACCOUNT: ${{ inputs.account }}
+        run: eas init --non-interactive --force --account "$ACCOUNT" 2>&1 | tee -a /tmp/eas.log
+      - name: Save project link (app.json) if it changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app.json eas.json
+          if git diff --cached --quiet; then
+            echo "nothing to save"
+          else
+            git commit -m "chore: link project to Expo account"
+            git push
+          fi
+      - name: Build Android preview app
+        run: eas build --platform android --profile preview --non-interactive 2>&1 | tee -a /tmp/eas.log
+      # Saves the output (including the install link) to the eas-logs branch so it can be read.
+      - name: Save build output to the eas-logs branch
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          { echo "commit: ${GITHUB_SHA}"; echo; cat /tmp/eas.log 2>/dev/null || echo "no log produced"; } > /tmp/eas-result.log
+          git checkout -q --orphan eas-logs
+          git rm -rf -q --cached . > /dev/null 2>&1 || true
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp /tmp/eas-result.log ./eas.log
+          git add eas.log
+          git commit -q -m "EAS build output for ${GITHUB_SHA}"
+          git push -f origin eas-logs
