@@ -25,7 +25,9 @@ describe('migrations', () => {
   it('can run again without changing anything', () => {
     const db = createTestDatabase();
     migrate(db);
-    db.run(`INSERT INTO tasks (id, title, created_at, updated_at) VALUES ('a', 'Keep me', 'x', 'x')`);
+    db.run(
+      `INSERT INTO tasks (id, title, created_at, updated_at) VALUES ('a', 'Keep me', 'x', 'x')`,
+    );
 
     expect(migrate(db)).toBe(migrations.length);
     expect(db.all('SELECT id FROM tasks')).toHaveLength(1);

@@ -117,7 +117,11 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
           <Button label="Save task" onPress={save} />
           <Button label="Cancel" variant="ghost" onPress={onClose} />
           {task ? (
-            <Button label="Delete task" variant="danger" onPress={() => setConfirmingDelete(true)} />
+            <Button
+              label="Delete task"
+              variant="danger"
+              onPress={() => setConfirmingDelete(true)}
+            />
           ) : null}
         </ScrollView>
 

@@ -19,7 +19,9 @@ export default function HomeScreen() {
   const editor = useTaskEditor();
   const today = toLocalDateString(now);
   const priorities = todaysPriorities(tasks, today);
-  const overdueIds = new Set(priorities.filter((t) => t.dueDate && t.dueDate < today).map((t) => t.id));
+  const overdueIds = new Set(
+    priorities.filter((t) => t.dueDate && t.dueDate < today).map((t) => t.id),
+  );
 
   return (
     <Screen>

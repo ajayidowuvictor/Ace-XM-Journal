@@ -73,6 +73,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  body: { flex: 1, minHeight: minTouchTarget, justifyContent: 'center', paddingVertical: spacing.xs },
+  body: {
+    flex: 1,
+    minHeight: minTouchTarget,
+    justifyContent: 'center',
+    paddingVertical: spacing.xs,
+  },
   doneTitle: { textDecorationLine: 'line-through' },
 });

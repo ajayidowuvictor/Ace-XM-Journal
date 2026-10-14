@@ -45,9 +45,12 @@ describe('validateTitle', () => {
 
 describe('cleanInput', () => {
   it('trims the title and notes', () => {
-    expect(
-      cleanInput({ title: '  Hi ', notes: ' there  ', dueDate: null, priority: 0 }),
-    ).toEqual({ title: 'Hi', notes: 'there', dueDate: null, priority: 0 });
+    expect(cleanInput({ title: '  Hi ', notes: ' there  ', dueDate: null, priority: 0 })).toEqual({
+      title: 'Hi',
+      notes: 'there',
+      dueDate: null,
+      priority: 0,
+    });
   });
 });
 

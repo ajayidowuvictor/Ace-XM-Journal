@@ -6,7 +6,12 @@ import { createTask, deleteTask, listTasks, setTaskCompleted, updateTask } from 
 import type { SqlDatabase } from '../types';
 import { createTestDatabase } from './testDatabase';
 
-const input: TaskInput = { title: 'Call the bank', notes: 'Ask about fees', dueDate: '2026-10-14', priority: 2 };
+const input: TaskInput = {
+  title: 'Call the bank',
+  notes: 'Ask about fees',
+  dueDate: '2026-10-14',
+  priority: 2,
+};
 const t1 = '2026-10-14T08:00:00.000Z';
 const t2 = '2026-10-14T09:00:00.000Z';
 
@@ -42,7 +47,12 @@ describe('tasks repository', () => {
 
   it('updates the edited fields and the updated time only', () => {
     createTask(db, 'id-1', input, t1);
-    updateTask(db, 'id-1', { title: 'Call the bank today', notes: '', dueDate: null, priority: 3 }, t2);
+    updateTask(
+      db,
+      'id-1',
+      { title: 'Call the bank today', notes: '', dueDate: null, priority: 3 },
+      t2,
+    );
 
     const [task] = listTasks(db);
     expect(task).toMatchObject({
@@ -72,7 +82,9 @@ describe('tasks repository', () => {
     deleteTask(db, 'id-1', t2);
 
     expect(listTasks(db).map((task) => task.id)).toEqual(['id-2']);
-    expect(db.first<{ deleted_at: string }>(`SELECT deleted_at FROM tasks WHERE id = 'id-1'`)).toEqual({
+    expect(
+      db.first<{ deleted_at: string }>(`SELECT deleted_at FROM tasks WHERE id = 'id-1'`),
+    ).toEqual({
       deleted_at: t2,
     });
   });
