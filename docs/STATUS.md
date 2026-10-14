@@ -4,7 +4,7 @@ Last updated: 2026-10-14
 
 ## Current phase
 
-Phase 3: Tasks and local database. Built and verified by automated checks; not yet seen on a phone (see "Not yet verified").
+Phase 3: Tasks and local database. Done: verified by automated checks and seen on the owner's Android phone. Next: Phase 4 (journal with encrypted storage).
 
 ## Completed (verified by GitHub Actions)
 
@@ -24,11 +24,13 @@ Phase 3: Tasks and local database. Built and verified by automated checks; not y
 
 ## Device testing
 
+- Phase 3 phone test (light theme): the owner added tasks and ticked one off; the Tasks screen (No date and Done sections, tick box, strike-through, date and priority line) and Home (Today's priorities) displayed correctly. The owner confirmed it works. Dark mode, editing, deleting and restart persistence were not shown in the screenshots.
+
 - First phone test: the app installed and opened but showed "Unmatched Route" because there was no entry route. Fixed by adding `src/app/index.tsx`, which forwards to onboarding or Home. A new build with the fix was installed on the owner's Android phone and checked from screenshots: onboarding, Home (greeting with name, date, quick actions, empty-state cards), the five tabs with icons and labels, Settings (appearance, privacy, version) and the dark theme all display correctly. Light theme, System mode and restart persistence were not shown in the screenshots.
 
 ## Not yet verified
 
-- Phase 3 has not been run on a phone. The task form's due date offers No date, Today, Tomorrow, In a week (no calendar picker yet). Tasks have no categories yet. Deleting a task cannot be undone from the app.
+- The task form's due date offers No date, Today, Tomorrow, In a week (no calendar picker yet). Tasks have no categories yet. Deleting a task cannot be undone from the app.
 - The tasks database is not encrypted; encryption is planned with the journal (Phase 4).
 - Light theme, System mode and keeping the choice after closing the app were not covered by the owner's screenshots.
 - Tasks, Journal and Habits tabs are placeholders with "coming soon" messages. Home's "New task" and "New journal entry" buttons only switch to those tabs for now. The Home cards show empty states because no data exists yet.
@@ -42,6 +44,5 @@ Phase 3: Tasks and local database. Built and verified by automated checks; not y
 
 ## Next actions
 
-1. Test Tasks on the phone and fix what looks wrong.
-2. Phase 4: journal with encrypted storage.
-3. Triage the npm audit findings before release.
+1. Phase 4: journal with encrypted storage.
+2. Triage the npm audit findings before release.
