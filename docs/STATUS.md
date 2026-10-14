@@ -4,7 +4,7 @@ Last updated: 2026-10-14
 
 ## Current phase
 
-Phase 2: Design system and navigation. Built and verified by automated checks; not yet seen on a real device (see "Not yet verified").
+Phase 2: Design system and navigation. Done: verified by automated checks and seen on a real Android phone. Next: Phase 3 (tasks and local database).
 
 ## Completed (verified by GitHub Actions)
 
@@ -15,16 +15,16 @@ Phase 2: Design system and navigation. Built and verified by automated checks; n
 - App shell: first-run onboarding screen (optional name, appearance choice, "Get started"), then five native tabs: Home, Tasks, Journal, Habits, Settings.
 - Home screen shows a greeting by time of day (with the name if given), the date, and quick actions.
 - Settings screen has working appearance control, privacy statement and app version.
-- Automated checks pass: type check, lint, format, 63 tests, Android JavaScript bundle build.
+- Automated checks pass: type check, lint, format, 65 tests, Android JavaScript bundle build.
 - An installable Android test build (preview .apk) was built successfully on Expo's servers (project `@ajayidowu/ace-xm-journal`). Expo created and stores the app's signing key. Built by the manually started "Android preview build" workflow, which needs the `EXPO_TOKEN` repository secret.
 
 ## Device testing
 
-- First phone test: the app installed and opened but showed "Unmatched Route" because there was no entry route. Fixed by adding `src/app/index.tsx`, which forwards to onboarding or Home. A new build with the fix has been produced; the retest on the phone is pending.
+- First phone test: the app installed and opened but showed "Unmatched Route" because there was no entry route. Fixed by adding `src/app/index.tsx`, which forwards to onboarding or Home. A new build with the fix was installed on the owner's Android phone and checked from screenshots: onboarding, Home (greeting with name, date, quick actions, empty-state cards), the five tabs with icons and labels, Settings (appearance, privacy, version) and the dark theme all display correctly. Light theme, System mode and restart persistence were not shown in the screenshots.
 
 ## Not yet verified
 
-- The test build has been produced but its installation and behaviour on a phone have not been confirmed yet. The app has not been run on a device or emulator by me. Layout, spacing, the tab bar icons and colours, onboarding flow and theme switching have not been looked at on a screen.
+- Light theme, System mode and keeping the choice after closing the app were not covered by the owner's screenshots.
 - Tasks, Journal and Habits tabs are placeholders with "coming soon" messages. Home's "New task" and "New journal entry" buttons only switch to those tabs for now. The Home cards show empty states because no data exists yet.
 - Placeholder icon from the starter template is still in use (real icon is Phase 9). Splash colour is brand navy but the splash image is still the starter's.
 - Onboarding has no reminder permission step yet (planned with notification settings in Phase 6).
@@ -36,6 +36,5 @@ Phase 2: Design system and navigation. Built and verified by automated checks; n
 
 ## Next actions
 
-1. Look at the app on a device or emulator and fix what looks wrong.
-2. Triage the audit findings.
-3. Start Phase 3: tasks, local database, dashboard with real data.
+1. Start Phase 3: tasks, local database, dashboard with real data.
+2. Triage the npm audit findings before release.
