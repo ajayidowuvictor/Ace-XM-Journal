@@ -8,17 +8,27 @@ on:
 jobs:
   quality:
     runs-on: ubuntu-latest
-    if: ${{ hashFiles('package-lock.json') != '' }}
     steps:
       - uses: actions/checkout@v4
+      - name: Skip until the Expo project exists
+        id: gate
+        run: |
+          if [ -f package-lock.json ]; then echo "ready=true" >> "$GITHUB_OUTPUT"; else echo "No package-lock.json yet; skipping checks."; fi
       - uses: actions/setup-node@v4
+        if: steps.gate.outputs.ready == 'true'
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
-      - run: npm run typecheck
-      - run: npm run lint
-      - run: npm run format:check
-      - run: npm test -- --ci
+      - if: steps.gate.outputs.ready == 'true'
+        run: npm ci
+      - if: steps.gate.outputs.ready == 'true'
+        run: npm run typecheck
+      - if: steps.gate.outputs.ready == 'true'
+        run: npm run lint
+      - if: steps.gate.outputs.ready == 'true'
+        run: npm run format:check
+      - if: steps.gate.outputs.ready == 'true'
+        run: npm test -- --ci
       - name: Dependency audit (high severity and above)
+        if: steps.gate.outputs.ready == 'true'
         run: npm audit --audit-level=high
