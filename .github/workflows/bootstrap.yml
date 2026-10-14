@@ -58,9 +58,9 @@ jobs:
           set -o pipefail
           {
             echo "== npm ci";            npm ci
-            echo "== prettier --write";  npx prettier --write . > /dev/null
             echo "== typecheck";         npm run typecheck
             echo "== lint";              npm run lint
+            echo "== prettier --write";  npx prettier --write . > /dev/null
             echo "== format:check";      npm run format:check
             echo "== test";              npm test -- --ci
           } 2>&1 | tee /tmp/verify.log
