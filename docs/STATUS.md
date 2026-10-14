@@ -18,6 +18,10 @@ Phase 2: Design system and navigation. Built and verified by automated checks; n
 - Automated checks pass: type check, lint, format, 63 tests, Android JavaScript bundle build.
 - An installable Android test build (preview .apk) was built successfully on Expo's servers (project `@ajayidowu/ace-xm-journal`). Expo created and stores the app's signing key. Built by the manually started "Android preview build" workflow, which needs the `EXPO_TOKEN` repository secret.
 
+## Device testing
+
+- First phone test: the app installed and opened but showed "Unmatched Route" because there was no entry route. Fixed by adding `src/app/index.tsx`, which forwards to onboarding or Home. A new build with the fix has been produced; the retest on the phone is pending.
+
 ## Not yet verified
 
 - The test build has been produced but its installation and behaviour on a phone have not been confirmed yet. The app has not been run on a device or emulator by me. Layout, spacing, the tab bar icons and colours, onboarding flow and theme switching have not been looked at on a screen.
