@@ -30,8 +30,8 @@ export default function SettingsScreen() {
       <Card>
         <Text variant="heading">Privacy</Text>
         <Text muted>
-          In this version, your information is stored only on this device. There are no accounts
-          and nothing is synced to the cloud.
+          In this version, your information is stored only on this device. There are no accounts and
+          nothing is synced to the cloud.
         </Text>
       </Card>
 

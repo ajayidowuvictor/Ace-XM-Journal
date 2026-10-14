@@ -40,7 +40,12 @@ export function ConfirmDialog({
           <Text variant="heading">{title}</Text>
           <Text muted>{message}</Text>
           <View style={styles.actions}>
-            <Button label={cancelLabel} variant="secondary" onPress={onCancel} style={styles.flex} />
+            <Button
+              label={cancelLabel}
+              variant="secondary"
+              onPress={onCancel}
+              style={styles.flex}
+            />
             <Button
               label={confirmLabel}
               variant={destructive ? 'danger' : 'primary'}

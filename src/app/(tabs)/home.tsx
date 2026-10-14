@@ -38,7 +38,10 @@ export default function HomeScreen() {
 
       <Card>
         <Text variant="heading">Habits</Text>
-        <EmptyState title="No habits yet" message="Habits you track will show their progress here." />
+        <EmptyState
+          title="No habits yet"
+          message="Habits you track will show their progress here."
+        />
       </Card>
     </Screen>
   );

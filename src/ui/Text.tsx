@@ -23,5 +23,7 @@ export function Text({ variant = 'body', muted = false, tone = 'default', style,
             : colors.text;
   const role = variant === 'title' || variant === 'heading' ? 'header' : undefined;
 
-  return <RNText accessibilityRole={role} {...rest} style={[typography[variant], { color }, style]} />;
+  return (
+    <RNText accessibilityRole={role} {...rest} style={[typography[variant], { color }, style]} />
+  );
 }
