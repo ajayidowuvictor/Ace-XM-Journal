@@ -4,7 +4,7 @@
 | ----- | --------------------------------------------------- | ----------- |
 | 0     | Repository discovery and planning                   | Done        |
 | 1     | Foundation: Expo, TypeScript, lint, tests, CI, docs | Done        |
-| 2     | Design system and navigation, onboarding shell      | Not started |
+| 2     | Design system and navigation, onboarding shell      | Built, device check pending |
 | 3     | Tasks and dashboard                                 | Not started |
 | 4     | Journal (autosave, search, tags, mood)              | Not started |
 | 5     | Habits, goals, calendar                             | Not started |

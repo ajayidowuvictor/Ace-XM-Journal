@@ -2,7 +2,7 @@
 
 A premium daily planner, private journal, habit tracker and goal system for Android (iOS later), built with React Native, Expo and TypeScript.
 
-**Status:** Phase 1 (Foundation). See [docs/STATUS.md](docs/STATUS.md) for what is done and what is not.
+**Status:** Phase 2 (design system and navigation) built. See [docs/STATUS.md](docs/STATUS.md) for what is done and what is not.
 
 ## Setup
 
@@ -27,8 +27,9 @@ The same checks run automatically on GitHub for every push and pull request (`.g
 ## Project layout
 
 ```
-app/            screens and routes (Expo Router)
+src/app/        screens and routes (Expo Router)
 src/ui/         design tokens and reusable components
+src/theme/      light/dark/system theme and saved preference
 src/features/   tasks, journal, habits, goals, calendar, reviews, settings
 src/db/         local SQLite database, migrations, repositories
 src/lib/        date helpers, calculations, export

@@ -12,6 +12,11 @@ npm test              # Jest with the jest-expo preset
 ## Currently covered
 
 - Design tokens: brand colours match the logo; all text colour pairs in light and dark themes meet WCAG AA contrast (4.5:1).
+- Theme preference logic (valid values, fallback to system, device setting).
+- Greeting by hour and date formatting.
+- Components: Button (press, disabled, loading blocks duplicates), EmptyState, ErrorState, ConfirmDialog (confirm and cancel are separate), SegmentedControl, TextField error display, progress clamping.
+
+The CI workflow also checks that the Android JavaScript bundle builds, and saves its output to the `ci-logs` branch.
 
 ## Planned (by phase)
 
