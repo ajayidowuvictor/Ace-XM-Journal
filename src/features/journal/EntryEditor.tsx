@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AppState, KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -7,7 +7,7 @@ import { formatLongDate } from '../../lib/greeting';
 import { parseLocalDate, toLocalDateString } from '../../lib/dates';
 import { useTheme } from '../../theme/context';
 import { Button, ConfirmDialog, Text, TextField, spacing } from '../../ui';
-import { createAutosaver } from './autosave';
+import { createAutosaver, type Autosaver } from './autosave';
 import { useJournal } from './JournalContext';
 import { isEmptyEntry, parseTags, tagsToText } from './logic';
 import { MoodPicker } from './MoodPicker';
@@ -64,32 +64,35 @@ export function EntryEditor({ entry }: { entry: JournalEntry | null }) {
     }
   }, [create, save]);
 
-  const saver = useMemo(() => createAutosaver(persist), [persist]);
+  const saver = useRef<Autosaver | null>(null);
 
   useEffect(() => {
+    const autosaver = createAutosaver(persist);
+    saver.current = autosaver;
     const subscription = AppState.addEventListener('change', (state) => {
-      if (state !== 'active') saver.flush();
+      if (state !== 'active') autosaver.flush();
     });
     return () => {
       subscription.remove();
-      saver.flush();
+      autosaver.flush();
+      saver.current = null;
     };
-  }, [saver]);
+  }, [persist]);
 
   function edit(changes: Partial<typeof draft.current>) {
     draft.current = { ...draft.current, ...changes };
     setSaveState('idle');
-    saver.schedule();
+    saver.current?.schedule();
   }
 
   function close() {
-    saver.flush();
+    saver.current?.flush();
     router.back();
   }
 
   function confirmDelete() {
     setConfirmingDelete(false);
-    saver.cancel();
+    saver.current?.cancel();
     if (entryId.current !== null && !remove(entryId.current)) {
       setSaveState('error');
       return;
