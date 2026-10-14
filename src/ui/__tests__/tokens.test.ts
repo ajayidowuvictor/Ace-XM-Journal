@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { brand, darkColors, lightColors, type ColorTokens } from '../tokens';
 
 function channel(value: number): number {

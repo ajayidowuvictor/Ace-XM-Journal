@@ -37,6 +37,7 @@ jobs:
               format: 'prettier --write .',
               test: 'jest'
             });
+            pkg.name = 'ace-xm-journal';
             pkg.jest = { preset: 'jest-expo' };
             fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2) + '\n');
             const app = JSON.parse(fs.readFileSync('app.json', 'utf8'));
