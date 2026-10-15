@@ -17,7 +17,10 @@ export async function shareExport(fileName: string, text: string): Promise<boole
     file.write(text);
 
     if (!(await Sharing.isAvailableAsync())) return false;
-    await Sharing.shareAsync(file.uri, { mimeType: 'application/json', dialogTitle: 'Export your data' });
+    await Sharing.shareAsync(file.uri, {
+      mimeType: 'application/json',
+      dialogTitle: 'Export your data',
+    });
     return true;
   } finally {
     try {

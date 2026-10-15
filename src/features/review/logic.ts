@@ -83,10 +83,5 @@ export function summaryLines(summary: WeeklySummary): string[] {
 /** Body text for a journal entry that stores the review and the user's reflection. */
 export function reviewEntryBody(summary: WeeklySummary, reflection: string): string {
   const note = reflection.trim();
-  return [
-    ...summaryLines(summary),
-    '',
-    'Reflection:',
-    note || '(nothing written)',
-  ].join('\n');
+  return [...summaryLines(summary), '', 'Reflection:', note || '(nothing written)'].join('\n');
 }

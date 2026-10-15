@@ -1,12 +1,7 @@
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 
-import {
-  REMINDER_BODY,
-  REMINDER_TITLE,
-  reminderTime,
-  type ReminderChoice,
-} from './logic';
+import { REMINDER_BODY, REMINDER_TITLE, reminderTime, type ReminderChoice } from './logic';
 
 const CHANNEL_ID = 'daily-reminder';
 

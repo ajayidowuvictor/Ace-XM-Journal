@@ -63,7 +63,12 @@ describe('weeklySummary', () => {
         task('future', { dueDate: '2026-10-30' }),
       ],
       habits: [habit(['2026-10-14', '2026-10-09', '2026-10-08']), habit(['2026-10-13'])],
-      entries: [entry('2026-10-14', 4), entry('2026-10-10', 2), entry('2026-10-12', null), entry('2026-10-01', 5)],
+      entries: [
+        entry('2026-10-14', 4),
+        entry('2026-10-10', 2),
+        entry('2026-10-12', null),
+        entry('2026-10-01', 5),
+      ],
       goals: [goal(at(2026, 10, 12)), goal(at(2026, 9, 1)), goal(null)],
     },
     TODAY,
@@ -91,7 +96,10 @@ describe('weeklySummary', () => {
   });
 
   it('has no average mood when no entry has one', () => {
-    const none = weeklySummary({ tasks: [], habits: [], entries: [entry(TODAY, null)], goals: [] }, TODAY);
+    const none = weeklySummary(
+      { tasks: [], habits: [], entries: [entry(TODAY, null)], goals: [] },
+      TODAY,
+    );
     expect(none.averageMood).toBeNull();
   });
 });
@@ -107,7 +115,10 @@ describe('summaryLines and reviewEntryBody', () => {
   });
 
   it('uses singular for one entry', () => {
-    const one = weeklySummary({ tasks: [], habits: [], entries: [entry(TODAY, 3)], goals: [] }, TODAY);
+    const one = weeklySummary(
+      { tasks: [], habits: [], entries: [entry(TODAY, 3)], goals: [] },
+      TODAY,
+    );
     expect(summaryLines(one)).toContain('Journal: 1 entry');
     expect(summaryLines(one)).toContain('Average mood: 3.0 out of 5');
   });

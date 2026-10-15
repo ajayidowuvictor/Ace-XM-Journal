@@ -69,9 +69,16 @@ export default function SettingsScreen() {
     setExporting(true);
     setExportNote(null);
     try {
-      const text = buildExport({ tasks, habits, goals, entries: allEntries }, new Date().toISOString());
+      const text = buildExport(
+        { tasks, habits, goals, entries: allEntries },
+        new Date().toISOString(),
+      );
       const shared = await shareExport(exportFileName(toLocalDateString(new Date())), text);
-      setExportNote(shared ? 'Export ready. Check where you sent it.' : 'Sharing is not available on this device.');
+      setExportNote(
+        shared
+          ? 'Export ready. Check where you sent it.'
+          : 'Sharing is not available on this device.',
+      );
     } catch {
       setExportNote('The export could not be created. Please try again.');
     } finally {
@@ -132,14 +139,16 @@ export default function SettingsScreen() {
       <Card>
         <Text variant="heading">Weekly review</Text>
         <Text muted>See how your week went and save a reflection to your journal.</Text>
-        <Button label="Open weekly review" variant="secondary" onPress={() => router.push('/review')} />
+        <Button
+          label="Open weekly review"
+          variant="secondary"
+          onPress={() => router.push('/review')}
+        />
       </Card>
 
       <Card>
         <Text variant="heading">Your data</Text>
-        <Text muted>
-          Export a copy of everything, or erase everything from this phone.
-        </Text>
+        <Text muted>Export a copy of everything, or erase everything from this phone.</Text>
         <Button
           label="Export my data"
           variant="secondary"
@@ -151,7 +160,11 @@ export default function SettingsScreen() {
             {exportNote}
           </Text>
         ) : null}
-        <Button label="Erase all my data" variant="danger" onPress={() => setConfirmingWipe(true)} />
+        <Button
+          label="Erase all my data"
+          variant="danger"
+          onPress={() => setConfirmingWipe(true)}
+        />
         {wipeNote ? (
           <Text variant="caption" accessibilityLiveRegion="polite">
             {wipeNote}
@@ -165,7 +178,11 @@ export default function SettingsScreen() {
           Your information is stored only on this device. There are no accounts, no tracking and
           nothing is sent to the cloud.
         </Text>
-        <Button label="Read how your data is protected" variant="ghost" onPress={() => router.push('/privacy')} />
+        <Button
+          label="Read how your data is protected"
+          variant="ghost"
+          onPress={() => router.push('/privacy')}
+        />
       </Card>
 
       <Card>
