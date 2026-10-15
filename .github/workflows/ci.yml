@@ -52,6 +52,20 @@ jobs:
         if: steps.gate.outputs.ready == 'true'
         continue-on-error: true
         run: npm audit --audit-level=high 2>&1 | tee -a /tmp/ci.log
+      # Triage aid: which advisories reach the shipped app (runtime packages only) and a short
+      # list of every affected package with its severity and whether a fix exists.
+      - name: Dependency audit (runtime packages only, report)
+        if: steps.gate.outputs.ready == 'true'
+        continue-on-error: true
+        run: |
+          echo "=== AUDIT RUNTIME ONLY ===" | tee -a /tmp/ci.log
+          npm audit --omit=dev --audit-level=high 2>&1 | tee -a /tmp/ci.log
+      - name: Dependency audit (summary list)
+        if: steps.gate.outputs.ready == 'true'
+        continue-on-error: true
+        run: |
+          echo "=== AUDIT SUMMARY ===" | tee -a /tmp/ci.log
+          npm audit --json 2>/dev/null | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const v=JSON.parse(d).vulnerabilities||{};for(const [n,x] of Object.entries(v)){const dev=x.isDirect?'direct':'indirect';console.log([n,x.severity,dev,x.fixAvailable===false?'nofix':(typeof x.fixAvailable==='object'?'fix:'+x.fixAvailable.name+'@'+x.fixAvailable.version+(x.fixAvailable.isSemVerMajor?'(major)':''):'fix')].join(' | '))}})" | tee -a /tmp/ci.log
       # Saves the check output to the ci-logs branch so it can be read without downloading logs.
       - name: Save results to the ci-logs branch
         if: always() && github.event_name != 'pull_request'
