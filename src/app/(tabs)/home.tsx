@@ -45,6 +45,8 @@ export default function HomeScreen() {
         />
       </View>
 
+      <Button label="Open calendar" variant="ghost" onPress={() => router.push('/calendar')} />
+
       <Card>
         <Text variant="heading">Today&apos;s priorities</Text>
         {priorities.length === 0 ? (

@@ -42,6 +42,31 @@ export const migrations: readonly Migration[] = [
       );
     `,
   },
+  {
+    version: 3,
+    sql: `
+      CREATE TABLE goals (
+        id TEXT PRIMARY KEY NOT NULL,
+        title TEXT NOT NULL,
+        notes TEXT NOT NULL DEFAULT '',
+        target_date TEXT,
+        completed_at TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        deleted_at TEXT
+      );
+      CREATE TABLE milestones (
+        id TEXT PRIMARY KEY NOT NULL,
+        goal_id TEXT NOT NULL,
+        title TEXT NOT NULL,
+        completed_at TEXT,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        deleted_at TEXT
+      );
+      CREATE INDEX idx_milestones_goal ON milestones (goal_id);
+    `,
+  },
 ];
 
 /** Applies any migrations the database has not seen yet. Returns the resulting version. */

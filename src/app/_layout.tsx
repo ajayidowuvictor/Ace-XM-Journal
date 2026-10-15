@@ -9,6 +9,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import { OnboardingProvider, useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { GoalsProvider } from '@/features/goals/GoalsContext';
 import { HabitsProvider } from '@/features/habits/HabitsContext';
 import { JournalProvider } from '@/features/journal/JournalContext';
 import { TasksProvider } from '@/features/tasks/TasksContext';
@@ -48,6 +49,7 @@ function RootNavigator() {
         <Stack.Protected guard={completed}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="entry" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="calendar" />
         </Stack.Protected>
       </Stack>
     </NavigationThemeProvider>
@@ -60,9 +62,11 @@ export default function RootLayout() {
       <OnboardingProvider>
         <TasksProvider>
           <HabitsProvider>
-            <JournalProvider>
-              <RootNavigator />
-            </JournalProvider>
+            <GoalsProvider>
+              <JournalProvider>
+                <RootNavigator />
+              </JournalProvider>
+            </GoalsProvider>
           </HabitsProvider>
         </TasksProvider>
       </OnboardingProvider>

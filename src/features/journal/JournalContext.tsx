@@ -21,6 +21,8 @@ type JournalValue = {
   status: Status;
   /** Entries matching the current search (all entries when the search is empty). */
   entries: JournalEntry[];
+  /** Every entry, ignoring the search. Used by the calendar and reviews. */
+  allEntries: JournalEntry[];
   query: string;
   setQuery: (query: string) => void;
   findEntry: (id: string) => JournalEntry | null;
@@ -34,6 +36,7 @@ type JournalValue = {
 const JournalContext = createContext<JournalValue>({
   status: 'loading',
   entries: [],
+  allEntries: [],
   query: '',
   setQuery: () => {},
   findEntry: () => null,
@@ -46,6 +49,7 @@ export function JournalProvider({ children }: { children: ReactNode }) {
   const [db, setDb] = useState<SqlDatabase | null>(null);
   const [status, setStatus] = useState<Status>('loading');
   const [entries, setEntries] = useState<JournalEntry[]>([]);
+  const [allEntries, setAllEntries] = useState<JournalEntry[]>([]);
   const [query, setQueryState] = useState('');
 
   useEffect(() => {
@@ -54,7 +58,9 @@ export function JournalProvider({ children }: { children: ReactNode }) {
       .then((opened) => {
         if (cancelled) return;
         setDb(opened);
-        setEntries(listEntries(opened));
+        const everything = listEntries(opened);
+        setEntries(everything);
+        setAllEntries(everything);
         setStatus('ready');
       })
       .catch(() => {
@@ -79,7 +85,9 @@ export function JournalProvider({ children }: { children: ReactNode }) {
       if (!db) return false;
       try {
         work(db, new Date().toISOString());
-        setEntries(listEntries(db, query));
+        const everything = listEntries(db);
+        setAllEntries(everything);
+        setEntries(query.trim() ? listEntries(db, query) : everything);
         return true;
       } catch {
         return false;
@@ -114,8 +122,8 @@ export function JournalProvider({ children }: { children: ReactNode }) {
   );
 
   const value = useMemo(
-    () => ({ status, entries, query, setQuery, findEntry, create, save, remove }),
-    [status, entries, query, setQuery, findEntry, create, save, remove],
+    () => ({ status, entries, allEntries, query, setQuery, findEntry, create, save, remove }),
+    [status, entries, allEntries, query, setQuery, findEntry, create, save, remove],
   );
 
   return <JournalContext.Provider value={value}>{children}</JournalContext.Provider>;

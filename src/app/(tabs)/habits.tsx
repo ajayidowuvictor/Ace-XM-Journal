@@ -1,18 +1,54 @@
+import { useState } from 'react';
+
+import { GoalsPanel } from '@/features/goals/GoalsPanel';
 import { HabitRow } from '@/features/habits/HabitRow';
 import { useHabits } from '@/features/habits/HabitsContext';
 import { useHabitEditor } from '@/features/habits/useHabitEditor';
 import { todaySummary } from '@/features/habits/logic';
 import { toLocalDateString } from '@/lib/dates';
-import { Button, Card, EmptyState, ErrorState, ProgressBar, Screen, Text } from '@/ui';
+import {
+  Button,
+  Card,
+  EmptyState,
+  ErrorState,
+  ProgressBar,
+  Screen,
+  SegmentedControl,
+  Text,
+  type SegmentOption,
+} from '@/ui';
+
+type Section = 'habits' | 'goals';
+
+const SECTIONS: readonly SegmentOption<Section>[] = [
+  { value: 'habits', label: 'Habits' },
+  { value: 'goals', label: 'Goals' },
+];
 
 export default function HabitsScreen() {
+  const [section, setSection] = useState<Section>('habits');
+
+  return (
+    <Screen title="Habits and goals">
+      <SegmentedControl
+        accessibilityLabel="Show habits or goals"
+        options={SECTIONS}
+        value={section}
+        onChange={setSection}
+      />
+      {section === 'habits' ? <HabitsPanel /> : <GoalsPanel />}
+    </Screen>
+  );
+}
+
+function HabitsPanel() {
   const { habits, error, setDoneToday } = useHabits();
   const editor = useHabitEditor();
   const today = toLocalDateString(new Date());
   const summary = todaySummary(habits, today);
 
   return (
-    <Screen title="Habits">
+    <>
       <Button label="New habit" onPress={() => editor.open(null)} />
 
       {error ? <ErrorState message={error} /> : null}
@@ -49,6 +85,6 @@ export default function HabitsScreen() {
       ) : null}
 
       {editor.element}
-    </Screen>
+    </>
   );
 }
