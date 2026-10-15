@@ -60,9 +60,15 @@ jobs:
             "$AAPT" dump badging "$NAME.apk" 2>&1 | grep -E "^package:|sdkVersion|targetSdkVersion|native-code|application-label:" | head -8
             echo "-- signature"
             "$APKSIGNER" verify --verbose --print-certs "$NAME.apk" 2>&1 | grep -E "Verifies|Verified using|SHA-256|DOES NOT|ERROR" | head -8
+            "$AAPT" dump badging "$NAME.apk" > "$NAME.badging" 2>&1
+            echo "-- minSdk: $(grep -o "minSdkVersion:'[0-9]*'" $NAME.badging | head -1)"
+            echo "-- permissions"; grep "^uses-permission" "$NAME.badging" | sort
+            echo "-- zipalign"; ls $ANDROID_HOME/build-tools/*/zipalign | tail -1 | xargs -I{} sh -c '{} -c -P 16 4 '"$NAME"'.apk && echo "aligned 16k ok" || echo "not 16k aligned"'
             echo "-- abis in apk"
             unzip -l "$NAME.apk" | grep -oE "lib/[a-z0-9_-]+/" | sort -u
           done 2>&1 | tee /tmp/apk-check.log
+          echo; echo "===== DIFF of badging (old vs new) =====" | tee -a /tmp/apk-check.log
+          diff OLD.badging NEW.badging | head -60 | tee -a /tmp/apk-check.log
       - name: Save results to the apk-logs branch
         if: always()
         run: |
