@@ -1,6 +1,6 @@
 import type { SqlDatabase } from './types';
 
-/** Permanently removes every task, habit and goal (and their history and steps). */
+/** Permanently removes every task, habit and goal (and their history and steps) and the day plans. */
 export function wipeAppData(db: SqlDatabase): void {
   db.transaction(() => {
     db.run('DELETE FROM tasks');
@@ -8,6 +8,8 @@ export function wipeAppData(db: SqlDatabase): void {
     db.run('DELETE FROM habits');
     db.run('DELETE FROM milestones');
     db.run('DELETE FROM goals');
+    db.run('DELETE FROM plan_blocks');
+    db.run('DELETE FROM plan_focus');
   });
 }
 
