@@ -88,6 +88,45 @@ describe('buildExport day plans', () => {
   });
 });
 
+describe('buildExport notes', () => {
+  it('includes notebooks and notes, and is empty for older callers', () => {
+    const empty = JSON.parse(buildExport({ tasks: [], habits: [], goals: [], entries: [] }, 'x'));
+    expect(empty.notebooks).toEqual([]);
+    expect(empty.notes).toEqual([]);
+
+    const withNotes = JSON.parse(
+      buildExport(
+        {
+          tasks: [],
+          habits: [],
+          goals: [],
+          entries: [],
+          notes: {
+            notebooks: [{ id: 'nb1', name: 'Scriptures', createdAt: 'x', updatedAt: 'x' }],
+            notes: [
+              {
+                id: 'n1',
+                notebookId: 'nb1',
+                kind: 'verse',
+                title: '',
+                body: 'Be still, and know that I am God.',
+                reference: 'Psalm 46:10',
+                pinned: true,
+                createdAt: 'x',
+                updatedAt: 'x',
+              },
+            ],
+          },
+        },
+        'x',
+      ),
+    );
+    expect(withNotes.notebooks[0].name).toBe('Scriptures');
+    expect(withNotes.notes[0].reference).toBe('Psalm 46:10');
+    expect(withNotes.notes[0].pinned).toBe(true);
+  });
+});
+
 describe('exportFileName', () => {
   it('includes the local date', () => {
     expect(exportFileName('2026-10-14')).toBe('acexm-export-2026-10-14.json');

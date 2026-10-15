@@ -6,6 +6,7 @@ export const PREF_KEYS = {
   onboardingComplete: 'onboarding-complete',
   displayName: 'display-name',
   reminder: 'daily-reminder',
+  readerSize: 'reader-text-size',
 } as const;
 
 /** Reads a stored preference. Returns null if nothing is stored or storage is unavailable. */
