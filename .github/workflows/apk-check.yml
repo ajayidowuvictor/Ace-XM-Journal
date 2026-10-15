@@ -34,6 +34,7 @@ jobs:
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
+      - run: npm ci
       - name: Inspect both builds
         env:
           NEW_BUILD: ${{ inputs.new_build }}
