@@ -4,7 +4,7 @@ Last updated: 2026-10-14
 
 ## Current phase
 
-Phase 4: Journal with encrypted storage. Built and verified by automated checks; not yet seen on a phone (see "Not yet verified").
+Phase 5 (first part): Habits. Phase 4 (journal) and this habits build are verified by automated checks only; neither has been confirmed on a phone yet (see "Not yet verified").
 
 ## Completed (verified by GitHub Actions)
 
@@ -26,6 +26,9 @@ Phase 4: Journal with encrypted storage. Built and verified by automated checks;
 - Journal storage is a separate database (`journal.db`) encrypted with SQLCipher via the expo-sqlite plugin option `useSQLCipher`. The random 256-bit key is created on first use and kept in expo-secure-store (Android Keystore). If the key cannot be read or does not match, the app shows an error and never deletes or recreates the journal. Android cloud backup is switched off (`android.allowBackup: false`) because a restored database would be unreadable without its key.
 - Automated checks now: type check, lint, format, 120 tests, Android bundle build.
 
+- Phase 5a: Habits tab (add, rename, delete with confirmation, tick once per day, current and best streak, "Today" progress bar) and a Habits card on Home with the same ticks. Streaks use local calendar dates; a streak stays alive until a full day is missed. Habits live in the main database (migration 2, existing tasks kept).
+- Automated checks now: type check, lint, format, 141 tests, Android bundle build.
+
 ## Device testing
 
 - Phase 3 phone test (light theme): the owner added tasks and ticked one off; the Tasks screen (No date and Done sections, tick box, strike-through, date and priority line) and Home (Today's priorities) displayed correctly. The owner confirmed it works. Dark mode, editing, deleting and restart persistence were not shown in the screenshots.
@@ -37,6 +40,7 @@ Phase 4: Journal with encrypted storage. Built and verified by automated checks;
 - The task form's due date offers No date, Today, Tomorrow, In a week (no calendar picker yet). Tasks have no categories yet. Deleting a task cannot be undone from the app.
 - Encryption is not verified on a device or by tests: the automated tests run the journal SQL on plain SQLite, so they do not prove the file is encrypted. It needs a check on the phone (the build must succeed with SQLCipher and the journal must open, save and reopen). The tasks database is not encrypted (only the journal is, per the project rules).
 - Because Android backup is off and the key lives only on the phone, a lost or wiped phone means a lost journal until export/backup (Phase 6) exists. Uninstalling the app erases the journal.
+- Habits (Phase 5a) and the journal (Phase 4) have not been run on a phone. Habits are daily only; goals and the calendar are not built yet.
 - The journal list shows all entries at once (no paging yet); fine for early use.
 - Light theme, System mode and keeping the choice after closing the app were not covered by the owner's screenshots.
 - Tasks, Journal and Habits tabs are placeholders with "coming soon" messages. Home's "New task" and "New journal entry" buttons only switch to those tabs for now. The Home cards show empty states because no data exists yet.
@@ -50,5 +54,6 @@ Phase 4: Journal with encrypted storage. Built and verified by automated checks;
 
 ## Next actions
 
-1. Test the journal on the phone and fix what looks wrong.
-2. Triage the npm audit findings before release.
+1. Test the journal and habits on the phone and fix what looks wrong.
+2. Rest of Phase 5: goals and calendar.
+3. Triage the npm audit findings before release.

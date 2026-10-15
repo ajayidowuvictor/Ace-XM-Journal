@@ -7,7 +7,7 @@
 | 2     | Design system and navigation, onboarding shell      | Done                 |
 | 3     | Tasks and dashboard                                 | Done                 |
 | 4     | Journal (autosave, search, tags, mood)              | Device check pending |
-| 5     | Habits, goals, calendar                             | Not started          |
+| 5     | Habits, goals, calendar                             | Habits built; goals, calendar not started |
 | 6     | Reviews, settings, export, deletion, privacy screen | Not started          |
 | 7     | Accounts and cloud sync (only if needed for v1)     | Deferred             |
 | 8     | Full QA pass                                        | Not started          |

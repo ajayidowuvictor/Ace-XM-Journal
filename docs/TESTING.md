@@ -23,6 +23,8 @@ The CI workflow also checks that the Android JavaScript bundle builds, and saves
 
 - Journal: repository (save, list order, search incl. % and _, update, erase on delete), journal migrations, key creation/reuse/refusal to overwrite, tags, mood, autosave timing. These run on plain SQLite; encryption itself still needs a device check.
 
+- Habits: streak, best streak, window counts and today summary (including month/year boundaries), repository (history, undo, delete, deleted habits) and the version 1 to 2 database upgrade keeping tasks.
+
 ## Planned (by phase)
 
 - Date helpers, streaks and review calculations (Phase 5/6).
