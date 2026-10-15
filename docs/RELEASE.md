@@ -35,7 +35,7 @@ Status: **not released.** Nothing has been submitted to any store. The steps tha
 - Data collected: none. Data shared: none. The app has no accounts and sends nothing to any server.
 - Data encryption in transit: not applicable (no data leaves the device).
 - Users can request deletion: yes, in-app "Erase all my data", and uninstalling the app removes everything.
-- Permissions: notifications (optional, for the daily reminder). Confirm the list in the built app before submitting.
+- Permissions: the build of 2026-10-15 was inspected and requested many extra permissions (biometric, push-message receiving, launcher badges, install referrer). They are now blocked in `app.json` (`android.blockedPermissions`). Expected remaining permissions: notifications, boot-completed and wake-lock (so the daily reminder survives a restart), network state, vibrate, and the Expo development defaults. Re-inspect the next build's manifest (the "APK check (diagnostic)" workflow prints it) before submitting.
 
 ## Privacy policy draft
 
