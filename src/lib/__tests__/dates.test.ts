@@ -1,6 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { addDays, isValidDateString, parseLocalDate, toLocalDateString } from '../dates';
+import {
+  addDays,
+  isValidDateString,
+  parseLocalDate,
+  shiftDateString,
+  toLocalDateString,
+} from '../dates';
 
 describe('toLocalDateString', () => {
   it('uses the local calendar day with zero padding', () => {
@@ -36,5 +42,13 @@ describe('parseLocalDate', () => {
     const date = parseLocalDate('2026-10-14');
     expect(date && toLocalDateString(date)).toBe('2026-10-14');
     expect(parseLocalDate('2026-02-30')).toBeNull();
+  });
+});
+
+describe('shiftDateString', () => {
+  it('moves a date string forward or back and rejects bad input', () => {
+    expect(shiftDateString('2026-10-31', 1)).toBe('2026-11-01');
+    expect(shiftDateString('2027-01-01', -1)).toBe('2026-12-31');
+    expect(shiftDateString('nope', 1)).toBeNull();
   });
 });

@@ -57,4 +57,16 @@ describe('migrations', () => {
       migrations.length,
     );
   });
+
+  it('keeps existing tasks when a database from the first version is upgraded', () => {
+    const db = createTestDatabase();
+    migrate(db, migrations.slice(0, 1));
+    db.run(`INSERT INTO tasks (id, title, created_at, updated_at) VALUES ('a', 'Old task', 'x', 'x')`);
+
+    expect(migrate(db)).toBe(migrations.length);
+    expect(db.first<{ title: string }>(`SELECT title FROM tasks WHERE id = 'a'`)?.title).toBe(
+      'Old task',
+    );
+    expect(db.all(`SELECT * FROM habits`)).toEqual([]);
+  });
 });

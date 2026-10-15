@@ -2,13 +2,16 @@ import { useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { HabitRow } from '@/features/habits/HabitRow';
+import { useHabits } from '@/features/habits/HabitsContext';
+import { todaySummary } from '@/features/habits/logic';
 import { TaskRow } from '@/features/tasks/TaskRow';
 import { useTasks } from '@/features/tasks/TasksContext';
 import { useTaskEditor } from '@/features/tasks/useTaskEditor';
 import { todaysPriorities } from '@/features/tasks/logic';
 import { toLocalDateString } from '@/lib/dates';
 import { formatLongDate, greetingForHour } from '@/lib/greeting';
-import { Button, Card, EmptyState, Screen, Text, spacing } from '@/ui';
+import { Button, Card, EmptyState, ProgressBar, Screen, Text, spacing } from '@/ui';
 
 export default function HomeScreen() {
   const router = useRouter();
@@ -17,7 +20,9 @@ export default function HomeScreen() {
   const greeting = greetingForHour(now.getHours());
   const { tasks, setCompleted } = useTasks();
   const editor = useTaskEditor();
+  const { habits, setDoneToday } = useHabits();
   const today = toLocalDateString(now);
+  const habitSummary = todaySummary(habits, toLocalDateString(now));
   const priorities = todaysPriorities(tasks, today);
   const overdueIds = new Set(
     priorities.filter((t) => t.dueDate && t.dueDate < today).map((t) => t.id),
@@ -62,10 +67,31 @@ export default function HomeScreen() {
 
       <Card>
         <Text variant="heading">Habits</Text>
-        <EmptyState
-          title="No habits yet"
-          message="Habits you track will show their progress here."
-        />
+        {habits.length === 0 ? (
+          <EmptyState
+            title="No habits yet"
+            message="Habits you track will show their progress here."
+          />
+        ) : (
+          <>
+            <Text muted>
+              {habitSummary.done} of {habitSummary.total} done today
+            </Text>
+            <ProgressBar
+              value={habitSummary.progress}
+              accessibilityLabel={`${habitSummary.done} of ${habitSummary.total} habits done today`}
+            />
+            {habits.map((habit) => (
+              <HabitRow
+                key={habit.id}
+                habit={habit}
+                today={today}
+                showStreak={false}
+                onToggle={(done) => setDoneToday(habit.id, done)}
+              />
+            ))}
+          </>
+        )}
       </Card>
       {editor.element}
     </Screen>

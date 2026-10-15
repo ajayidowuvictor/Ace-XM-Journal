@@ -39,3 +39,9 @@ export function parseLocalDate(value: string): Date | null {
   const [year, month, day] = value.split('-').map(Number);
   return new Date(year, month - 1, day);
 }
+
+/** The local date `days` days after a `YYYY-MM-DD` date, as `YYYY-MM-DD`. Null if invalid. */
+export function shiftDateString(value: string, days: number): string | null {
+  const date = parseLocalDate(value);
+  return date ? addDays(date, days) : null;
+}

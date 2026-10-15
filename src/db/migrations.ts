@@ -24,6 +24,24 @@ export const migrations: readonly Migration[] = [
       CREATE INDEX idx_tasks_due_date ON tasks (due_date);
     `,
   },
+  {
+    version: 2,
+    sql: `
+      CREATE TABLE habits (
+        id TEXT PRIMARY KEY NOT NULL,
+        name TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        deleted_at TEXT
+      );
+      CREATE TABLE habit_completions (
+        habit_id TEXT NOT NULL,
+        completed_date TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        PRIMARY KEY (habit_id, completed_date)
+      );
+    `,
+  },
 ];
 
 /** Applies any migrations the database has not seen yet. Returns the resulting version. */

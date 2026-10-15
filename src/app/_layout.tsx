@@ -9,6 +9,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 
 import { OnboardingProvider, useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { HabitsProvider } from '@/features/habits/HabitsContext';
 import { JournalProvider } from '@/features/journal/JournalContext';
 import { TasksProvider } from '@/features/tasks/TasksContext';
 import { ThemeProvider } from '@/theme/ThemeProvider';
@@ -58,9 +59,11 @@ export default function RootLayout() {
     <ThemeProvider>
       <OnboardingProvider>
         <TasksProvider>
-          <JournalProvider>
-            <RootNavigator />
-          </JournalProvider>
+          <HabitsProvider>
+            <JournalProvider>
+              <RootNavigator />
+            </JournalProvider>
+          </HabitsProvider>
         </TasksProvider>
       </OnboardingProvider>
     </ThemeProvider>
