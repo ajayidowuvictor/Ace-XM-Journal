@@ -19,6 +19,8 @@ type TasksValue = {
   error: string | null;
   /** Saves a new task. Returns an error message if the input is not valid, otherwise null. */
   add: (input: TaskInput) => string | null;
+  /** Like `add`, but also returns the new task's id so the caller can use it straight away. */
+  addTask: (input: TaskInput) => { id: string | null; error: string | null };
   edit: (id: string, input: TaskInput) => string | null;
   setCompleted: (id: string, completed: boolean) => void;
   remove: (id: string) => void;
@@ -30,6 +32,7 @@ const TasksContext = createContext<TasksValue>({
   tasks: [],
   error: null,
   add: () => null,
+  addTask: () => ({ id: null, error: null }),
   edit: () => null,
   setCompleted: () => {},
   remove: () => {},
@@ -79,6 +82,19 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     [run],
   );
 
+  const addTask = useCallback(
+    (input: TaskInput) => {
+      const problem = validateTitle(input.title);
+      if (problem) return { id: null, error: problem };
+      const clean = cleanInput(input);
+      const id = newId();
+      return run((database, now) => createTask(database, id, clean, now))
+        ? { id, error: null }
+        : { id: null, error: SAVE_ERROR };
+    },
+    [run],
+  );
+
   const edit = useCallback(
     (id: string, input: TaskInput) => {
       const problem = validateTitle(input.title);
@@ -108,8 +124,8 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   }, [db]);
 
   const value = useMemo(
-    () => ({ tasks, error, add, edit, setCompleted, remove, reload }),
-    [tasks, error, add, edit, setCompleted, remove, reload],
+    () => ({ tasks, error, add, addTask, edit, setCompleted, remove, reload }),
+    [tasks, error, add, addTask, edit, setCompleted, remove, reload],
   );
 
   return <TasksContext.Provider value={value}>{children}</TasksContext.Provider>;

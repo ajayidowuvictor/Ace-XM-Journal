@@ -243,6 +243,12 @@ export function dayHeadline({ done, total }: Pick<DayProgress, 'done' | 'total'>
   return `${done} of ${total} done. Keep going at your own pace.`;
 }
 
+/** The same kind of line for the day after today: how much is planned, never how much is done. */
+export function tomorrowHeadline(total: number): string {
+  if (total === 0) return 'Nothing planned yet. Choose what matters most.';
+  return total === 1 ? '1 thing planned. A calm start.' : `${total} things planned. A calm start.`;
+}
+
 // ---- Evening wrap-up (saved as an encrypted journal entry) ----
 
 export const WRAP_UP_TAG = 'day wrap-up';

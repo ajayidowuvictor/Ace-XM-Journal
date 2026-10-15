@@ -12,6 +12,7 @@ import { OnboardingProvider, useOnboarding } from '@/features/onboarding/Onboard
 import { GoalsProvider } from '@/features/goals/GoalsContext';
 import { HabitsProvider } from '@/features/habits/HabitsContext';
 import { JournalProvider } from '@/features/journal/JournalContext';
+import { PlannerProvider } from '@/features/planner/PlannerContext';
 import { TasksProvider } from '@/features/tasks/TasksContext';
 import { ThemeProvider } from '@/theme/ThemeProvider';
 import { useAppFonts } from '@/theme/useAppFonts';
@@ -71,9 +72,11 @@ export default function RootLayout() {
         <TasksProvider>
           <HabitsProvider>
             <GoalsProvider>
-              <JournalProvider>
-                <RootNavigator />
-              </JournalProvider>
+              <PlannerProvider>
+                <JournalProvider>
+                  <RootNavigator />
+                </JournalProvider>
+              </PlannerProvider>
             </GoalsProvider>
           </HabitsProvider>
         </TasksProvider>

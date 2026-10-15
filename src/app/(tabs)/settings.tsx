@@ -16,6 +16,7 @@ import {
 } from '@/features/reminders/logic';
 import { applyReminder } from '@/features/reminders/service';
 import { WipeDialog } from '@/features/settings/WipeDialog';
+import { usePlanner } from '@/features/planner/PlannerContext';
 import { useTasks } from '@/features/tasks/TasksContext';
 import { toLocalDateString } from '@/lib/dates';
 import { PREF_KEYS, readPreference, writePreference } from '@/lib/preferences';
@@ -34,6 +35,7 @@ export default function SettingsScreen() {
   const { tasks, reload: reloadTasks } = useTasks();
   const { habits, reload: reloadHabits } = useHabits();
   const { goals, reload: reloadGoals } = useGoals();
+  const { focus, blocks, reload: reloadPlanner } = usePlanner();
   const { allEntries, wipe: wipeJournal, status: journalStatus } = useJournal();
 
   const [reminder, setReminder] = useState<ReminderChoice>(() =>
@@ -70,7 +72,7 @@ export default function SettingsScreen() {
     setExportNote(null);
     try {
       const text = buildExport(
-        { tasks, habits, goals, entries: allEntries },
+        { tasks, habits, goals, entries: allEntries, plan: { focus, blocks } },
         new Date().toISOString(),
       );
       const shared = await shareExport(exportFileName(toLocalDateString(new Date())), text);
@@ -95,6 +97,7 @@ export default function SettingsScreen() {
       reloadTasks();
       reloadHabits();
       reloadGoals();
+      reloadPlanner();
       setWipeNote(
         wipeJournal()
           ? 'Everything has been erased.'

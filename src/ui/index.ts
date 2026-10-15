@@ -1,10 +1,12 @@
 export { Button } from './Button';
 export { Card } from './Card';
 export { Checkbox } from './Checkbox';
+export { Chip } from './Chip';
 export { ConfirmDialog } from './ConfirmDialog';
 export { PressableScale } from './PressableScale';
 export { ProgressBar, clampProgress } from './ProgressBar';
 export { Screen } from './Screen';
+export { SectionHeader } from './SectionHeader';
 export { SegmentedControl, type SegmentOption } from './SegmentedControl';
 export { EmptyState, ErrorState, LoadingState } from './states';
 export { Text } from './Text';

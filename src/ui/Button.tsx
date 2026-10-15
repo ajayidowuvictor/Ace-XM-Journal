@@ -9,7 +9,7 @@ import {
 import { tapLight } from '../lib/haptics';
 import { useTheme } from '../theme/context';
 import { PressableScale } from './PressableScale';
-import { minTouchTarget, radius, spacing, typography } from './tokens';
+import { fonts, minTouchTarget, radius, spacing, typography } from './tokens';
 
 type Props = {
   label: string;
@@ -25,6 +25,8 @@ type Props = {
   /** Shows a spinner and ignores presses, which prevents duplicate submissions. */
   loading?: boolean;
   accessibilityHint?: string;
+  /** Read aloud instead of the visible label, when the label is a short symbol such as "+15 m". */
+  accessibilityLabel?: string;
   style?: StyleProp<ViewStyle>;
 };
 
@@ -36,6 +38,7 @@ export function Button({
   disabled = false,
   loading = false,
   accessibilityHint,
+  accessibilityLabel,
   style,
 }: Props) {
   const { colors } = useTheme();
@@ -51,7 +54,7 @@ export function Button({
   return (
     <PressableScale
       accessibilityRole="button"
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
       accessibilityHint={accessibilityHint}
       accessibilityState={{ disabled: inactive, busy: loading }}
       disabled={inactive}
@@ -69,7 +72,11 @@ export function Button({
       {loading ? (
         <ActivityIndicator color={palette.text} />
       ) : (
-        <RNText style={[typography.subheading, { color: palette.text }]}>{label}</RNText>
+        <RNText
+          style={[size === 'compact' ? styles.compactText : typography.subheading, { color: palette.text }]}
+        >
+          {label}
+        </RNText>
       )}
     </PressableScale>
   );
@@ -82,5 +89,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   regular: { minHeight: 52, borderRadius: radius.control },
-  compact: { minHeight: minTouchTarget, borderRadius: radius.md, paddingHorizontal: spacing.md },
+  compact: { minHeight: minTouchTarget, borderRadius: radius.md, paddingHorizontal: spacing.md - 4 },
+  compactText: { fontFamily: fonts.semibold, fontSize: 15, lineHeight: 20 },
 });

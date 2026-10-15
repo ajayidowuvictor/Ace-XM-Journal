@@ -20,6 +20,7 @@ import {
   sortBlocks,
   suggestStart,
   timeRange,
+  tomorrowHeadline,
   validateBlock,
   withFocus,
   withoutFocus,
@@ -295,6 +296,14 @@ describe('day progress and wording', () => {
     expect(dayHeadline({ done: 0, total: 3 })).toMatch(/one small thing/);
     expect(dayHeadline({ done: 1, total: 3 })).toBe('1 of 3 done. Keep going at your own pace.');
     expect(dayHeadline({ done: 3, total: 3 })).toMatch(/done\. Well done/);
+  });
+});
+
+describe('tomorrowHeadline', () => {
+  it('says how much is planned', () => {
+    expect(tomorrowHeadline(0)).toMatch(/Nothing planned/);
+    expect(tomorrowHeadline(1)).toBe('1 thing planned. A calm start.');
+    expect(tomorrowHeadline(4)).toBe('4 things planned. A calm start.');
   });
 });
 

@@ -1,6 +1,7 @@
 import type { Goal } from '../goals/types';
 import type { Habit } from '../habits/types';
 import type { JournalEntry } from '../journal/types';
+import type { FocusRow, PlanBlock } from '../planner/types';
 import type { Task } from '../tasks/types';
 
 export type ExportInputs = {
@@ -8,6 +9,8 @@ export type ExportInputs = {
   habits: readonly Habit[];
   goals: readonly Goal[];
   entries: readonly JournalEntry[];
+  /** Day plans: the focus tasks and time blocks. Optional so older callers keep working. */
+  plan?: { focus: readonly FocusRow[]; blocks: readonly PlanBlock[] };
 };
 
 /** Everything the app holds for the user, in a plain readable format (JSON text). */
@@ -22,6 +25,7 @@ export function buildExport(inputs: ExportInputs, nowIso: string): string {
       habits: inputs.habits,
       goals: inputs.goals,
       journalEntries: inputs.entries,
+      dayPlans: { focus: inputs.plan?.focus ?? [], blocks: inputs.plan?.blocks ?? [] },
     },
     null,
     2,

@@ -52,6 +52,42 @@ describe('buildExport', () => {
   });
 });
 
+describe('buildExport day plans', () => {
+  it('includes focus tasks and time blocks, and is empty for older callers', () => {
+    const empty = JSON.parse(buildExport({ tasks: [], habits: [], goals: [], entries: [] }, 'x'));
+    expect(empty.dayPlans).toEqual({ focus: [], blocks: [] });
+
+    const withPlan = JSON.parse(
+      buildExport(
+        {
+          tasks: [],
+          habits: [],
+          goals: [],
+          entries: [],
+          plan: {
+            focus: [{ planDate: '2026-10-15', taskId: 't1', position: 0 }],
+            blocks: [
+              {
+                id: 'b1',
+                planDate: '2026-10-15',
+                title: 'Write',
+                taskId: null,
+                startMinutes: 540,
+                durationMinutes: 60,
+                createdAt: 'x',
+                updatedAt: 'x',
+              },
+            ],
+          },
+        },
+        'x',
+      ),
+    );
+    expect(withPlan.dayPlans.focus[0].taskId).toBe('t1');
+    expect(withPlan.dayPlans.blocks[0].title).toBe('Write');
+  });
+});
+
 describe('exportFileName', () => {
   it('includes the local date', () => {
     expect(exportFileName('2026-10-14')).toBe('acexm-export-2026-10-14.json');
