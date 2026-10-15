@@ -14,7 +14,7 @@ type Props = {
 export function TaskRow({ task, overdue = false, onToggle, onOpen }: Props) {
   const done = task.completedAt !== null;
   const details = [
-    task.dueDate ? `${overdue ? 'Overdue, ' : ''}${formatShortDate(task.dueDate)}` : null,
+    task.dueDate ? `${overdue ? 'From ' : ''}${formatShortDate(task.dueDate)}` : null,
     task.priority > 0 ? `${PRIORITY_LABELS[task.priority]} priority` : null,
   ].filter((part): part is string => part !== null);
 
@@ -35,7 +35,7 @@ export function TaskRow({ task, overdue = false, onToggle, onOpen }: Props) {
           {task.title}
         </Text>
         {details.length > 0 ? (
-          <Text variant="caption" tone={overdue && !done ? 'danger' : undefined} muted={!overdue}>
+          <Text variant="caption" tone={overdue && !done ? 'primary' : undefined} muted={!overdue}>
             {details.join('  ·  ')}
           </Text>
         ) : null}

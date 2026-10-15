@@ -46,7 +46,7 @@ export default function TasksScreen() {
         />
       ) : null}
 
-      {section('Overdue', groups.overdue, true)}
+      {section('From earlier', groups.overdue, true)}
       {section('Today', groups.today)}
       {section('Upcoming', groups.upcoming)}
       {section('No date', groups.noDate)}
