@@ -11,6 +11,10 @@ on:
         description: 'Space-separated packages to add with "npx expo install" (optional)'
         required: false
         default: ''
+      relock:
+        description: 'Type "true" to rebuild package-lock.json from package.json (after moving dependencies)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -30,6 +34,9 @@ jobs:
         env:
           PACKAGES: ${{ inputs.packages }}
         run: npx expo install $PACKAGES
+      - name: Rebuild lock file
+        if: inputs.relock == 'true'
+        run: npm install --package-lock-only --ignore-scripts
       - run: npx prettier --write .
       - name: Commit changes
         run: |

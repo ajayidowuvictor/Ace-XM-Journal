@@ -65,7 +65,7 @@ jobs:
         continue-on-error: true
         run: |
           echo "=== AUDIT SUMMARY ===" | tee -a /tmp/ci.log
-          npm audit --json 2>/dev/null | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const v=JSON.parse(d).vulnerabilities||{};for(const [n,x] of Object.entries(v)){const dev=x.isDirect?'direct':'indirect';console.log([n,x.severity,dev,x.fixAvailable===false?'nofix':(typeof x.fixAvailable==='object'?'fix:'+x.fixAvailable.name+'@'+x.fixAvailable.version+(x.fixAvailable.isSemVerMajor?'(major)':''):'fix')].join(' | '))}})" | tee -a /tmp/ci.log
+          npm audit --json 2>/dev/null | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{const v=JSON.parse(d).vulnerabilities||{};for(const [n,x] of Object.entries(v)){for(const w of x.via){if(typeof w==='object')console.log('ROOT | '+n+' | '+w.severity+' | '+w.title+' | '+w.url)}const dev=x.isDirect?'direct':'indirect';console.log([n,x.severity,dev,x.fixAvailable===false?'nofix':(typeof x.fixAvailable==='object'?'fix:'+x.fixAvailable.name+'@'+x.fixAvailable.version+(x.fixAvailable.isSemVerMajor?'(major)':''):'fix')].join(' | '))}})" | tee -a /tmp/ci.log
       # Saves the check output to the ci-logs branch so it can be read without downloading logs.
       - name: Save results to the ci-logs branch
         if: always() && github.event_name != 'pull_request'
