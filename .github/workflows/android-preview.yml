@@ -10,6 +10,10 @@ on:
       account:
         description: 'Expo account username that will own the project'
         required: true
+      profile:
+        description: 'Build profile from eas.json (preview = all phones, preview-arm64 = smaller file for modern 64-bit phones)'
+        required: false
+        default: 'preview'
 
 permissions:
   contents: write
@@ -56,7 +60,9 @@ jobs:
             git push
           fi
       - name: Build Android preview app
-        run: eas build --platform android --profile preview --non-interactive 2>&1 | tee -a /tmp/eas.log
+        env:
+          PROFILE: ${{ inputs.profile }}
+        run: eas build --platform android --profile "$PROFILE" --non-interactive 2>&1 | tee -a /tmp/eas.log
       # Saves the output (including the install link) to the eas-logs branch so it can be read.
       - name: Save build output to the eas-logs branch
         if: always()
