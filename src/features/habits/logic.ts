@@ -54,7 +54,10 @@ export function doneInLastDays(dates: readonly string[], today: string, days: nu
 export type TodaySummary = { done: number; total: number; progress: number };
 
 /** Habits finished today out of all habits, with progress from 0 to 1. */
-export function todaySummary(habits: readonly { completedDates: readonly string[] }[], today: string) {
+export function todaySummary(
+  habits: readonly { completedDates: readonly string[] }[],
+  today: string,
+) {
   const total = habits.length;
   const done = habits.filter((habit) => habit.completedDates.includes(today)).length;
   return { done, total, progress: total === 0 ? 0 : done / total } satisfies TodaySummary;

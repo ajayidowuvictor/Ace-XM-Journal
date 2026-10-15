@@ -61,7 +61,9 @@ describe('habits repository', () => {
 
     expect(listHabits(db).map((h) => h.id)).toEqual(['h2']);
     expect(db.all('SELECT * FROM habit_completions WHERE habit_id = ?', ['h1'])).toEqual([]);
-    expect(db.first<{ deleted_at: string }>(`SELECT deleted_at FROM habits WHERE id = 'h1'`)).toEqual({
+    expect(
+      db.first<{ deleted_at: string }>(`SELECT deleted_at FROM habits WHERE id = 'h1'`),
+    ).toEqual({
       deleted_at: t2,
     });
   });
