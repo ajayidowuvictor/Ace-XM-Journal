@@ -46,7 +46,7 @@ jobs:
           for NAME in OLD NEW; do
             ID=$([ $NAME = NEW ] && echo "$NEW_BUILD" || echo "$OLD_BUILD")
             echo; echo "===== $NAME build $ID ====="
-            eas build:view "$ID" --json --non-interactive > "$NAME.json" 2> "$NAME.err"
+            eas build:view "$ID" --json > "$NAME.json" 2> "$NAME.err"
             echo "-- eas stderr:"; head -c 400 "$NAME.err"
             echo "-- eas json keys:"; node -e "try{const j=JSON.parse(require('fs').readFileSync('$NAME.json','utf8'));console.log(Object.keys(j).join(','));console.log(JSON.stringify(j.artifacts||{}).replace(/\\?[^\"]*/g,''))}catch(e){console.log('not json: '+require('fs').readFileSync('$NAME.json','utf8').slice(0,300))}"
             URL=$(cat "$NAME.json" | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{const j=JSON.parse(d);console.log(j.artifacts&&j.artifacts.buildUrl||'');}catch(e){console.log('')}})")
