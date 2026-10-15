@@ -1,0 +1,73 @@
+name: APK check (diagnostic)
+
+# Manually started. Downloads two builds from Expo, tests the files and prints their key details
+# (package name, version code, minimum Android version, signing certificate) so they can be
+# compared. Output is saved to the apk-logs branch. Needs the EXPO_TOKEN secret.
+
+on:
+  workflow_dispatch:
+    inputs:
+      new_build:
+        description: 'Build id of the build that fails to install'
+        required: true
+      old_build:
+        description: 'Build id of a build that installed fine'
+        required: true
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Set up EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Inspect both builds
+        env:
+          NEW_BUILD: ${{ inputs.new_build }}
+          OLD_BUILD: ${{ inputs.old_build }}
+        run: |
+          set +e
+          AAPT=$(ls $ANDROID_HOME/build-tools/*/aapt2 2>/dev/null | tail -1)
+          APKSIGNER=$(ls $ANDROID_HOME/build-tools/*/apksigner 2>/dev/null | tail -1)
+          echo "aapt2: $AAPT"; echo "apksigner: $APKSIGNER"
+          for NAME in OLD NEW; do
+            ID=$([ $NAME = NEW ] && echo "$NEW_BUILD" || echo "$OLD_BUILD")
+            echo; echo "===== $NAME build $ID ====="
+            URL=$(eas build:view "$ID" --json 2>/dev/null | node -e "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{try{const j=JSON.parse(d);console.log(j.artifacts&&j.artifacts.buildUrl||'');}catch(e){console.log('')}})")
+            echo "url: ${URL:-none}"
+            [ -z "$URL" ] && continue
+            curl -sSL -o "$NAME.apk" "$URL"
+            ls -l "$NAME.apk"
+            echo "-- zip test"; unzip -tq "$NAME.apk" | tail -2
+            echo "-- manifest summary"
+            "$AAPT" dump badging "$NAME.apk" 2>&1 | grep -E "^package:|sdkVersion|targetSdkVersion|native-code|application-label:" | head -8
+            echo "-- signature"
+            "$APKSIGNER" verify --verbose --print-certs "$NAME.apk" 2>&1 | grep -E "Verifies|Verified using|SHA-256|DOES NOT|ERROR" | head -8
+            echo "-- abis in apk"
+            unzip -l "$NAME.apk" | grep -oE "lib/[a-z0-9_-]+/" | sort -u
+          done 2>&1 | tee /tmp/apk-check.log
+      - name: Save results to the apk-logs branch
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -q --orphan apk-logs
+          git rm -rf -q --cached . > /dev/null 2>&1 || true
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp /tmp/apk-check.log ./apk-check.log 2>/dev/null || echo "no log" > apk-check.log
+          git add apk-check.log
+          git commit -q -m "APK check output"
+          git push -f origin apk-logs
