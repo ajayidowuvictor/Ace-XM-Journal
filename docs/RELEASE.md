@@ -41,7 +41,7 @@ Status: **not released.** Nothing has been submitted to any store. The steps tha
 
 **Privacy policy for ACE XM JOURNAL**
 
-*Last updated: [date]*
+_Last updated: [date]_
 
 ACE XM JOURNAL ("the app") is designed to keep your information on your own phone.
 

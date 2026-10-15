@@ -8,15 +8,15 @@ Feature-complete for the first (local-only) release, pending the owner's phone t
 
 ## What the app does
 
-- **Shell and design:** brand theme (light, dark, system), first-run onboarding (optional name), five native tabs (Home, Tasks, Journal, Habits and goals, Settings), reusable accessible components. *Seen on a phone.*
-- **Tasks:** add, edit, tick off, delete with confirmation; sections Overdue, Today, Upcoming, No date, Done; due dates by quick choice; priority. *Seen on a phone (light theme).*
-- **Journal:** encrypted database (SQLCipher, key in Android secure storage), entries with title, text, mood and tags, autosave, search, delete erases content. *Not yet seen on a phone; encryption itself is not proven by automated tests.*
-- **Habits:** daily check-in, current and best streak, today's progress, shown on Home. *Not yet seen on a phone.*
-- **Goals:** goals with target date, steps and progress, marked achieved. *Not yet seen on a phone.*
-- **Calendar:** month view with dots for days with tasks due, habit check-ins or journal entries; tap a day to see them. *Not yet seen on a phone.*
-- **Weekly review:** 7-day summary and a reflection saved as an encrypted journal entry. *Not yet seen on a phone.*
-- **Settings:** appearance, optional daily reminder (fixed text, never your words), export to a plain JSON file (with warning), erase all data (two confirmations), privacy page. *Not yet seen on a phone. The reminder and the share sheet need a real device to confirm.*
-- **Branding:** app icon, adaptive icon and splash derived from the owner's logo emblem. *Not yet seen on a phone.*
+- **Shell and design:** brand theme (light, dark, system), first-run onboarding (optional name), five native tabs (Home, Tasks, Journal, Habits and goals, Settings), reusable accessible components. _Seen on a phone._
+- **Tasks:** add, edit, tick off, delete with confirmation; sections Overdue, Today, Upcoming, No date, Done; due dates by quick choice; priority. _Seen on a phone (light theme)._
+- **Journal:** encrypted database (SQLCipher, key in Android secure storage), entries with title, text, mood and tags, autosave, search, delete erases content. _Not yet seen on a phone; encryption itself is not proven by automated tests._
+- **Habits:** daily check-in, current and best streak, today's progress, shown on Home. _Not yet seen on a phone._
+- **Goals:** goals with target date, steps and progress, marked achieved. _Not yet seen on a phone._
+- **Calendar:** month view with dots for days with tasks due, habit check-ins or journal entries; tap a day to see them. _Not yet seen on a phone._
+- **Weekly review:** 7-day summary and a reflection saved as an encrypted journal entry. _Not yet seen on a phone._
+- **Settings:** appearance, optional daily reminder (fixed text, never your words), export to a plain JSON file (with warning), erase all data (two confirmations), privacy page. _Not yet seen on a phone. The reminder and the share sheet need a real device to confirm._
+- **Branding:** app icon, adaptive icon and splash derived from the owner's logo emblem. _Not yet seen on a phone._
 
 ## Device testing history
 
