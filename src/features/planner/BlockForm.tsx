@@ -57,7 +57,11 @@ export function BlockForm({
   const durations = DURATION_CHOICES.includes(duration as (typeof DURATION_CHOICES)[number])
     ? [...DURATION_CHOICES]
     : [...DURATION_CHOICES, duration].sort((a, b) => a - b);
-  const clashes = overlappingBlocks(dayBlocks, { startMinutes: start, durationMinutes: duration }, block?.id);
+  const clashes = overlappingBlocks(
+    dayBlocks,
+    { startMinutes: start, durationMinutes: duration },
+    block?.id,
+  );
 
   function chooseDuration(next: number) {
     setDuration(next);
@@ -111,8 +115,16 @@ export function BlockForm({
             <View style={styles.row}>
               {[
                 { label: '−1 h', spoken: 'One hour earlier', delta: -60 },
-                { label: `−${START_STEP} m`, spoken: `${START_STEP} minutes earlier`, delta: -START_STEP },
-                { label: `+${START_STEP} m`, spoken: `${START_STEP} minutes later`, delta: START_STEP },
+                {
+                  label: `−${START_STEP} m`,
+                  spoken: `${START_STEP} minutes earlier`,
+                  delta: -START_STEP,
+                },
+                {
+                  label: `+${START_STEP} m`,
+                  spoken: `${START_STEP} minutes later`,
+                  delta: START_STEP,
+                },
                 { label: '+1 h', spoken: 'One hour later', delta: 60 },
               ].map((step) => (
                 <Button
@@ -174,7 +186,11 @@ export function BlockForm({
           <Button label="Save block" onPress={save} />
           <Button label="Cancel" variant="ghost" onPress={onClose} />
           {block ? (
-            <Button label="Delete block" variant="danger" onPress={() => setConfirmingDelete(true)} />
+            <Button
+              label="Delete block"
+              variant="danger"
+              onPress={() => setConfirmingDelete(true)}
+            />
           ) : null}
         </ScrollView>
 

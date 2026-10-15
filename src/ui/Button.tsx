@@ -73,7 +73,10 @@ export function Button({
         <ActivityIndicator color={palette.text} />
       ) : (
         <RNText
-          style={[size === 'compact' ? styles.compactText : typography.subheading, { color: palette.text }]}
+          style={[
+            size === 'compact' ? styles.compactText : typography.subheading,
+            { color: palette.text },
+          ]}
         >
           {label}
         </RNText>
@@ -89,6 +92,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   regular: { minHeight: 52, borderRadius: radius.control },
-  compact: { minHeight: minTouchTarget, borderRadius: radius.md, paddingHorizontal: spacing.md - 4 },
+  compact: {
+    minHeight: minTouchTarget,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md - 4,
+  },
   compactText: { fontFamily: fonts.semibold, fontSize: 15, lineHeight: 20 },
 });

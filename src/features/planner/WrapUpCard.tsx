@@ -23,7 +23,9 @@ export function WrapUpCard({ existing, journalReady, onSave }: Props) {
   const empty = !wentWell.trim() && !tomorrow.trim();
 
   function save() {
-    setNote(onSave(wentWell, tomorrow) ? 'Saved to your journal.' : 'Could not save. Please try again.');
+    setNote(
+      onSave(wentWell, tomorrow) ? 'Saved to your journal.' : 'Could not save. Please try again.',
+    );
   }
 
   return (

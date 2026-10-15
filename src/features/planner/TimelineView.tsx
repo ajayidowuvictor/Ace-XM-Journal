@@ -45,7 +45,11 @@ export function TimelineView({ entries, completedTaskIds, onOpenBlock }: Props) 
 
         if (entry.kind === 'now') {
           return (
-            <View key={key} style={styles.row} accessibilityLabel={`Now, ${formatTime(entry.minutes)}`}>
+            <View
+              key={key}
+              style={styles.row}
+              accessibilityLabel={`Now, ${formatTime(entry.minutes)}`}
+            >
               <View style={styles.time}>
                 <Text variant="caption" tone="success">
                   Now
@@ -83,7 +87,11 @@ export function TimelineView({ entries, completedTaskIds, onOpenBlock }: Props) 
         return (
           <View key={key} style={styles.row}>
             <View style={styles.time}>
-              <Text variant="secondary" muted={state !== 'current'} tone={state === 'current' ? 'primary' : undefined}>
+              <Text
+                variant="secondary"
+                muted={state !== 'current'}
+                tone={state === 'current' ? 'primary' : undefined}
+              >
                 {formatTime(block.startMinutes)}
               </Text>
             </View>
@@ -108,7 +116,8 @@ export function TimelineView({ entries, completedTaskIds, onOpenBlock }: Props) 
                   {block.title}
                 </Text>
                 <Text variant="caption" muted>
-                  {formatDuration(block.durationMinutes)}  ·  until {formatTime(block.startMinutes + block.durationMinutes)}
+                  {formatDuration(block.durationMinutes)} · until{' '}
+                  {formatTime(block.startMinutes + block.durationMinutes)}
                 </Text>
               </PressableScale>
             </View>
@@ -133,9 +142,19 @@ const styles = StyleSheet.create({
   },
   nowDot: { marginTop: spacing.sm + 2, width: 12, height: 12, borderRadius: 6 },
   content: { flex: 1, paddingVertical: spacing.xs },
-  block: { borderRadius: 16, paddingHorizontal: spacing.md, paddingVertical: spacing.sm + 2, gap: 2 },
+  block: {
+    borderRadius: 16,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm + 2,
+    gap: 2,
+  },
   done: { textDecorationLine: 'line-through' },
-  nowContent: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.sm },
+  nowContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingVertical: spacing.sm,
+  },
   nowLine: { flex: 1, height: 2, borderRadius: 1, opacity: 0.5 },
   gapContent: { paddingVertical: spacing.sm, justifyContent: 'center' },
 });

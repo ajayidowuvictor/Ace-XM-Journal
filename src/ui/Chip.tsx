@@ -28,9 +28,7 @@ export function Chip({ label, selected = false, onPress, accessibilityLabel }: P
       }}
       style={[styles.chip, { backgroundColor: selected ? colors.primary : colors.surfaceMuted }]}
     >
-      <RNText
-        style={[typography.secondary, { color: selected ? colors.onPrimary : colors.text }]}
-      >
+      <RNText style={[typography.secondary, { color: selected ? colors.onPrimary : colors.text }]}>
         {label}
       </RNText>
     </PressableScale>

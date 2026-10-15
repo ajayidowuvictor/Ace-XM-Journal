@@ -52,7 +52,12 @@ function open(): {
     const db = openAppDatabase();
     return { db, focus: listFocus(db), blocks: listBlocks(db), error: null };
   } catch {
-    return { db: null, focus: [], blocks: [], error: 'Your day plan could not be opened on this device.' };
+    return {
+      db: null,
+      focus: [],
+      blocks: [],
+      error: 'Your day plan could not be opened on this device.',
+    };
   }
 }
 
