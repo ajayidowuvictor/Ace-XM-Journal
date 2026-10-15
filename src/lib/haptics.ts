@@ -7,9 +7,7 @@ type HapticsModule = typeof import('expo-haptics');
 
 function run(action: (haptics: HapticsModule) => Promise<void>): void {
   try {
-    import('expo-haptics')
-      .then((haptics) => action(haptics))
-      .catch(() => undefined);
+    import('expo-haptics').then((haptics) => action(haptics)).catch(() => undefined);
   } catch {
     // Haptics are a nicety; ignore any failure.
   }

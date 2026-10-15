@@ -1,4 +1,9 @@
-import { MAX_FOCUS, type FocusRow, type PlanBlock, type PlanBlockInput } from '../features/planner/types';
+import {
+  MAX_FOCUS,
+  type FocusRow,
+  type PlanBlock,
+  type PlanBlockInput,
+} from '../features/planner/types';
 import type { SqlDatabase } from './types';
 
 type FocusDbRow = { plan_date: string; task_id: string; position: number };
@@ -33,7 +38,9 @@ function toBlock(row: BlockDbRow): PlanBlock {
 /** Every focus choice, ordered by day and then by the order the person picked them in. */
 export function listFocus(db: SqlDatabase): FocusRow[] {
   return db
-    .all<FocusDbRow>('SELECT plan_date, task_id, position FROM plan_focus ORDER BY plan_date, position')
+    .all<FocusDbRow>(
+      'SELECT plan_date, task_id, position FROM plan_focus ORDER BY plan_date, position',
+    )
     .map((row) => ({ planDate: row.plan_date, taskId: row.task_id, position: row.position }));
 }
 
@@ -77,7 +84,16 @@ export function createBlock(
     `INSERT INTO plan_blocks
        (id, plan_date, title, task_id, start_minutes, duration_minutes, created_at, updated_at)
      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    [id, planDate, input.title, input.taskId, input.startMinutes, input.durationMinutes, nowIso, nowIso],
+    [
+      id,
+      planDate,
+      input.title,
+      input.taskId,
+      input.startMinutes,
+      input.durationMinutes,
+      nowIso,
+      nowIso,
+    ],
   );
 }
 

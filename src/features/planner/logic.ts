@@ -46,7 +46,11 @@ export function validateBlock(input: PlanBlockInput): string | null {
   const title = input.title.trim();
   if (!title) return 'Enter a name for this block.';
   if (title.length > MAX_TITLE_LENGTH) return `Keep the name under ${MAX_TITLE_LENGTH} letters.`;
-  if (!Number.isInteger(input.startMinutes) || input.startMinutes < 0 || input.startMinutes >= MINUTES_PER_DAY) {
+  if (
+    !Number.isInteger(input.startMinutes) ||
+    input.startMinutes < 0 ||
+    input.startMinutes >= MINUTES_PER_DAY
+  ) {
     return 'Choose a start time during the day.';
   }
   if (
@@ -133,7 +137,10 @@ export const MIN_GAP_TO_SHOW = 30;
  * The blocks of one day in order, with a "now" marker and free-time gaps between them.
  * Pass `nowMinutes` as null when the day is not today: nothing is then marked as past or current.
  */
-export function buildTimeline(blocks: readonly PlanBlock[], nowMinutes: number | null): TimelineEntry[] {
+export function buildTimeline(
+  blocks: readonly PlanBlock[],
+  nowMinutes: number | null,
+): TimelineEntry[] {
   const entries: TimelineEntry[] = [];
   const sorted = sortBlocks(blocks);
   let markerHandled = false;
@@ -173,7 +180,11 @@ export function buildTimeline(blocks: readonly PlanBlock[], nowMinutes: number |
 // ---- Focus (the few things that matter today) ----
 
 /** The focus tasks for a day, in the order chosen. Tasks that no longer exist are left out. */
-export function focusTasks(rows: readonly FocusRow[], tasks: readonly Task[], planDate: string): Task[] {
+export function focusTasks(
+  rows: readonly FocusRow[],
+  tasks: readonly Task[],
+  planDate: string,
+): Task[] {
   const byId = new Map(tasks.map((task) => [task.id, task]));
   return rows
     .filter((row) => row.planDate === planDate)
@@ -195,7 +206,11 @@ export function withoutFocus(ids: readonly string[], taskId: string): string[] {
 }
 
 /** Open tasks worth choosing from: today's first, then earlier ones, then undated, then later ones. */
-export function focusCandidates(tasks: readonly Task[], today: string, excludeIds: readonly string[]): Task[] {
+export function focusCandidates(
+  tasks: readonly Task[],
+  today: string,
+  excludeIds: readonly string[],
+): Task[] {
   const groups = groupTasks(tasks, today);
   const excluded = new Set(excludeIds);
   return [...groups.today, ...groups.overdue, ...groups.noDate, ...groups.upcoming].filter(
@@ -269,8 +284,12 @@ export function wrapUpTitle(shortDate: string): string {
 }
 
 /** The wrap-up already saved for a day, if any. */
-export function findWrapUp(entries: readonly JournalEntry[], planDate: string): JournalEntry | null {
+export function findWrapUp(
+  entries: readonly JournalEntry[],
+  planDate: string,
+): JournalEntry | null {
   return (
-    entries.find((entry) => entry.entryDate === planDate && entry.tags.includes(WRAP_UP_TAG)) ?? null
+    entries.find((entry) => entry.entryDate === planDate && entry.tags.includes(WRAP_UP_TAG)) ??
+    null
   );
 }

@@ -124,10 +124,9 @@ describe('sortBlocks and overlaps', () => {
 
   it('finds blocks that share time and ignores blocks that only touch', () => {
     const blocks = [block('a', 540, 60), block('b', 600, 60)];
-    expect(overlappingBlocks(blocks, { startMinutes: 570, durationMinutes: 60 }).map((b) => b.id)).toEqual([
-      'a',
-      'b',
-    ]);
+    expect(
+      overlappingBlocks(blocks, { startMinutes: 570, durationMinutes: 60 }).map((b) => b.id),
+    ).toEqual(['a', 'b']);
     expect(overlappingBlocks(blocks, { startMinutes: 660, durationMinutes: 30 })).toEqual([]);
     expect(overlappingBlocks(blocks, { startMinutes: 480, durationMinutes: 60 })).toEqual([]);
   });
@@ -180,7 +179,11 @@ describe('buildTimeline', () => {
   it('marks every block as upcoming and shows no marker when the day is not today', () => {
     const entries = buildTimeline(blocks, null);
     expect(entries.map((e) => e.kind)).toEqual(['block', 'gap', 'block', 'block']);
-    expect(entries.filter((e) => e.kind === 'block').every((e) => e.kind === 'block' && e.state === 'upcoming')).toBe(true);
+    expect(
+      entries
+        .filter((e) => e.kind === 'block')
+        .every((e) => e.kind === 'block' && e.state === 'upcoming'),
+    ).toBe(true);
   });
 
   it('only mentions gaps of 30 minutes or more', () => {
@@ -309,7 +312,10 @@ describe('wrap-up text', () => {
 
   it('reads the parts back, including text with several lines', () => {
     const body = composeWrapUp({ wentWell: 'Line one\nLine two', tomorrow: 'Plan the week' });
-    expect(parseWrapUp(body)).toEqual({ wentWell: 'Line one\nLine two', tomorrow: 'Plan the week' });
+    expect(parseWrapUp(body)).toEqual({
+      wentWell: 'Line one\nLine two',
+      tomorrow: 'Plan the week',
+    });
   });
 
   it('reads a wrap-up that only has the second part', () => {

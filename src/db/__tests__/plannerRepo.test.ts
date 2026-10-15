@@ -1,6 +1,13 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { createBlock, deleteBlock, listBlocks, listFocus, replaceFocus, updateBlock } from '../plannerRepo';
+import {
+  createBlock,
+  deleteBlock,
+  listBlocks,
+  listFocus,
+  replaceFocus,
+  updateBlock,
+} from '../plannerRepo';
 import { migrate } from '../migrations';
 import { createTestDatabase } from '../testing/testDatabase';
 
@@ -45,7 +52,12 @@ describe('plan blocks', () => {
   it('updates a block and remembers when', () => {
     const db = setup();
     createBlock(db, 'b1', '2026-10-15', input, now);
-    updateBlock(db, 'b1', { title: 'Read', taskId: 't1', startMinutes: 600, durationMinutes: 30 }, later);
+    updateBlock(
+      db,
+      'b1',
+      { title: 'Read', taskId: 't1', startMinutes: 600, durationMinutes: 30 },
+      later,
+    );
 
     expect(listBlocks(db)[0]).toMatchObject({
       title: 'Read',
@@ -72,7 +84,9 @@ describe('plan blocks', () => {
     deleteBlock(db, 'b1', later);
     updateBlock(db, 'b1', { ...input, title: 'Changed' }, later);
 
-    expect(db.first<{ title: string }>('SELECT title FROM plan_blocks')?.title).toBe('Write report');
+    expect(db.first<{ title: string }>('SELECT title FROM plan_blocks')?.title).toBe(
+      'Write report',
+    );
   });
 });
 

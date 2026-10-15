@@ -21,7 +21,13 @@ describe('wipeAppData', () => {
     setHabitDone(db, 'h1', '2026-10-14', true, now);
     createGoal(db, 'g1', { title: 'g', notes: '', targetDate: null }, now);
     addMilestone(db, 'm1', 'g1', 'step', now);
-    createBlock(db, 'b1', '2026-10-14', { title: 'x', taskId: null, startMinutes: 540, durationMinutes: 30 }, now);
+    createBlock(
+      db,
+      'b1',
+      '2026-10-14',
+      { title: 'x', taskId: null, startMinutes: 540, durationMinutes: 30 },
+      now,
+    );
     replaceFocus(db, '2026-10-14', ['t1'], now);
 
     wipeAppData(db);

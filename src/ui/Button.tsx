@@ -1,4 +1,10 @@
-import { ActivityIndicator, Text as RNText, StyleSheet, type StyleProp, type ViewStyle } from 'react-native';
+import {
+  ActivityIndicator,
+  Text as RNText,
+  StyleSheet,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 
 import { tapLight } from '../lib/haptics';
 import { useTheme } from '../theme/context';
