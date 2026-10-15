@@ -1,7 +1,8 @@
 import { Pressable, Text as RNText, StyleSheet, View } from 'react-native';
 
+import { selectionTick } from '../lib/haptics';
 import { useTheme } from '../theme/context';
-import { minTouchTarget, radius, spacing, typography } from './tokens';
+import { minTouchTarget, radius, shadows, spacing, typography } from './tokens';
 
 export type SegmentOption<T extends string> = { value: T; label: string };
 
@@ -18,13 +19,13 @@ export function SegmentedControl<T extends string>({
   onChange,
   accessibilityLabel,
 }: Props<T>) {
-  const { colors } = useTheme();
+  const { colors, scheme } = useTheme();
 
   return (
     <View
       accessibilityRole="radiogroup"
       accessibilityLabel={accessibilityLabel}
-      style={[styles.row, { backgroundColor: colors.background, borderColor: colors.border }]}
+      style={[styles.row, { backgroundColor: colors.surfaceMuted }]}
     >
       {options.map((option) => {
         const selected = option.value === value;
@@ -34,16 +35,20 @@ export function SegmentedControl<T extends string>({
             accessibilityRole="radio"
             accessibilityLabel={option.label}
             accessibilityState={{ checked: selected, selected }}
-            onPress={() => onChange(option.value)}
-            style={[styles.segment, selected && { backgroundColor: colors.primary }]}
+            onPress={() => {
+              if (!selected) selectionTick();
+              onChange(option.value);
+            }}
+            style={[
+              styles.segment,
+              selected && { backgroundColor: colors.thumb },
+              selected && scheme !== 'dark' ? shadows.thumb : null,
+            ]}
           >
             <RNText
               style={[
-                typography.body,
-                {
-                  color: selected ? colors.onPrimary : colors.text,
-                  fontWeight: selected ? '600' : '400',
-                },
+                selected ? typography.subheading : typography.secondary,
+                { color: selected ? colors.text : colors.textMuted },
               ]}
             >
               {option.label}
@@ -58,15 +63,13 @@ export function SegmentedControl<T extends string>({
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    borderWidth: 1,
     borderRadius: radius.md,
-    padding: spacing.xs,
-    gap: spacing.xs,
+    padding: 3,
   },
   segment: {
     flex: 1,
-    minHeight: minTouchTarget - spacing.sm,
-    borderRadius: radius.sm,
+    minHeight: minTouchTarget - spacing.xs,
+    borderRadius: radius.md - 3,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.sm,

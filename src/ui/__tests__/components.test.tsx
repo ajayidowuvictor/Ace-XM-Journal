@@ -1,7 +1,9 @@
 import { describe, expect, it, jest } from '@jest/globals';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
+import * as Haptics from 'expo-haptics';
 
 import { Button } from '../Button';
+import { Checkbox } from '../Checkbox';
 import { ConfirmDialog } from '../ConfirmDialog';
 import { clampProgress } from '../ProgressBar';
 import { SegmentedControl } from '../SegmentedControl';
@@ -29,6 +31,46 @@ describe('Button', () => {
     expect(screen.queryByText('Save')).toBeNull();
     await fireEvent.press(screen.getByLabelText('Save'));
     expect(onPress).not.toHaveBeenCalled();
+  });
+});
+
+describe('Button haptics', () => {
+  it('gives a light tap when pressed', async () => {
+    await render(<Button label="Save" onPress={() => {}} />);
+    await fireEvent.press(screen.getByText('Save'));
+    await waitFor(() => expect(Haptics.impactAsync).toHaveBeenCalledWith('light'));
+  });
+});
+
+describe('Checkbox', () => {
+  it('reports the new state when pressed', async () => {
+    const onChange = jest.fn();
+    await render(<Checkbox checked={false} onChange={onChange} accessibilityLabel="Mark done" />);
+    await fireEvent.press(screen.getByLabelText('Mark done'));
+    expect(onChange).toHaveBeenCalledWith(true);
+  });
+
+  it('turns an already ticked box off', async () => {
+    const onChange = jest.fn();
+    await render(<Checkbox checked onChange={onChange} accessibilityLabel="Mark not done" />);
+    await fireEvent.press(screen.getByLabelText('Mark not done'));
+    expect(onChange).toHaveBeenCalledWith(false);
+  });
+
+  it('buzzes only when something gets completed', async () => {
+    const buzz = jest.mocked(Haptics.notificationAsync);
+    buzz.mockClear();
+    const { rerender } = await render(
+      <Checkbox checked={false} onChange={() => {}} accessibilityLabel="Toggle" />,
+    );
+    await fireEvent.press(screen.getByLabelText('Toggle'));
+    await waitFor(() => expect(buzz).toHaveBeenCalledWith('success'));
+
+    buzz.mockClear();
+    await rerender(<Checkbox checked onChange={() => {}} accessibilityLabel="Toggle" />);
+    await fireEvent.press(screen.getByLabelText('Toggle'));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(buzz).not.toHaveBeenCalled();
   });
 });
 

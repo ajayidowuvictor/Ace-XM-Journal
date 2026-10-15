@@ -1,7 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { useTheme } from '../../theme/context';
-import { Text, minTouchTarget, radius, spacing } from '../../ui';
+import { Checkbox, Text, minTouchTarget, spacing } from '../../ui';
 import { currentStreak, longestStreak } from './logic';
 import type { Habit } from './types';
 
@@ -15,7 +14,6 @@ type Props = {
 };
 
 export function HabitRow({ habit, today, onToggle, onOpen, showStreak = true }: Props) {
-  const { colors } = useTheme();
   const done = habit.completedDates.includes(today);
   const streak = currentStreak(habit.completedDates, today);
   const best = longestStreak(habit.completedDates);
@@ -41,22 +39,11 @@ export function HabitRow({ habit, today, onToggle, onOpen, showStreak = true }: 
 
   return (
     <View style={styles.row}>
-      <Pressable
-        accessibilityRole="checkbox"
+      <Checkbox
+        checked={done}
         accessibilityLabel={`Mark "${habit.name}" as ${done ? 'not done' : 'done'} today`}
-        accessibilityState={{ checked: done }}
-        onPress={() => onToggle(!done)}
-        style={styles.checkArea}
-      >
-        <View
-          style={[
-            styles.box,
-            { borderColor: colors.primary, backgroundColor: done ? colors.primary : 'transparent' },
-          ]}
-        >
-          {done ? <Text style={{ color: colors.onPrimary }}>✓</Text> : null}
-        </View>
-      </Pressable>
+        onChange={onToggle}
+      />
       {onOpen ? (
         <Pressable
           accessibilityRole="button"
@@ -76,19 +63,5 @@ export function HabitRow({ habit, today, onToggle, onOpen, showStreak = true }: 
 const styles = StyleSheet.create({
   row: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   flex: { flex: 1 },
-  checkArea: {
-    width: minTouchTarget,
-    height: minTouchTarget,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 26,
-    height: 26,
-    borderRadius: radius.sm,
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   body: { minHeight: minTouchTarget, justifyContent: 'center', paddingVertical: spacing.xs },
 });

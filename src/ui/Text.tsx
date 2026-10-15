@@ -9,6 +9,8 @@ type Props = TextProps & {
   tone?: 'default' | 'primary' | 'success' | 'danger';
 };
 
+const HEADER_VARIANTS = new Set(['largeTitle', 'title', 'heading']);
+
 export function Text({ variant = 'body', muted = false, tone = 'default', style, ...rest }: Props) {
   const { colors } = useTheme();
   const color =
@@ -21,7 +23,7 @@ export function Text({ variant = 'body', muted = false, tone = 'default', style,
           : muted
             ? colors.textMuted
             : colors.text;
-  const role = variant === 'title' || variant === 'heading' ? 'header' : undefined;
+  const role = HEADER_VARIANTS.has(variant) ? 'header' : undefined;
 
   return (
     <RNText accessibilityRole={role} {...rest} style={[typography[variant], { color }, style]} />

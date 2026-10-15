@@ -1,6 +1,8 @@
 export { Button } from './Button';
 export { Card } from './Card';
+export { Checkbox } from './Checkbox';
 export { ConfirmDialog } from './ConfirmDialog';
+export { PressableScale } from './PressableScale';
 export { ProgressBar, clampProgress } from './ProgressBar';
 export { Screen } from './Screen';
 export { SegmentedControl, type SegmentOption } from './SegmentedControl';

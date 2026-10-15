@@ -14,6 +14,7 @@ import { HabitsProvider } from '@/features/habits/HabitsContext';
 import { JournalProvider } from '@/features/journal/JournalContext';
 import { TasksProvider } from '@/features/tasks/TasksContext';
 import { ThemeProvider } from '@/theme/ThemeProvider';
+import { useAppFonts } from '@/theme/useAppFonts';
 import { useTheme } from '@/theme/context';
 
 SplashScreen.preventAutoHideAsync();
@@ -59,6 +60,11 @@ function RootNavigator() {
 }
 
 export default function RootLayout() {
+  const fontsReady = useAppFonts();
+
+  // The splash screen stays up until the fonts are ready, so text never jumps from one font to another.
+  if (!fontsReady) return null;
+
   return (
     <ThemeProvider>
       <OnboardingProvider>

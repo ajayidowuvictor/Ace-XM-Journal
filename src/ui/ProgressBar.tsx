@@ -24,7 +24,7 @@ export function ProgressBar({ value, accessibilityLabel }: Props) {
       accessibilityRole="progressbar"
       accessibilityLabel={accessibilityLabel}
       accessibilityValue={{ min: 0, max: 100, now: Math.round(progress * 100) }}
-      style={[styles.track, { backgroundColor: colors.border }]}
+      style={[styles.track, { backgroundColor: colors.surfaceMuted }]}
     >
       <View
         style={[styles.fill, { width: `${progress * 100}%`, backgroundColor: colors.success }]}
@@ -34,6 +34,6 @@ export function ProgressBar({ value, accessibilityLabel }: Props) {
 }
 
 const styles = StyleSheet.create({
-  track: { height: 8, borderRadius: radius.pill, overflow: 'hidden' },
+  track: { height: 10, borderRadius: radius.pill, overflow: 'hidden' },
   fill: { height: '100%', borderRadius: radius.pill },
 });
