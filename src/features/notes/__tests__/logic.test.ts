@@ -136,7 +136,11 @@ describe('filtering', () => {
 
   it('combines notebook, kind and search', () => {
     expect(
-      filterNotes(notes, { filter: { type: 'notebook', id: 'nb2' }, search: 'grace', kind: 'text' }),
+      filterNotes(notes, {
+        filter: { type: 'notebook', id: 'nb2' },
+        search: 'grace',
+        kind: 'text',
+      }),
     ).toHaveLength(1);
     expect(
       filterNotes(notes, { filter: { type: 'notebook', id: 'nb2' }, search: '', kind: 'verse' }),
@@ -146,7 +150,11 @@ describe('filtering', () => {
 
 describe('splitPinned', () => {
   it('separates pinned notes and keeps the order', () => {
-    const list = [make({ id: '1', pinned: true }), make({ id: '2' }), make({ id: '3', pinned: true })];
+    const list = [
+      make({ id: '1', pinned: true }),
+      make({ id: '2' }),
+      make({ id: '3', pinned: true }),
+    ];
     const { pinned, others } = splitPinned(list);
     expect(pinned.map((n) => n.id)).toEqual(['1', '3']);
     expect(others.map((n) => n.id)).toEqual(['2']);
@@ -186,9 +194,9 @@ describe('parseReaderIndex', () => {
 
 describe('shareText', () => {
   it('writes a verse as a quotation with its reference', () => {
-    expect(
-      shareText(make({ kind: 'verse', body: ' Jesus wept. ', reference: 'John 11:35' })),
-    ).toBe('“Jesus wept.”\n— John 11:35');
+    expect(shareText(make({ kind: 'verse', body: ' Jesus wept. ', reference: 'John 11:35' }))).toBe(
+      '“Jesus wept.”\n— John 11:35',
+    );
   });
 
   it('writes a verse without a reference as just the quotation', () => {
@@ -196,9 +204,11 @@ describe('shareText', () => {
   });
 
   it('writes other notes as title, text and source', () => {
-    expect(shareText(make({ kind: 'text', title: 'On rest', body: 'Be still.', reference: 'A. Writer' }))).toBe(
-      'On rest\n\nBe still.\n\n— A. Writer',
-    );
+    expect(
+      shareText(
+        make({ kind: 'text', title: 'On rest', body: 'Be still.', reference: 'A. Writer' }),
+      ),
+    ).toBe('On rest\n\nBe still.\n\n— A. Writer');
     expect(shareText(make({ body: 'Only text' }))).toBe('Only text');
   });
 });

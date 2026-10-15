@@ -109,12 +109,7 @@ export function NotesView() {
   return (
     <>
       <View style={styles.row}>
-        <Button
-          label="New note"
-          size="compact"
-          onPress={() => start('note')}
-          style={styles.flex}
-        />
+        <Button label="New note" size="compact" onPress={() => start('note')} style={styles.flex} />
         <Button
           label="New verse"
           variant="secondary"

@@ -159,7 +159,9 @@ export function NoteEditor({ note, initialKind, initialNotebookId }: Props) {
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <View style={styles.inner}>
             <Button label="Done" variant="ghost" onPress={close} style={styles.done} />
-            <Text variant="title">{note ? KIND_LABELS[kind] : `New ${KIND_LABELS[kind].toLowerCase()}`}</Text>
+            <Text variant="title">
+              {note ? KIND_LABELS[kind] : `New ${KIND_LABELS[kind].toLowerCase()}`}
+            </Text>
 
             <SegmentedControl<NoteKind>
               accessibilityLabel="Kind of note"
@@ -178,7 +180,9 @@ export function NoteEditor({ note, initialKind, initialNotebookId }: Props) {
                 setTitle(text);
                 edit({ title: text });
               }}
-              placeholder={kind === 'verse' ? 'For example: A verse for courage' : 'Give it a title'}
+              placeholder={
+                kind === 'verse' ? 'For example: A verse for courage' : 'Give it a title'
+              }
             />
 
             {kind !== 'note' ? (
@@ -189,7 +193,9 @@ export function NoteEditor({ note, initialKind, initialNotebookId }: Props) {
                   setReference(text);
                   edit({ reference: text });
                 }}
-                placeholder={kind === 'verse' ? 'For example: John 3:16 (KJV)' : 'Where is it from?'}
+                placeholder={
+                  kind === 'verse' ? 'For example: John 3:16 (KJV)' : 'Where is it from?'
+                }
               />
             ) : null}
 
@@ -268,9 +274,7 @@ export function NoteEditor({ note, initialKind, initialNotebookId }: Props) {
               {SAVE_TEXT[saveState]}
             </Text>
 
-            {body.trim() ? (
-              <Button label="Read" variant="secondary" onPress={openReader} />
-            ) : null}
+            {body.trim() ? <Button label="Read" variant="secondary" onPress={openReader} /> : null}
             {exists ? (
               <Button
                 label={`Delete ${KIND_LABELS[kind].toLowerCase()}`}

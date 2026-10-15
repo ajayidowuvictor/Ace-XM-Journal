@@ -26,7 +26,13 @@ function OpenDialog({ title, confirmLabel, initialName = '', onCancel, onSave }:
   const clean = cleanNotebookName(name);
 
   return (
-    <Modal visible transparent animationType="fade" onRequestClose={onCancel} accessibilityViewIsModal>
+    <Modal
+      visible
+      transparent
+      animationType="fade"
+      onRequestClose={onCancel}
+      accessibilityViewIsModal
+    >
       <View style={styles.overlay}>
         <Card variant="hero" style={styles.dialog}>
           <Text variant="heading">{title}</Text>

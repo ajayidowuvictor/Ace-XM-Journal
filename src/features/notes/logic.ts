@@ -35,7 +35,11 @@ export function noteHeadline(note: Pick<Note, 'kind' | 'title' | 'body' | 'refer
   if (note.kind === 'verse' && note.reference.trim()) return note.reference.trim();
   const firstLine = note.body.trim().split('\n')[0] ?? '';
   if (firstLine) return firstLine.length > 70 ? `${firstLine.slice(0, 67)}...` : firstLine;
-  return note.kind === 'verse' ? 'Untitled verse' : note.kind === 'text' ? 'Untitled text' : 'Untitled note';
+  return note.kind === 'verse'
+    ? 'Untitled verse'
+    : note.kind === 'text'
+      ? 'Untitled text'
+      : 'Untitled note';
 }
 
 /** A short plain preview of the text for the list (line breaks become spaces). */
@@ -88,7 +92,9 @@ export function filterNotes(
     if (!matchesFilter(note, options.filter)) return false;
     if (options.kind !== null && note.kind !== options.kind) return false;
     if (!term) return true;
-    return [note.title, note.body, note.reference].some((text) => text.toLowerCase().includes(term));
+    return [note.title, note.body, note.reference].some((text) =>
+      text.toLowerCase().includes(term),
+    );
   });
 }
 

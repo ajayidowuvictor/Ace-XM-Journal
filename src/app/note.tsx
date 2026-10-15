@@ -33,7 +33,15 @@ export default function NoteScreen() {
   return <Loaded id={id ?? null} kind={kind} notebook={notebook ?? null} />;
 }
 
-function Loaded({ id, kind, notebook }: { id: string | null; kind?: string; notebook: string | null }) {
+function Loaded({
+  id,
+  kind,
+  notebook,
+}: {
+  id: string | null;
+  kind?: string;
+  notebook: string | null;
+}) {
   const { findNote, notebooks } = useNotes();
   // Read once so the editor keeps its own text while the user types.
   const [note] = useState(() => (id ? findNote(id) : null));

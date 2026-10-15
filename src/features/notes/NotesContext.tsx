@@ -106,10 +106,7 @@ export function NotesProvider({ children }: { children: ReactNode }) {
     [run],
   );
 
-  const remove = useCallback(
-    (id: string) => run((db, now) => deleteNote(db, id, now)),
-    [run],
-  );
+  const remove = useCallback((id: string) => run((db, now) => deleteNote(db, id, now)), [run]);
 
   const addNotebook = useCallback(
     (name: string) => {

@@ -13,15 +13,7 @@ type Props = Omit<TextInputProps, 'style'> & {
   minInputHeight?: number;
 };
 
-export function TextField({
-  label,
-  hint,
-  error,
-  minInputHeight,
-  onFocus,
-  onBlur,
-  ...rest
-}: Props) {
+export function TextField({ label, hint, error, minInputHeight, onFocus, onBlur, ...rest }: Props) {
   const { colors } = useTheme();
   const [focused, setFocused] = useState(false);
 

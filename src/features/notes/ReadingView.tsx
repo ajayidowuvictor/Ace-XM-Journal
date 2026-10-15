@@ -61,7 +61,10 @@ export function ReadingView({ note, fromEditor }: Props) {
   }
 
   return (
-    <SafeAreaView edges={['top', 'bottom']} style={[styles.flex, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      edges={['top', 'bottom']}
+      style={[styles.flex, { backgroundColor: colors.background }]}
+    >
       <View style={styles.bar}>
         <Button label="Done" variant="ghost" size="compact" onPress={() => router.back()} />
         <View style={styles.sizes}>
@@ -181,7 +184,12 @@ export function ReadingView({ note, fromEditor }: Props) {
           </Text>
         ) : null}
         <View style={styles.actionRow}>
-          <Button label="Share" variant="secondary" onPress={() => void share()} style={styles.flex} />
+          <Button
+            label="Share"
+            variant="secondary"
+            onPress={() => void share()}
+            style={styles.flex}
+          />
           <Button label="Edit" onPress={edit} style={styles.flex} />
         </View>
       </View>

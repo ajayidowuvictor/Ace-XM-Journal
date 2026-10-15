@@ -48,9 +48,7 @@ beforeEach(() => {
 describe('notes repository', () => {
   it('saves a note and reads it back exactly', () => {
     createNote(db, 'n1', note, t1);
-    expect(listNotes(db)).toEqual([
-      { id: 'n1', ...note, createdAt: t1, updatedAt: t1 },
-    ]);
+    expect(listNotes(db)).toEqual([{ id: 'n1', ...note, createdAt: t1, updatedAt: t1 }]);
   });
 
   it('keeps a verse with its reference and pinned state', () => {

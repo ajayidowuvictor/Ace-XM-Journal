@@ -35,4 +35,5 @@ export type NoteInput = {
 };
 
 /** Which notes the list shows. */
-export type NotebookFilter = { type: 'all' } | { type: 'unfiled' } | { type: 'notebook'; id: string };
+export type NotebookFilter =
+  { type: 'all' } | { type: 'unfiled' } | { type: 'notebook'; id: string };
