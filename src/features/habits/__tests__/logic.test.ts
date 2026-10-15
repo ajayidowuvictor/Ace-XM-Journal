@@ -61,8 +61,9 @@ describe('longestStreak', () => {
 describe('doneInLastDays', () => {
   it('counts only days inside the window, including today', () => {
     const dates = ['2026-10-14', '2026-10-12', '2026-10-08', '2026-10-07'];
-    expect(doneInLastDays(dates, TODAY, 7)).toBe(2);
-    expect(doneInLastDays(dates, TODAY, 8)).toBe(3);
+    expect(doneInLastDays(dates, TODAY, 6)).toBe(2);
+    expect(doneInLastDays(dates, TODAY, 7)).toBe(3);
+    expect(doneInLastDays(dates, TODAY, 8)).toBe(4);
   });
 });
 
