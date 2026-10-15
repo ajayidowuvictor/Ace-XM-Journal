@@ -1,59 +1,49 @@
 # Project Status
 
-Last updated: 2026-10-14
+Last updated: 2026-10-15
 
 ## Current phase
 
-Phase 5 (first part): Habits. Phase 4 (journal) and this habits build are verified by automated checks only; neither has been confirmed on a phone yet (see "Not yet verified").
+Feature-complete for the first (local-only) release, pending the owner's phone testing. Everything below is verified by automated checks (type check, lint, format, 179 tests, Android bundle build) unless stated otherwise. Phases 4 and later have not been seen on a phone yet.
 
-## Completed (verified by GitHub Actions)
+## What the app does
 
-- Phase 1 foundation: Expo SDK 57, React Native 0.86, Expo Router, TypeScript strict, ESLint, Prettier, Jest, CI.
-- One brand theme replaces the starter's theme: colours from the logo, light and dark versions, spacing, radius, typography. Text colour pairs are tested for WCAG AA contrast.
-- Appearance choice (System, Light, Dark) is saved on the device and applied across the app.
-- Reusable components in `src/ui/`: Text, Card, Button (primary, secondary, danger, ghost; loading state blocks duplicate presses), TextField, SegmentedControl, ProgressBar, LoadingState, EmptyState, ErrorState, ConfirmDialog, Screen.
-- App shell: first-run onboarding screen (optional name, appearance choice, "Get started"), then five native tabs: Home, Tasks, Journal, Habits, Settings.
-- Home screen shows a greeting by time of day (with the name if given), the date, and quick actions.
-- Settings screen has working appearance control, privacy statement and app version.
-- Automated checks pass: type check, lint, format, 65 tests, Android JavaScript bundle build.
-- An installable Android test build (preview .apk) was built successfully on Expo's servers (project `@ajayidowu/ace-xm-journal`). Expo created and stores the app's signing key. Built by the manually started "Android preview build" workflow, which needs the `EXPO_TOKEN` repository secret.
+- **Shell and design:** brand theme (light, dark, system), first-run onboarding (optional name), five native tabs (Home, Tasks, Journal, Habits and goals, Settings), reusable accessible components. *Seen on a phone.*
+- **Tasks:** add, edit, tick off, delete with confirmation; sections Overdue, Today, Upcoming, No date, Done; due dates by quick choice; priority. *Seen on a phone (light theme).*
+- **Journal:** encrypted database (SQLCipher, key in Android secure storage), entries with title, text, mood and tags, autosave, search, delete erases content. *Not yet seen on a phone; encryption itself is not proven by automated tests.*
+- **Habits:** daily check-in, current and best streak, today's progress, shown on Home. *Not yet seen on a phone.*
+- **Goals:** goals with target date, steps and progress, marked achieved. *Not yet seen on a phone.*
+- **Calendar:** month view with dots for days with tasks due, habit check-ins or journal entries; tap a day to see them. *Not yet seen on a phone.*
+- **Weekly review:** 7-day summary and a reflection saved as an encrypted journal entry. *Not yet seen on a phone.*
+- **Settings:** appearance, optional daily reminder (fixed text, never your words), export to a plain JSON file (with warning), erase all data (two confirmations), privacy page. *Not yet seen on a phone. The reminder and the share sheet need a real device to confirm.*
+- **Branding:** app icon, adaptive icon and splash derived from the owner's logo emblem. *Not yet seen on a phone.*
 
-- Phase 3: on-device SQLite database (`src/db/`) with numbered migrations; tasks repository with soft delete; Tasks tab (add, edit, tick off, delete with confirmation; sections Overdue, Today, Upcoming, No date, Done); Home shows today's priorities and its "New task" button opens the task form.
-- Database SQL is tested against a real SQLite (better-sqlite3, test-only). Automated checks now: type check, lint, format, 92 tests, Android bundle build.
-- CI fix: checks piped to a log file could report success when a test failed. The workflows now use a shell that fails on any error in the pipe. Earlier green results were confirmed by reading the saved logs.
+## Device testing history
 
-- Phase 4: Journal tab with search (title, text, tags), New entry / edit screen with autosave (saves when typing pauses and when leaving or backgrounding), mood, tags and delete with confirmation (erases the entry's content). Home's "New journal entry" opens the editor.
-- Journal storage is a separate database (`journal.db`) encrypted with SQLCipher via the expo-sqlite plugin option `useSQLCipher`. The random 256-bit key is created on first use and kept in expo-secure-store (Android Keystore). If the key cannot be read or does not match, the app shows an error and never deletes or recreates the journal. Android cloud backup is switched off (`android.allowBackup: false`) because a restored database would be unreadable without its key.
-- Automated checks now: type check, lint, format, 120 tests, Android bundle build.
-
-- Phase 5a: Habits tab (add, rename, delete with confirmation, tick once per day, current and best streak, "Today" progress bar) and a Habits card on Home with the same ticks. Streaks use local calendar dates; a streak stays alive until a full day is missed. Habits live in the main database (migration 2, existing tasks kept).
-- Automated checks now: type check, lint, format, 141 tests, Android bundle build.
-
-## Device testing
-
-- Phase 3 phone test (light theme): the owner added tasks and ticked one off; the Tasks screen (No date and Done sections, tick box, strike-through, date and priority line) and Home (Today's priorities) displayed correctly. The owner confirmed it works. Dark mode, editing, deleting and restart persistence were not shown in the screenshots.
-
-- First phone test: the app installed and opened but showed "Unmatched Route" because there was no entry route. Fixed by adding `src/app/index.tsx`, which forwards to onboarding or Home. A new build with the fix was installed on the owner's Android phone and checked from screenshots: onboarding, Home (greeting with name, date, quick actions, empty-state cards), the five tabs with icons and labels, Settings (appearance, privacy, version) and the dark theme all display correctly. Light theme, System mode and restart persistence were not shown in the screenshots.
+- Phase 2 build: first launch showed "Unmatched Route"; fixed with an entry route; retest passed.
+- Phase 3 build: Tasks and Home priorities confirmed working by the owner.
+- Journal, habits and everything after: waiting for the owner's test of the final build.
 
 ## Not yet verified
 
-- The task form's due date offers No date, Today, Tomorrow, In a week (no calendar picker yet). Tasks have no categories yet. Deleting a task cannot be undone from the app.
-- Encryption is not verified on a device or by tests: the automated tests run the journal SQL on plain SQLite, so they do not prove the file is encrypted. It needs a check on the phone (the build must succeed with SQLCipher and the journal must open, save and reopen). The tasks database is not encrypted (only the journal is, per the project rules).
-- Because Android backup is off and the key lives only on the phone, a lost or wiped phone means a lost journal until export/backup (Phase 6) exists. Uninstalling the app erases the journal.
-- Habits (Phase 5a) and the journal (Phase 4) have not been run on a phone. Habits are daily only; goals and the calendar are not built yet.
-- The journal list shows all entries at once (no paging yet); fine for early use.
-- Light theme, System mode and keeping the choice after closing the app were not covered by the owner's screenshots.
-- Tasks, Journal and Habits tabs are placeholders with "coming soon" messages. Home's "New task" and "New journal entry" buttons only switch to those tabs for now. The Home cards show empty states because no data exists yet.
-- Placeholder icon from the starter template is still in use (real icon is Phase 9). Splash colour is brand navy but the splash image is still the starter's.
-- Onboarding has no reminder permission step yet (planned with notification settings in Phase 6).
+- Everything marked "not yet seen on a phone" above. In particular: that the encrypted journal opens, saves and reopens; that the reminder fires; that export opens the share sheet; and that the new icon and splash look right.
+- SQL is tested on plain SQLite (`better-sqlite3`), not SQLCipher.
+- No Play Store step has been done. See `docs/RELEASE.md`.
 
-## Known issues
+## Known limits
 
-- `npm audit` reports about 66 vulnerabilities (about 16 moderate, 50 high), apparently in the starter's development tooling. The CI audit step reports but does not block. Needs triage before release.
-- Two temporary log branches (`bootstrap-logs`, `ci-logs`) exist in the repository. `ci-logs` is updated by CI on every run; `bootstrap-logs` can be deleted on GitHub.
+- Losing the phone, uninstalling the app or clearing its data loses all data (cloud backup is off by design); export is the only copy.
+- Habits are daily only; due dates use quick choices; tasks are not linked to goals; the journal list is not paged.
+- Screens work out "today" when they draw, so an app left open past midnight updates on the next interaction.
+- Tasks, habits and goals are stored on the phone but not encrypted by the app (only the journal is).
+- Android only has been built. iOS later from the same code.
+- Cloud accounts and sync (roadmap Phase 7) are intentionally not built for this release.
+- Dependency audit: triaged in `docs/SECURITY.md`; five underlying advisories accepted with reasons.
+- Two temporary log branches (`ci-logs`, `eas-logs`) are used by the workflows; `bootstrap-logs` can be deleted on GitHub.
+- Some commits in the history are authored by the GitHub Actions bot (automatic formatting).
 
 ## Next actions
 
-1. Test the journal and habits on the phone and fix what looks wrong.
-2. Rest of Phase 5: goals and calendar.
-3. Triage the npm audit findings before release.
+1. Owner installs the latest build, tests every screen and reports what to fix.
+2. Fix reported problems, rebuild, retest.
+3. Follow `docs/RELEASE.md` for the Play internal testing track.

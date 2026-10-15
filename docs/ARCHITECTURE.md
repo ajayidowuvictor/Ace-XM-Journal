@@ -29,6 +29,14 @@ Journal entries live in their own database, `journal.db`, encrypted with SQLCiph
 
 One theme in `src/theme/` supplies colours from `src/ui/tokens.ts`. The user's choice (system, light, dark), the first-run flag and the display name are small settings saved with `expo-sqlite/kv-store` (`src/lib/preferences.ts`). The main journal and task data will use the SQLite database in `src/db/` (Phase 3 onward).
 
+## Screens outside the tabs
+
+`entry` (journal editor, modal), `calendar`, `review` (weekly review) and `privacy` are stack screens in the root layout, available only after onboarding.
+
+## Data in the main database
+
+Migrations 1 to 3 create tasks, habits and habit completions, and goals and milestones. The weekly review is stored as a normal journal entry (so it is encrypted), not in its own table. Task-to-goal links and categories from the original plan are not built.
+
 ## Navigation
 
 Expo Router with native tabs (`expo-router/unstable-native-tabs`, the SDK 57 path). The root layout shows onboarding until it is completed, then the tabs, using `Stack.Protected`.

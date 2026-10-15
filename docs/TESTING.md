@@ -25,6 +25,10 @@ The CI workflow also checks that the Android JavaScript bundle builds, and saves
 
 - Habits: streak, best streak, window counts and today summary (including month/year boundaries), repository (history, undo, delete, deleted habits) and the version 1 to 2 database upgrade keeping tasks.
 
+- Goals (repository, progress, sorting, target dates), calendar grid and day info, weekly review calculations, export contents, erase-all (including that the app still works afterwards), daily reminder choices, typed erase confirmation.
+
+Not covered by automated tests (needs a phone): SQLCipher encryption itself, secure-store key handling, notifications, the share sheet, and the look of each screen.
+
 ## Planned (by phase)
 
 - Date helpers, streaks and review calculations (Phase 5/6).

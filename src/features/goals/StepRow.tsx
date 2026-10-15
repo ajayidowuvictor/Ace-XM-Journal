@@ -37,7 +37,12 @@ export function StepRow({ step, onToggle, onRemove }: Props) {
           {step.title}
         </Text>
       </View>
-      <Button label="Remove" variant="ghost" onPress={onRemove} />
+      <Button
+        label="Remove"
+        variant="ghost"
+        accessibilityHint={`Removes the step ${step.title}`}
+        onPress={onRemove}
+      />
     </View>
   );
 }
