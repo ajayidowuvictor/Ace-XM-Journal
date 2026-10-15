@@ -94,12 +94,7 @@ export function addMilestone(
   );
 }
 
-export function setMilestoneDone(
-  db: SqlDatabase,
-  id: string,
-  done: boolean,
-  nowIso: string,
-): void {
+export function setMilestoneDone(db: SqlDatabase, id: string, done: boolean, nowIso: string): void {
   db.run(
     'UPDATE milestones SET completed_at = ?, updated_at = ? WHERE id = ? AND deleted_at IS NULL',
     [done ? nowIso : null, nowIso, id],

@@ -34,7 +34,11 @@ export function milestoneCounts(goal: Pick<Goal, 'milestones'>) {
 
 export type TargetChoice = 'none' | 'month' | 'quarter' | 'half' | 'keep';
 
-export function targetDateFor(choice: TargetChoice, existing: string | null, now: Date): string | null {
+export function targetDateFor(
+  choice: TargetChoice,
+  existing: string | null,
+  now: Date,
+): string | null {
   switch (choice) {
     case 'none':
       return null;

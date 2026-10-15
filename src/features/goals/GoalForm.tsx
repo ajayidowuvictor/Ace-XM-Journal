@@ -179,7 +179,11 @@ export function GoalForm({ visible, goalId, onClose }: Props) {
           ) : null}
           <Button label="Cancel" variant="ghost" onPress={onClose} />
           {goal ? (
-            <Button label="Delete goal" variant="danger" onPress={() => setConfirmingDelete(true)} />
+            <Button
+              label="Delete goal"
+              variant="danger"
+              onPress={() => setConfirmingDelete(true)}
+            />
           ) : null}
         </ScrollView>
 

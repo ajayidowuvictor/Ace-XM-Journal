@@ -8,12 +8,30 @@ describe('monthGrid', () => {
 
     expect(weeks).toHaveLength(5);
     expect(weeks.every((week) => week.length === 7)).toBe(true);
-    expect(weeks[0]).toEqual([null, null, null, '2026-10-01', '2026-10-02', '2026-10-03', '2026-10-04']);
-    expect(weeks[4]).toEqual(['2026-10-26', '2026-10-27', '2026-10-28', '2026-10-29', '2026-10-30', '2026-10-31', null]);
+    expect(weeks[0]).toEqual([
+      null,
+      null,
+      null,
+      '2026-10-01',
+      '2026-10-02',
+      '2026-10-03',
+      '2026-10-04',
+    ]);
+    expect(weeks[4]).toEqual([
+      '2026-10-26',
+      '2026-10-27',
+      '2026-10-28',
+      '2026-10-29',
+      '2026-10-30',
+      '2026-10-31',
+      null,
+    ]);
   });
 
   it('contains every day of the month exactly once', () => {
-    const days = monthGrid(2028, 1).flat().filter((cell): cell is string => cell !== null);
+    const days = monthGrid(2028, 1)
+      .flat()
+      .filter((cell): cell is string => cell !== null);
     expect(days).toHaveLength(29);
     expect(days[0]).toBe('2028-02-01');
     expect(days[28]).toBe('2028-02-29');

@@ -44,7 +44,9 @@ describe('validation', () => {
 
 describe('goalProgress', () => {
   it('is the share of steps done', () => {
-    expect(goalProgress(goal('a', { milestones: [step(true), step(false), step(false), step(true)] }))).toBe(0.5);
+    expect(
+      goalProgress(goal('a', { milestones: [step(true), step(false), step(false), step(true)] })),
+    ).toBe(0.5);
   });
 
   it('is 0 with no steps, and 1 once the goal is marked done', () => {

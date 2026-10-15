@@ -2,7 +2,13 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { dayInfo, hasActivity, monthGrid, shiftMonth, WEEKDAY_LABELS } from '@/features/calendar/logic';
+import {
+  dayInfo,
+  hasActivity,
+  monthGrid,
+  shiftMonth,
+  WEEKDAY_LABELS,
+} from '@/features/calendar/logic';
 import { useHabits } from '@/features/habits/HabitsContext';
 import { useJournal } from '@/features/journal/JournalContext';
 import { entryHeadline } from '@/features/journal/logic';
@@ -142,7 +148,12 @@ export default function CalendarScreen() {
 
 const styles = StyleSheet.create({
   back: { alignSelf: 'flex-start' },
-  monthRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
+  monthRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+  },
   monthTitle: { flex: 1, textAlign: 'center' },
   week: { flexDirection: 'row' },
   cell: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: minTouchTarget },
