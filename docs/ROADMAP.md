@@ -10,7 +10,7 @@
 | 5     | Habits, goals, calendar                             | Built, device check pending                                                        |
 | 6     | Reviews, settings, export, deletion, privacy screen | Built, device check pending                                                        |
 | 7     | Accounts and cloud sync (only if needed for v1)     | Deferred (not in first release)                                                    |
-| 8     | Full QA pass                                        | QA pass done in code review; owner test pending                                    |
+| 8     | Full QA pass                                        | Limited code review done; owner testing pending                                    |
 | 9     | Android and iOS builds                              | Icon and splash done; Android test build works; store build profile added, not run |
 | 10    | Beta and release preparation                        | Release docs drafted (docs/RELEASE.md); nothing submitted                          |
 | 11    | Maintenance                                         | Not started                                                                        |

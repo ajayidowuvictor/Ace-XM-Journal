@@ -34,7 +34,7 @@ export default function SettingsScreen() {
   const { tasks, reload: reloadTasks } = useTasks();
   const { habits, reload: reloadHabits } = useHabits();
   const { goals, reload: reloadGoals } = useGoals();
-  const { allEntries, wipe: wipeJournal } = useJournal();
+  const { allEntries, wipe: wipeJournal, status: journalStatus } = useJournal();
 
   const [reminder, setReminder] = useState<ReminderChoice>(() =>
     parseReminderChoice(readPreference(PREF_KEYS.reminder)),
@@ -75,9 +75,11 @@ export default function SettingsScreen() {
       );
       const shared = await shareExport(exportFileName(toLocalDateString(new Date())), text);
       setExportNote(
-        shared
-          ? 'Export ready. Check where you sent it.'
-          : 'Sharing is not available on this device.',
+        !shared
+          ? 'Sharing is not available on this device.'
+          : journalStatus === 'ready'
+            ? 'Export ready. Check where you sent it.'
+            : 'Export ready, but the journal could not be included because it was not available.',
       );
     } catch {
       setExportNote('The export could not be created. Please try again.');
