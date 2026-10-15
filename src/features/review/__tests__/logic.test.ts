@@ -167,10 +167,7 @@ describe('findExistingReview', () => {
 });
 
 describe('reflectionFrom', () => {
-  const summary = weeklySummary(
-    { tasks: [], habits: [], goals: [], entries: [] },
-    TODAY,
-  );
+  const summary = weeklySummary({ tasks: [], habits: [], goals: [], entries: [] }, TODAY);
 
   it('gets back what was written', () => {
     const body = reviewEntryBody(summary, 'Good week.\nMore rest next week.');

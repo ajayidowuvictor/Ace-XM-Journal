@@ -31,7 +31,9 @@ export default function ReviewScreen() {
   );
   const title = `Weekly review: ${formatShortDate(summary.start)} to ${formatShortDate(summary.end)}`;
   const existing = findExistingReview(allEntries, title);
-  const [reflection, setReflection] = useState(() => (existing ? reflectionFrom(existing.body) : ''));
+  const [reflection, setReflection] = useState(() =>
+    existing ? reflectionFrom(existing.body) : '',
+  );
 
   function saveToJournal() {
     const body = reviewEntryBody(summary, reflection);
