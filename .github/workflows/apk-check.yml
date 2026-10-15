@@ -8,11 +8,13 @@ on:
   workflow_dispatch:
     inputs:
       new_build:
-        description: 'Build id of the build that fails to install'
-        required: true
+        description: 'Build id of the build that fails to install (can be left empty)'
+        required: false
+        default: ''
       old_build:
-        description: 'Build id of a build that installed fine'
-        required: true
+        description: 'Build id of a build that installed fine (can be left empty)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -35,6 +37,20 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
       - run: npm ci
+      - name: List recent Android builds with their file sizes
+        run: |
+          set +e
+          eas build:list --platform=android --limit=15 --non-interactive --json > list.json 2> list.err
+          head -c 300 list.err
+          node -e "
+          const j=JSON.parse(require('fs').readFileSync('list.json','utf8'));
+          for (const b of j) console.log([b.id,b.createdAt,b.status,b.buildProfile,(b.gitCommitHash||'').slice(0,7),b.artifacts&&b.artifacts.buildUrl||''].join(' '));
+          " > list.txt
+          while read ID CREATED STATUS PROFILE SHA URL; do
+            SIZE=""
+            [ -n "$URL" ] && SIZE=$(curl -sIL "$URL" | grep -i '^content-length' | tail -1 | tr -d '\r' | awk '{print $2}')
+            echo "$ID $CREATED $STATUS $PROFILE $SHA bytes=${SIZE:-n/a}"
+          done < list.txt | tee /tmp/apk-sizes.log
       - name: Inspect both builds
         env:
           NEW_BUILD: ${{ inputs.new_build }}
@@ -46,6 +62,7 @@ jobs:
           echo "aapt2: $AAPT"; echo "apksigner: $APKSIGNER"
           for NAME in OLD NEW; do
             ID=$([ $NAME = NEW ] && echo "$NEW_BUILD" || echo "$OLD_BUILD")
+            [ -z "$ID" ] && continue
             echo; echo "===== $NAME build $ID ====="
             eas build:view "$ID" --json > "$NAME.json" 2> "$NAME.err"
             echo "-- eas stderr:"; head -c 400 "$NAME.err"
@@ -78,6 +95,7 @@ jobs:
           git rm -rf -q --cached . > /dev/null 2>&1 || true
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
           cp /tmp/apk-check.log ./apk-check.log 2>/dev/null || echo "no log" > apk-check.log
-          git add apk-check.log
+          cp /tmp/apk-sizes.log ./apk-sizes.log 2>/dev/null || echo "no sizes" > apk-sizes.log
+          git add apk-check.log apk-sizes.log
           git commit -q -m "APK check output"
           git push -f origin apk-logs
