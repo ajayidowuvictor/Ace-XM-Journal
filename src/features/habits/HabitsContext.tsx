@@ -23,6 +23,8 @@ type HabitsValue = {
   /** Marks the habit done or not done for today (the device's local date). */
   setDoneToday: (id: string, done: boolean) => void;
   remove: (id: string) => void;
+  /** Re-reads everything from the database (used after all data is erased). */
+  reload: () => void;
 };
 
 const HabitsContext = createContext<HabitsValue>({
@@ -32,6 +34,7 @@ const HabitsContext = createContext<HabitsValue>({
   rename: () => null,
   setDoneToday: () => {},
   remove: () => {},
+  reload: () => {},
 });
 
 const SAVE_ERROR = 'Your change could not be saved. Please try again.';
@@ -102,9 +105,13 @@ export function HabitsProvider({ children }: { children: ReactNode }) {
     [run],
   );
 
+  const reload = useCallback(() => {
+    if (db) setHabits(listHabits(db));
+  }, [db]);
+
   const value = useMemo(
-    () => ({ habits, error, add, rename, setDoneToday, remove }),
-    [habits, error, add, rename, setDoneToday, remove],
+    () => ({ habits, error, add, rename, setDoneToday, remove, reload }),
+    [habits, error, add, rename, setDoneToday, remove, reload],
   );
 
   return <HabitsContext.Provider value={value}>{children}</HabitsContext.Provider>;

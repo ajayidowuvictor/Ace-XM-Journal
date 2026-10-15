@@ -50,6 +50,8 @@ function RootNavigator() {
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="entry" options={{ presentation: 'modal' }} />
           <Stack.Screen name="calendar" />
+          <Stack.Screen name="review" />
+          <Stack.Screen name="privacy" />
         </Stack.Protected>
       </Stack>
     </NavigationThemeProvider>

@@ -10,6 +10,7 @@ import {
 
 import { openJournalDatabase } from '../../db/journalDatabase';
 import { createEntry, deleteEntry, listEntries, updateEntry } from '../../db/journalRepo';
+import { wipeJournalData } from '../../db/wipeRepo';
 import type { SqlDatabase } from '../../db/types';
 import { toLocalDateString } from '../../lib/dates';
 import { newId } from '../../lib/id';
@@ -31,6 +32,8 @@ type JournalValue = {
   /** Returns true when saved. */
   save: (id: string, input: EntryInput) => boolean;
   remove: (id: string) => boolean;
+  /** Permanently erases every entry. Returns true when done. */
+  wipe: () => boolean;
 };
 
 const JournalContext = createContext<JournalValue>({
@@ -43,6 +46,7 @@ const JournalContext = createContext<JournalValue>({
   create: () => null,
   save: () => false,
   remove: () => false,
+  wipe: () => false,
 });
 
 export function JournalProvider({ children }: { children: ReactNode }) {
@@ -121,9 +125,22 @@ export function JournalProvider({ children }: { children: ReactNode }) {
     [change],
   );
 
+  const wipe = useCallback(() => {
+    if (!db) return false;
+    try {
+      wipeJournalData(db);
+      setEntries([]);
+      setAllEntries([]);
+      setQueryState('');
+      return true;
+    } catch {
+      return false;
+    }
+  }, [db]);
+
   const value = useMemo(
-    () => ({ status, entries, allEntries, query, setQuery, findEntry, create, save, remove }),
-    [status, entries, allEntries, query, setQuery, findEntry, create, save, remove],
+    () => ({ status, entries, allEntries, query, setQuery, findEntry, create, save, remove, wipe }),
+    [status, entries, allEntries, query, setQuery, findEntry, create, save, remove, wipe],
   );
 
   return <JournalContext.Provider value={value}>{children}</JournalContext.Provider>;

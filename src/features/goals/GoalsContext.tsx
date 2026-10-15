@@ -27,6 +27,8 @@ type GoalsValue = {
   addStep: (goalId: string, title: string) => string | null;
   setStepDone: (stepId: string, done: boolean) => void;
   removeStep: (stepId: string) => void;
+  /** Re-reads everything from the database (used after all data is erased). */
+  reload: () => void;
 };
 
 const GoalsContext = createContext<GoalsValue>({
@@ -39,6 +41,7 @@ const GoalsContext = createContext<GoalsValue>({
   addStep: () => null,
   setStepDone: () => {},
   removeStep: () => {},
+  reload: () => {},
 });
 
 const SAVE_ERROR = 'Your change could not be saved. Please try again.';
@@ -137,9 +140,13 @@ export function GoalsProvider({ children }: { children: ReactNode }) {
     [run],
   );
 
+  const reload = useCallback(() => {
+    if (db) setGoals(listGoals(db));
+  }, [db]);
+
   const value = useMemo(
-    () => ({ goals, error, add, edit, setDone, remove, addStep, setStepDone, removeStep }),
-    [goals, error, add, edit, setDone, remove, addStep, setStepDone, removeStep],
+    () => ({ goals, error, add, edit, setDone, remove, addStep, setStepDone, removeStep, reload }),
+    [goals, error, add, edit, setDone, remove, addStep, setStepDone, removeStep, reload],
   );
 
   return <GoalsContext.Provider value={value}>{children}</GoalsContext.Provider>;

@@ -45,7 +45,20 @@ export default function HomeScreen() {
         />
       </View>
 
-      <Button label="Open calendar" variant="ghost" onPress={() => router.push('/calendar')} />
+      <View style={styles.actions}>
+        <Button
+          label="Calendar"
+          variant="ghost"
+          onPress={() => router.push('/calendar')}
+          style={styles.action}
+        />
+        <Button
+          label="Weekly review"
+          variant="ghost"
+          onPress={() => router.push('/review')}
+          style={styles.action}
+        />
+      </View>
 
       <Card>
         <Text variant="heading">Today&apos;s priorities</Text>

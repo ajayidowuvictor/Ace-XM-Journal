@@ -22,6 +22,8 @@ type TasksValue = {
   edit: (id: string, input: TaskInput) => string | null;
   setCompleted: (id: string, completed: boolean) => void;
   remove: (id: string) => void;
+  /** Re-reads everything from the database (used after all data is erased). */
+  reload: () => void;
 };
 
 const TasksContext = createContext<TasksValue>({
@@ -31,6 +33,7 @@ const TasksContext = createContext<TasksValue>({
   edit: () => null,
   setCompleted: () => {},
   remove: () => {},
+  reload: () => {},
 });
 
 const SAVE_ERROR = 'Your change could not be saved. Please try again.';
@@ -100,9 +103,13 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     [run],
   );
 
+  const reload = useCallback(() => {
+    if (db) setTasks(listTasks(db));
+  }, [db]);
+
   const value = useMemo(
-    () => ({ tasks, error, add, edit, setCompleted, remove }),
-    [tasks, error, add, edit, setCompleted, remove],
+    () => ({ tasks, error, add, edit, setCompleted, remove, reload }),
+    [tasks, error, add, edit, setCompleted, remove, reload],
   );
 
   return <TasksContext.Provider value={value}>{children}</TasksContext.Provider>;
