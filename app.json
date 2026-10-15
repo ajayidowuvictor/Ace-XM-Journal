@@ -20,7 +20,8 @@
       },
       "predictiveBackGestureEnabled": false,
       "package": "com.ajayidowuvictor.acexmjournal",
-      "allowBackup": false
+      "allowBackup": false,
+      "versionCode": 1
     },
     "web": {
       "output": "static",
