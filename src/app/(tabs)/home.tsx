@@ -1,120 +1,287 @@
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { useOnboarding } from '@/features/onboarding/OnboardingContext';
-import { HabitRow } from '@/features/habits/HabitRow';
 import { useHabits } from '@/features/habits/HabitsContext';
+import { HabitRow } from '@/features/habits/HabitRow';
 import { todaySummary } from '@/features/habits/logic';
-import { TaskRow } from '@/features/tasks/TaskRow';
+import { useJournal } from '@/features/journal/JournalContext';
+import { useOnboarding } from '@/features/onboarding/OnboardingContext';
+import { CarryOverCard } from '@/features/planner/CarryOverCard';
+import { FocusCard } from '@/features/planner/FocusCard';
+import { FocusPicker } from '@/features/planner/FocusPicker';
+import {
+  WRAP_UP_TAG,
+  buildTimeline,
+  carryOverTasks,
+  composeWrapUp,
+  dayHeadline,
+  dayProgress,
+  findWrapUp,
+  focusCandidates,
+  focusTasks,
+  minutesOfDay,
+  tomorrowHeadline,
+  withFocus,
+  withoutFocus,
+  wrapUpTitle,
+} from '@/features/planner/logic';
+import { usePlanner } from '@/features/planner/PlannerContext';
+import { TimelineView } from '@/features/planner/TimelineView';
+import { useBlockEditor } from '@/features/planner/useBlockEditor';
+import { WrapUpCard } from '@/features/planner/WrapUpCard';
 import { useTasks } from '@/features/tasks/TasksContext';
 import { useTaskEditor } from '@/features/tasks/useTaskEditor';
-import { todaysPriorities } from '@/features/tasks/logic';
-import { toLocalDateString } from '@/lib/dates';
+import type { Task } from '@/features/tasks/types';
+import { addDays, formatShortDate, parseLocalDate, toLocalDateString } from '@/lib/dates';
 import { formatLongDate, greetingForHour } from '@/lib/greeting';
-import { Button, Card, EmptyState, ProgressBar, Screen, Text, spacing } from '@/ui';
+import { useNow } from '@/lib/useNow';
+import {
+  Button,
+  Card,
+  EmptyState,
+  ProgressBar,
+  Screen,
+  SectionHeader,
+  SegmentedControl,
+  Text,
+  spacing,
+  type SegmentOption,
+} from '@/ui';
+
+type Day = 'today' | 'tomorrow';
+
+const DAY_OPTIONS: readonly SegmentOption<Day>[] = [
+  { value: 'today', label: 'Today' },
+  { value: 'tomorrow', label: 'Tomorrow' },
+];
+
+/** From this hour on, the evening wrap-up card is shown. */
+const WRAP_UP_HOUR = 17;
 
 export default function HomeScreen() {
   const router = useRouter();
   const { displayName } = useOnboarding();
-  const now = new Date();
-  const greeting = greetingForHour(now.getHours());
-  const { tasks, setCompleted } = useTasks();
-  const editor = useTaskEditor();
-  const { habits, setDoneToday } = useHabits();
+  const now = useNow();
   const today = toLocalDateString(now);
-  const habitSummary = todaySummary(habits, toLocalDateString(now));
-  const priorities = todaysPriorities(tasks, today);
-  const overdueIds = new Set(
-    priorities.filter((t) => t.dueDate && t.dueDate < today).map((t) => t.id),
+  const tomorrow = addDays(now, 1);
+  const greeting = greetingForHour(now.getHours());
+
+  const [day, setDay] = useState<Day>('today');
+  const [picking, setPicking] = useState(false);
+  const planDate = day === 'today' ? today : tomorrow;
+  const nowMinutes = day === 'today' ? minutesOfDay(now) : null;
+
+  const { tasks, setCompleted, edit, addTask } = useTasks();
+  const taskEditor = useTaskEditor();
+  const { habits, setDoneToday } = useHabits();
+  const { focus, blocks, setFocus } = usePlanner();
+  const { allEntries, create, save, status: journalStatus } = useJournal();
+
+  const focusList = focusTasks(focus, tasks, planDate);
+  const focusIds = focusList.map((task) => task.id);
+  const dayBlocks = blocks.filter((block) => block.planDate === planDate);
+  const timeline = buildTimeline(dayBlocks, nowMinutes);
+  const completedTaskIds = new Set(
+    tasks.filter((task) => task.completedAt !== null).map((task) => task.id),
   );
+
+  const linkableTasks: Task[] = [];
+  for (const task of [...focusList, ...tasks.filter((t) => t.dueDate === planDate)]) {
+    if (!task.completedAt && !linkableTasks.some((other) => other.id === task.id)) {
+      linkableTasks.push(task);
+    }
+  }
+  const blockEditor = useBlockEditor({
+    planDate,
+    dayBlocks,
+    nowMinutes,
+    linkableTasks: linkableTasks.slice(0, 6),
+  });
+
+  const progress = dayProgress(tasks, planDate);
+  const headline = day === 'today' ? dayHeadline(progress) : tomorrowHeadline(progress.total);
+  const habitSummary = todaySummary(habits, today);
+  const carryOver = day === 'today' ? carryOverTasks(tasks, today) : [];
+  const wrapUp = findWrapUp(allEntries, today);
+  const showWrapUp = day === 'today' && (now.getHours() >= WRAP_UP_HOUR || wrapUp !== null);
+
+  function chooseFocus(task: Task) {
+    const next = withFocus(focusIds, task.id);
+    if (next) setFocus(planDate, next);
+    setPicking(false);
+  }
+
+  function createFocus(title: string): string | null {
+    const { id, error } = addTask({ title, notes: '', dueDate: planDate, priority: 0 });
+    if (error || !id) return error ?? 'Your change could not be saved. Please try again.';
+    const next = withFocus(focusIds, id);
+    if (next) setFocus(planDate, next);
+    setPicking(false);
+    return null;
+  }
+
+  function moveTask(task: Task, to: 'today' | 'tomorrow') {
+    edit(task.id, {
+      title: task.title,
+      notes: task.notes,
+      dueDate: to === 'today' ? today : tomorrow,
+      priority: task.priority,
+    });
+  }
+
+  function saveWrapUp(wentWell: string, next: string): boolean {
+    const body = composeWrapUp({ wentWell, tomorrow: next });
+    if (wrapUp) {
+      return save(wrapUp.id, {
+        title: wrapUp.title,
+        body,
+        mood: wrapUp.mood,
+        tags: wrapUp.tags,
+      });
+    }
+    return (
+      create({
+        title: wrapUpTitle(formatShortDate(today)),
+        body,
+        mood: null,
+        tags: [WRAP_UP_TAG],
+      }) !== null
+    );
+  }
 
   return (
     <Screen>
       <View style={styles.header}>
         <Text variant="title">{displayName ? `${greeting}, ${displayName}` : greeting}</Text>
-        <Text muted>{formatLongDate(now)}</Text>
+        <Text variant="secondary" muted>
+          {formatLongDate(day === 'today' ? now : (parseLocalDate(tomorrow) ?? now))}
+        </Text>
       </View>
 
-      <View style={styles.actions}>
-        <Button label="New task" onPress={() => editor.open(null)} style={styles.action} />
-        <Button
-          label="New journal entry"
-          variant="secondary"
-          onPress={() => router.push('/entry')}
-          style={styles.action}
+      <SegmentedControl
+        accessibilityLabel="Day to plan"
+        options={DAY_OPTIONS}
+        value={day}
+        onChange={setDay}
+      />
+
+      <Card variant="hero">
+        <Text variant="subheading">{headline}</Text>
+        {day === 'today' && progress.total > 0 ? (
+          <ProgressBar
+            value={progress.progress}
+            accessibilityLabel={`${progress.done} of ${progress.total} tasks done today`}
+          />
+        ) : null}
+      </Card>
+
+      <SectionHeader title="Your focus" />
+      <FocusCard
+        tasks={focusList}
+        onToggle={(task, completed) => setCompleted(task.id, completed)}
+        onOpen={(task) => taskEditor.open(task)}
+        onRemove={(task) => setFocus(planDate, withoutFocus(focusIds, task.id))}
+        onAdd={() => setPicking(true)}
+      />
+
+      <SectionHeader
+        title="Plan the day"
+        actionLabel="Add block"
+        onAction={() => blockEditor.open(null)}
+      />
+      <Card>
+        {timeline.length === 0 ? (
+          <EmptyState
+            title="Nothing scheduled"
+            message="Give an important task its own time. A short block is enough."
+            actionLabel="Add a block"
+            onAction={() => blockEditor.open(null)}
+          />
+        ) : (
+          <TimelineView
+            entries={timeline}
+            completedTaskIds={completedTaskIds}
+            onOpenBlock={(block) => blockEditor.open(block)}
+          />
+        )}
+      </Card>
+
+      <CarryOverCard tasks={carryOver} onMove={moveTask} />
+
+      {day === 'today' ? (
+        <>
+          <SectionHeader title="Habits" />
+          <Card>
+            {habits.length === 0 ? (
+              <EmptyState
+                title="No habits yet"
+                message="Habits you track will show their progress here."
+              />
+            ) : (
+              <>
+                <Text variant="secondary" muted>
+                  {habitSummary.done} of {habitSummary.total} done today
+                </Text>
+                <ProgressBar
+                  value={habitSummary.progress}
+                  accessibilityLabel={`${habitSummary.done} of ${habitSummary.total} habits done today`}
+                />
+                {habits.map((habit) => (
+                  <HabitRow
+                    key={habit.id}
+                    habit={habit}
+                    today={today}
+                    showStreak={false}
+                    onToggle={(done) => setDoneToday(habit.id, done)}
+                  />
+                ))}
+              </>
+            )}
+          </Card>
+        </>
+      ) : null}
+
+      {showWrapUp ? (
+        <WrapUpCard
+          key={wrapUp?.id ?? 'new'}
+          existing={wrapUp}
+          journalReady={journalStatus === 'ready'}
+          onSave={saveWrapUp}
         />
-      </View>
+      ) : null}
 
-      <View style={styles.actions}>
+      <View style={styles.shortcuts}>
         <Button
           label="Calendar"
-          variant="ghost"
+          variant="secondary"
           onPress={() => router.push('/calendar')}
-          style={styles.action}
+          style={styles.shortcut}
         />
         <Button
           label="Weekly review"
-          variant="ghost"
+          variant="secondary"
           onPress={() => router.push('/review')}
-          style={styles.action}
+          style={styles.shortcut}
         />
       </View>
 
-      <Card>
-        <Text variant="heading">Today&apos;s priorities</Text>
-        {priorities.length === 0 ? (
-          <EmptyState
-            title="Nothing planned yet"
-            message="Tasks you add for today will appear here."
-          />
-        ) : (
-          priorities.map((task) => (
-            <TaskRow
-              key={task.id}
-              task={task}
-              overdue={overdueIds.has(task.id)}
-              onToggle={(completed) => setCompleted(task.id, completed)}
-              onOpen={() => editor.open(task)}
-            />
-          ))
-        )}
-      </Card>
-
-      <Card>
-        <Text variant="heading">Habits</Text>
-        {habits.length === 0 ? (
-          <EmptyState
-            title="No habits yet"
-            message="Habits you track will show their progress here."
-          />
-        ) : (
-          <>
-            <Text muted>
-              {habitSummary.done} of {habitSummary.total} done today
-            </Text>
-            <ProgressBar
-              value={habitSummary.progress}
-              accessibilityLabel={`${habitSummary.done} of ${habitSummary.total} habits done today`}
-            />
-            {habits.map((habit) => (
-              <HabitRow
-                key={habit.id}
-                habit={habit}
-                today={today}
-                showStreak={false}
-                onToggle={(done) => setDoneToday(habit.id, done)}
-              />
-            ))}
-          </>
-        )}
-      </Card>
-      {editor.element}
+      {taskEditor.element}
+      {blockEditor.element}
+      <FocusPicker
+        visible={picking}
+        candidates={focusCandidates(tasks, today, focusIds)}
+        spotsLeft={3 - focusIds.length}
+        onPick={chooseFocus}
+        onCreate={createFocus}
+        onClose={() => setPicking(false)}
+      />
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   header: { gap: spacing.xs, paddingTop: spacing.sm },
-  actions: { flexDirection: 'row', gap: spacing.sm },
-  action: { flex: 1 },
+  shortcuts: { flexDirection: 'row', gap: spacing.sm, paddingTop: spacing.sm },
+  shortcut: { flex: 1 },
 });

@@ -6,6 +6,15 @@ Last updated: 2026-10-16
 
 Feature-complete for the first (local-only) release. The owner has now walked through every screen on a phone (Infinix Hot 30i, Android 12) and reported that each worked. Automated checks (type check, lint, format, 179 tests, Android bundle build) back everything else.
 
+## In progress: Phase 1 (design and Today planner)
+
+Built on branch `feat/design-and-today` and checked by CI (type check, lint, format, 251 tests, Android bundle). Not yet seen on a phone:
+
+- **New look:** Inter font, cool-mist palette, new buttons, cards, round check circles, haptics (see `docs/DESIGN.md`).
+- **Today planner (Home tab):** a Today / Tomorrow switch, up to three focus tasks, a time rail of blocks (start time, length, optional linked task, "now" marker, free-time gaps), gentle "Still waiting from earlier" tasks that can be moved to today or tomorrow, habits, and an evening wrap-up saved as an encrypted journal entry (shown from 17:00).
+- **Also changed:** saving the weekly review twice for the same week updates the first entry; older tasks read "From earlier" instead of "Overdue". Day plans are included in the export and removed by "Erase all my data".
+- **Database:** migration 4 adds `plan_focus` and `plan_blocks`. Existing tasks, habits, goals and journal entries are not touched.
+
 ## What the app does
 
 - **Shell and design:** brand theme (light, dark, system), first-run onboarding (optional name), five native tabs (Home, Tasks, Journal, Habits and goals, Settings), reusable accessible components. _Seen on a phone._
@@ -47,6 +56,8 @@ Feature-complete for the first (local-only) release. The owner has now walked th
 - Some commits in the history are authored by the GitHub Actions bot (automatic formatting).
 
 ## Next actions
+
+0. Owner tests the Phase 1 build on the phone and reports what to adjust (look, planner, wording). Then merge the branch.
 
 1. Owner confirms the reminder (next morning) and the journal after erase-all, and reports anything else to fix.
 2. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.

@@ -4,7 +4,13 @@ import type { Goal } from '../../goals/types';
 import type { Habit } from '../../habits/types';
 import type { JournalEntry } from '../../journal/types';
 import type { Task } from '../../tasks/types';
-import { reviewEntryBody, summaryLines, weeklySummary } from '../logic';
+import {
+  findExistingReview,
+  reflectionFrom,
+  reviewEntryBody,
+  summaryLines,
+  weeklySummary,
+} from '../logic';
 
 const TODAY = '2026-10-14';
 // Noon local time, so the local date is the same in any time zone.
@@ -127,5 +133,52 @@ describe('summaryLines and reviewEntryBody', () => {
     const body = reviewEntryBody(empty, '  Good week.  ');
     expect(body.endsWith('Reflection:\nGood week.')).toBe(true);
     expect(reviewEntryBody(empty, '')).toContain('(nothing written)');
+  });
+});
+
+describe('findExistingReview', () => {
+  const entry = (id: string, title: string, tags: string[]): JournalEntry => ({
+    id,
+    entryDate: TODAY,
+    title,
+    body: '',
+    mood: null,
+    tags,
+    createdAt: 'x',
+    updatedAt: 'x',
+  });
+
+  it('finds the review saved for the same week', () => {
+    const entries = [
+      entry('a', 'Weekly review: Oct 8 to Oct 14', ['weekly review']),
+      entry('b', 'Weekly review: Oct 1 to Oct 7', ['weekly review']),
+    ];
+    expect(findExistingReview(entries, 'Weekly review: Oct 8 to Oct 14')?.id).toBe('a');
+  });
+
+  it('ignores other entries with the same title but no review tag', () => {
+    const entries = [entry('a', 'Weekly review: Oct 8 to Oct 14', ['work'])];
+    expect(findExistingReview(entries, 'Weekly review: Oct 8 to Oct 14')).toBeNull();
+  });
+
+  it('returns null when nothing matches', () => {
+    expect(findExistingReview([], 'Weekly review: Oct 8 to Oct 14')).toBeNull();
+  });
+});
+
+describe('reflectionFrom', () => {
+  const summary = weeklySummary({ tasks: [], habits: [], goals: [], entries: [] }, TODAY);
+
+  it('gets back what was written', () => {
+    const body = reviewEntryBody(summary, 'Good week.\nMore rest next week.');
+    expect(reflectionFrom(body)).toBe('Good week.\nMore rest next week.');
+  });
+
+  it('is empty when nothing was written', () => {
+    expect(reflectionFrom(reviewEntryBody(summary, '   '))).toBe('');
+  });
+
+  it('is empty for text without a reflection', () => {
+    expect(reflectionFrom('Something else')).toBe('');
   });
 });

@@ -67,6 +67,30 @@ export const migrations: readonly Migration[] = [
       CREATE INDEX idx_milestones_goal ON milestones (goal_id);
     `,
   },
+  {
+    version: 4,
+    sql: `
+      CREATE TABLE plan_focus (
+        plan_date TEXT NOT NULL,
+        task_id TEXT NOT NULL,
+        position INTEGER NOT NULL,
+        created_at TEXT NOT NULL,
+        PRIMARY KEY (plan_date, task_id)
+      );
+      CREATE TABLE plan_blocks (
+        id TEXT PRIMARY KEY NOT NULL,
+        plan_date TEXT NOT NULL,
+        title TEXT NOT NULL,
+        task_id TEXT,
+        start_minutes INTEGER NOT NULL,
+        duration_minutes INTEGER NOT NULL,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        deleted_at TEXT
+      );
+      CREATE INDEX idx_plan_blocks_date ON plan_blocks (plan_date);
+    `,
+  },
 ];
 
 /** Applies any migrations the database has not seen yet. Returns the resulting version. */

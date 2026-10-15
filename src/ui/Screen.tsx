@@ -4,14 +4,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useTheme } from '../theme/context';
 import { Text } from './Text';
-import { spacing } from './tokens';
+import { layout, spacing } from './tokens';
 
 type Props = {
   title?: string;
   children: ReactNode;
 };
 
-/** Standard scrolling screen: safe area, brand background, optional title, centred on wide screens. */
+/** Standard scrolling screen: safe area, background, large title, centred on wide screens. */
 export function Screen({ title, children }: Props) {
   const { colors } = useTheme();
 
@@ -23,7 +23,11 @@ export function Screen({ title, children }: Props) {
         keyboardDismissMode="on-drag"
       >
         <View style={styles.inner}>
-          {title ? <Text variant="title">{title}</Text> : null}
+          {title ? (
+            <Text variant="largeTitle" style={styles.title}>
+              {title}
+            </Text>
+          ) : null}
           {children}
         </View>
       </ScrollView>
@@ -33,6 +37,7 @@ export function Screen({ title, children }: Props) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  content: { padding: spacing.lg, paddingBottom: spacing.xxl },
-  inner: { width: '100%', maxWidth: 720, alignSelf: 'center', gap: spacing.md },
+  content: { padding: layout.gutter, paddingBottom: spacing.xxl + spacing.lg },
+  inner: { width: '100%', maxWidth: layout.maxWidth, alignSelf: 'center', gap: spacing.md },
+  title: { paddingTop: spacing.sm },
 });

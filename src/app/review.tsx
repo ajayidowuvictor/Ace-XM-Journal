@@ -4,7 +4,14 @@ import { useState } from 'react';
 import { useGoals } from '@/features/goals/GoalsContext';
 import { useHabits } from '@/features/habits/HabitsContext';
 import { useJournal } from '@/features/journal/JournalContext';
-import { reviewEntryBody, summaryLines, weeklySummary } from '@/features/review/logic';
+import {
+  REVIEW_TAG,
+  findExistingReview,
+  reflectionFrom,
+  reviewEntryBody,
+  summaryLines,
+  weeklySummary,
+} from '@/features/review/logic';
 import { useTasks } from '@/features/tasks/TasksContext';
 import { formatShortDate, toLocalDateString } from '@/lib/dates';
 import { Button, Card, Screen, Text, TextField } from '@/ui';
@@ -14,8 +21,7 @@ export default function ReviewScreen() {
   const { tasks } = useTasks();
   const { habits } = useHabits();
   const { goals } = useGoals();
-  const { allEntries, create, status } = useJournal();
-  const [reflection, setReflection] = useState('');
+  const { allEntries, create, save, status } = useJournal();
   const [note, setNote] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
 
@@ -23,15 +29,18 @@ export default function ReviewScreen() {
     { tasks, habits, goals, entries: allEntries },
     toLocalDateString(new Date()),
   );
+  const title = `Weekly review: ${formatShortDate(summary.start)} to ${formatShortDate(summary.end)}`;
+  const existing = findExistingReview(allEntries, title);
+  const [reflection, setReflection] = useState(() =>
+    existing ? reflectionFrom(existing.body) : '',
+  );
 
   function saveToJournal() {
-    const id = create({
-      title: `Weekly review: ${formatShortDate(summary.start)} to ${formatShortDate(summary.end)}`,
-      body: reviewEntryBody(summary, reflection),
-      mood: null,
-      tags: ['weekly review'],
-    });
-    if (id) {
+    const body = reviewEntryBody(summary, reflection);
+    const done = existing
+      ? save(existing.id, { title, body, mood: existing.mood, tags: existing.tags })
+      : create({ title, body, mood: null, tags: [REVIEW_TAG] }) !== null;
+    if (done) {
       setSaved(true);
       setNote('Saved to your journal.');
     } else {
@@ -56,14 +65,18 @@ export default function ReviewScreen() {
       <TextField
         label="What went well, and what will you change next week?"
         value={reflection}
-        onChangeText={setReflection}
+        onChangeText={(text) => {
+          setReflection(text);
+          setSaved(false);
+          setNote(null);
+        }}
         multiline
         textAlignVertical="top"
         placeholder="Write a few lines"
       />
 
       <Button
-        label={saved ? 'Saved' : 'Save to my journal'}
+        label={saved ? 'Saved' : existing ? 'Update my review' : 'Save to my journal'}
         disabled={saved || status !== 'ready'}
         onPress={saveToJournal}
       />

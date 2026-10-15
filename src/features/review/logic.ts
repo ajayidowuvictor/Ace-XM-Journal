@@ -85,3 +85,24 @@ export function reviewEntryBody(summary: WeeklySummary, reflection: string): str
   const note = reflection.trim();
   return [...summaryLines(summary), '', 'Reflection:', note || '(nothing written)'].join('\n');
 }
+
+export const REVIEW_TAG = 'weekly review';
+
+/** The review already saved with this title (one per week), so saving again updates it. */
+export function findExistingReview(
+  entries: readonly JournalEntry[],
+  title: string,
+): JournalEntry | null {
+  return entries.find((entry) => entry.title === title && entry.tags.includes(REVIEW_TAG)) ?? null;
+}
+
+const NOTHING_WRITTEN = '(nothing written)';
+
+/** The reflection part of a saved review's text, so it can be edited again. */
+export function reflectionFrom(body: string): string {
+  const marker = 'Reflection:\n';
+  const index = body.indexOf(marker);
+  if (index === -1) return '';
+  const text = body.slice(index + marker.length).trim();
+  return text === NOTHING_WRITTEN ? '' : text;
+}

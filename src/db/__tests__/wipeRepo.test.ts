@@ -5,6 +5,7 @@ import { journalMigrations } from '../journalMigrations';
 import { addMilestone, createGoal, listGoals } from '../goalsRepo';
 import { createHabit, listHabits, setHabitDone } from '../habitsRepo';
 import { migrate } from '../migrations';
+import { createBlock, listBlocks, listFocus, replaceFocus } from '../plannerRepo';
 import { createTask, listTasks } from '../tasksRepo';
 import { createTestDatabase } from '../testing/testDatabase';
 import { wipeAppData, wipeJournalData } from '../wipeRepo';
@@ -20,6 +21,14 @@ describe('wipeAppData', () => {
     setHabitDone(db, 'h1', '2026-10-14', true, now);
     createGoal(db, 'g1', { title: 'g', notes: '', targetDate: null }, now);
     addMilestone(db, 'm1', 'g1', 'step', now);
+    createBlock(
+      db,
+      'b1',
+      '2026-10-14',
+      { title: 'x', taskId: null, startMinutes: 540, durationMinutes: 30 },
+      now,
+    );
+    replaceFocus(db, '2026-10-14', ['t1'], now);
 
     wipeAppData(db);
 
@@ -28,6 +37,9 @@ describe('wipeAppData', () => {
     expect(listGoals(db)).toEqual([]);
     expect(db.all('SELECT * FROM habit_completions')).toEqual([]);
     expect(db.all('SELECT * FROM milestones')).toEqual([]);
+    expect(listBlocks(db)).toEqual([]);
+    expect(db.all('SELECT * FROM plan_blocks')).toEqual([]);
+    expect(listFocus(db)).toEqual([]);
 
     createTask(db, 't2', { title: 'b', notes: '', dueDate: null, priority: 0 }, now);
     expect(listTasks(db)).toHaveLength(1);

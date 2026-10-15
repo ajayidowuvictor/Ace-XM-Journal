@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { THEME_PREFERENCES, type ThemePreference } from '@/theme/schemes';
 import { useTheme } from '@/theme/context';
-import { Button, Screen, SegmentedControl, Text, TextField, spacing } from '@/ui';
+import { Button, Screen, SegmentedControl, Text, TextField, fonts, spacing } from '@/ui';
 
 const APPEARANCE_OPTIONS = THEME_PREFERENCES.map((value) => ({
   value,
@@ -70,7 +70,7 @@ export default function OnboardingScreen() {
 
 const styles = StyleSheet.create({
   header: { gap: spacing.sm, paddingTop: spacing.lg },
-  brand: { letterSpacing: 2, fontWeight: '700' },
+  brand: { letterSpacing: 2, fontFamily: fonts.bold },
   benefits: { gap: spacing.md },
   appearance: { gap: spacing.sm },
 });

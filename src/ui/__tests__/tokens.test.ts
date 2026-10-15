@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@jest/globals';
-import { brand, darkColors, lightColors, type ColorTokens } from '../tokens';
+import { brand, darkColors, fonts, lightColors, typography, type ColorTokens } from '../tokens';
 
 function channel(value: number): number {
   const c = value / 255;
@@ -44,7 +44,27 @@ describe.each([
     ['danger on background', c.danger, c.background],
     ['danger on surface', c.danger, c.surface],
     ['onDanger on danger', c.onDanger, c.danger],
+    ['text on muted surface', c.text, c.surfaceMuted],
+    ['muted text on muted surface', c.textMuted, c.surfaceMuted],
+    ['text on selected thumb', c.text, c.thumb],
+    ['primary on primary tint', c.primary, c.primaryTint],
+    ['success on success tint', c.success, c.successTint],
+    ['danger on danger tint', c.danger, c.dangerTint],
   ])('%s', (_label, fg, bg) => {
     expect(contrast(fg, bg)).toBeGreaterThanOrEqual(4.5);
+  });
+});
+
+describe('typography', () => {
+  it('only uses the loaded Inter weights', () => {
+    const allowed = new Set(Object.values(fonts));
+    for (const style of Object.values(typography)) {
+      expect(allowed.has(style.fontFamily)).toBe(true);
+    }
+  });
+
+  it('keeps body text at a comfortable size and line height', () => {
+    expect(typography.body.fontSize).toBeGreaterThanOrEqual(16);
+    expect(typography.body.lineHeight / typography.body.fontSize).toBeGreaterThanOrEqual(1.4);
   });
 });

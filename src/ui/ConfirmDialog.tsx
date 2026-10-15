@@ -36,7 +36,7 @@ export function ConfirmDialog({
       accessibilityViewIsModal
     >
       <View style={styles.overlay}>
-        <Card style={styles.dialog}>
+        <Card variant="hero" style={styles.dialog}>
           <Text variant="heading">{title}</Text>
           <Text muted>{message}</Text>
           <View style={styles.actions}>
