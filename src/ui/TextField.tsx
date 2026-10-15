@@ -3,7 +3,7 @@ import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
 import { useTheme } from '../theme/context';
 import { Text } from './Text';
-import { minTouchTarget, radius, spacing, typography } from './tokens';
+import { radius, spacing, typography } from './tokens';
 
 type Props = Omit<TextInputProps, 'style'> & {
   label: string;
