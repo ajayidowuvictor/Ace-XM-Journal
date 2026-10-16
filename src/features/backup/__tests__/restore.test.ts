@@ -31,6 +31,7 @@ function filledDatabases() {
       priority: 3,
       repeat: 'monthly',
       reminderTime: '09:00',
+      category: 'health',
     },
     t(1),
   );
@@ -219,6 +220,7 @@ describe('tasks from before repeats and reminders existed', () => {
     );
     expect(data!.tasks[0]).toMatchObject({ repeat: 'none', reminderTime: null });
     expect(data!.tasks[1]).toMatchObject({ repeat: 'none', reminderTime: null });
+    expect(data!.tasks[0].category).toBe('none');
   });
 });
 

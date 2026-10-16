@@ -5,16 +5,26 @@ import { useTheme } from '../../theme/context';
 import { REMINDER_TIME_CHOICES, reminderChoiceFor } from '../reminders/taskReminders';
 import {
   Button,
+  Card,
   Chip,
   ConfirmDialog,
   SegmentedControl,
   Text,
   TextField,
+  layout,
   spacing,
   type SegmentOption,
 } from '../../ui';
 import { choiceFor, dueDateFor, type DueChoice } from './logic';
-import { REPEAT_LABELS, type Priority, type RepeatRule, type Task, type TaskInput } from './types';
+import {
+  CATEGORY_LABELS,
+  REPEAT_LABELS,
+  type Priority,
+  type RepeatRule,
+  type Task,
+  type TaskCategory,
+  type TaskInput,
+} from './types';
 
 type Props = {
   visible: boolean;
@@ -27,6 +37,8 @@ type Props = {
 };
 
 const REPEAT_RULES: readonly RepeatRule[] = ['none', 'daily', 'weekdays', 'weekly', 'monthly'];
+
+const CATEGORIES: readonly TaskCategory[] = ['none', 'deep', 'routine', 'personal', 'health'];
 
 const PRIORITY_OPTIONS: readonly SegmentOption<`${Priority}`>[] = [
   { value: '0', label: 'None' },
@@ -46,6 +58,7 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
   const [priority, setPriority] = useState<`${Priority}`>(`${task?.priority ?? 0}`);
   const [repeat, setRepeat] = useState<RepeatRule>(task?.repeat ?? 'none');
   const [reminder, setReminder] = useState<string>(reminderChoiceFor(task?.reminderTime ?? null));
+  const [category, setCategory] = useState<TaskCategory>(task?.category ?? 'none');
   const [error, setError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
@@ -95,9 +108,12 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
       priority: Number(priority) as Priority,
       repeat: dueDate ? repeat : 'none',
       reminderTime: dueDate && reminder !== 'off' ? reminder : null,
+      category,
     });
     if (problem) setError(problem);
   }
+
+  const saveLabel = task ? 'Save task' : dueChoice === 'today' ? 'Add to today' : 'Add task';
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
@@ -105,91 +121,121 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={[styles.flex, { backgroundColor: colors.background }]}
       >
+        <View style={[styles.topBar, { borderBottomColor: colors.border }]}>
+          <Button label="Cancel" variant="ghost" size="compact" onPress={onClose} />
+          <Text variant="subheading" accessibilityRole="header">
+            {task ? 'Edit task' : 'New task'}
+          </Text>
+          <View style={styles.topSpacer} />
+        </View>
+
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-          <Text variant="title">{task ? 'Edit task' : 'New task'}</Text>
-
-          <TextField
-            label="Task"
-            value={title}
-            onChangeText={(text) => {
-              setTitle(text);
-              setError(null);
-            }}
-            error={error ?? undefined}
-            placeholder="What needs doing?"
-            autoFocus={!task}
-            returnKeyType="done"
-          />
-          <TextField
-            label="Notes (optional)"
-            value={notes}
-            onChangeText={setNotes}
-            multiline
-            placeholder="Anything to remember"
-          />
-
-          <View style={styles.group}>
-            <Text variant="caption" muted>
-              Due
-            </Text>
-            <SegmentedControl
-              accessibilityLabel="Due date"
-              options={dueOptions}
-              value={dueChoice}
-              onChange={chooseDue}
+          <Card style={styles.card}>
+            <TextField
+              label="Task"
+              value={title}
+              onChangeText={(text) => {
+                setTitle(text);
+                setError(null);
+              }}
+              error={error ?? undefined}
+              placeholder="What needs doing?"
+              autoFocus={!task}
+              returnKeyType="done"
             />
-          </View>
-
-          <View style={styles.group}>
-            <Text variant="caption" muted>
-              Repeat
-            </Text>
-            <View style={styles.chips}>
-              {REPEAT_RULES.map((rule) => (
-                <Chip
-                  key={rule}
-                  label={rule === 'none' ? 'Never' : REPEAT_LABELS[rule].replace('Every ', '')}
-                  accessibilityLabel={REPEAT_LABELS[rule]}
-                  selected={repeat === rule}
-                  onPress={() => chooseRepeat(rule)}
-                />
-              ))}
-            </View>
-          </View>
-
-          <View style={styles.group}>
-            <Text variant="caption" muted>
-              Remind me on the due date at
-            </Text>
-            <View style={styles.chips}>
-              {reminderChoices.map((choice) => (
-                <Chip
-                  key={choice.value}
-                  label={choice.label}
-                  accessibilityLabel={
-                    choice.value === 'off' ? 'No reminder' : `Remind me at ${choice.label}`
-                  }
-                  selected={reminder === choice.value}
-                  onPress={() => chooseReminder(choice.value)}
-                />
-              ))}
-            </View>
-          </View>
-
-          <View style={styles.group}>
-            <Text variant="caption" muted>
-              Priority
-            </Text>
-            <SegmentedControl
-              accessibilityLabel="Priority"
-              options={PRIORITY_OPTIONS}
-              value={priority}
-              onChange={setPriority}
+            <TextField
+              label="Notes (optional)"
+              value={notes}
+              onChangeText={setNotes}
+              multiline
+              placeholder="Anything to remember"
             />
-          </View>
+          </Card>
 
-          <Button label="Save task" onPress={save} />
-          <Button label="Cancel" variant="ghost" onPress={onClose} />
+          <Card style={styles.card}>
+            <View style={styles.group}>
+              <Text variant="caption" muted>
+                Due
+              </Text>
+              <SegmentedControl
+                accessibilityLabel="Due date"
+                options={dueOptions}
+                value={dueChoice}
+                onChange={chooseDue}
+              />
+            </View>
+
+            <View style={styles.group}>
+              <Text variant="caption" muted>
+                Remind me on the due date at
+              </Text>
+              <View style={styles.chips}>
+                {reminderChoices.map((choice) => (
+                  <Chip
+                    key={choice.value}
+                    label={choice.label}
+                    accessibilityLabel={
+                      choice.value === 'off' ? 'No reminder' : `Remind me at ${choice.label}`
+                    }
+                    selected={reminder === choice.value}
+                    onPress={() => chooseReminder(choice.value)}
+                  />
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.group}>
+              <Text variant="caption" muted>
+                Repeat
+              </Text>
+              <View style={styles.chips}>
+                {REPEAT_RULES.map((rule) => (
+                  <Chip
+                    key={rule}
+                    label={rule === 'none' ? 'Never' : REPEAT_LABELS[rule].replace('Every ', '')}
+                    accessibilityLabel={REPEAT_LABELS[rule]}
+                    selected={repeat === rule}
+                    onPress={() => chooseRepeat(rule)}
+                  />
+                ))}
+              </View>
+            </View>
+          </Card>
+
+          <Card style={styles.card}>
+            <View style={styles.group}>
+              <Text variant="caption" muted>
+                Priority
+              </Text>
+              <SegmentedControl
+                accessibilityLabel="Priority"
+                options={PRIORITY_OPTIONS}
+                value={priority}
+                onChange={setPriority}
+              />
+            </View>
+
+            <View style={styles.group}>
+              <Text variant="caption" muted>
+                Category
+              </Text>
+              <View style={styles.chips}>
+                {CATEGORIES.map((item) => (
+                  <Chip
+                    key={item}
+                    label={CATEGORY_LABELS[item]}
+                    accessibilityLabel={
+                      item === 'none' ? 'No category' : `Category: ${CATEGORY_LABELS[item]}`
+                    }
+                    selected={category === item}
+                    onPress={() => setCategory(item)}
+                  />
+                ))}
+              </View>
+            </View>
+          </Card>
+
+          <Button label={saveLabel} onPress={save} />
           {task ? (
             <Button
               label="Delete task"
@@ -218,7 +264,18 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  content: { padding: spacing.lg, paddingTop: spacing.xxl, gap: spacing.md },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.xl,
+    paddingBottom: spacing.sm,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  topSpacer: { width: 72 },
+  content: { padding: layout.gutter, gap: spacing.md, paddingBottom: spacing.xxl },
+  card: { gap: spacing.md },
   group: { gap: spacing.xs },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
 });

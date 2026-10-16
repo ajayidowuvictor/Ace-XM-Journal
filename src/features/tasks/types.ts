@@ -18,6 +18,17 @@ export const REPEAT_LABELS: Record<RepeatRule, string> = {
   monthly: 'Every month',
 };
 
+/** What kind of task it is. Shown as a small coloured label; "none" means no label. */
+export type TaskCategory = 'none' | 'deep' | 'routine' | 'personal' | 'health';
+
+export const CATEGORY_LABELS: Record<TaskCategory, string> = {
+  none: 'None',
+  deep: 'Deep work',
+  routine: 'Routine',
+  personal: 'Personal',
+  health: 'Health',
+};
+
 export type Task = {
   id: string;
   title: string;
@@ -28,6 +39,7 @@ export type Task = {
   repeat: RepeatRule;
   /** Local time `HH:MM` for a reminder on the due date, or null for no reminder. */
   reminderTime: string | null;
+  category: TaskCategory;
   /** UTC timestamp (ISO 8601) when completed, or null while still open. */
   completedAt: string | null;
   createdAt: string;
@@ -43,4 +55,6 @@ export type TaskInput = {
   repeat?: RepeatRule;
   /** Left out means "no reminder" when adding and "unchanged" when editing. */
   reminderTime?: string | null;
+  /** Left out means "no category" when adding and "unchanged" when editing. */
+  category?: TaskCategory;
 };

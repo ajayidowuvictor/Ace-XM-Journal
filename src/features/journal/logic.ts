@@ -82,3 +82,11 @@ export function relativeDayLabel(entryDate: string, today: string): string | nul
 export function entriesOnDay(entries: readonly JournalEntry[], day: string | null): JournalEntry[] {
   return day === null ? [...entries] : entries.filter((entry) => entry.entryDate === day);
 }
+
+/** Adds a quotation (such as a saved verse) to the end of the text, after a blank line. */
+export function appendQuote(body: string, quote: string): string {
+  const addition = quote.trim();
+  if (!addition) return body;
+  const current = body.trimEnd();
+  return current ? `${current}\n\n${addition}` : addition;
+}

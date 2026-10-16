@@ -7,6 +7,7 @@ import {
   MAX_TAG_LENGTH,
   entryHeadline,
   escapeLike,
+  appendQuote,
   isEmptyEntry,
   moodFor,
   normalizeTag,
@@ -115,5 +116,18 @@ describe('entriesOnDay', () => {
     expect(entriesOnDay(entries, null).map((e) => e.id)).toEqual(['a', 'b', 'c']);
     expect(entriesOnDay(entries, '2026-10-16').map((e) => e.id)).toEqual(['a', 'c']);
     expect(entriesOnDay(entries, '2026-10-01')).toEqual([]);
+  });
+});
+
+describe('appendQuote', () => {
+  it('puts the quote on its own paragraph at the end', () => {
+    expect(appendQuote('Today I read this.  \n', '“Be still.”\n— Psalm 46:10')).toBe(
+      'Today I read this.\n\n“Be still.”\n— Psalm 46:10',
+    );
+  });
+
+  it('starts the page with the quote when it is empty and ignores an empty quote', () => {
+    expect(appendQuote('', '“Be still.”')).toBe('“Be still.”');
+    expect(appendQuote('Hello', '   ')).toBe('Hello');
   });
 });

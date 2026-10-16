@@ -98,6 +98,12 @@ export const migrations: readonly Migration[] = [
       ALTER TABLE tasks ADD COLUMN reminder_time TEXT;
     `,
   },
+  {
+    version: 6,
+    sql: `
+      ALTER TABLE tasks ADD COLUMN category TEXT NOT NULL DEFAULT 'none';
+    `,
+  },
 ];
 
 /** Applies any migrations the database has not seen yet. Returns the resulting version. */
