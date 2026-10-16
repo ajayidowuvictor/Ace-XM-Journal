@@ -17,11 +17,15 @@ function filledSource() {
   db.run(
     `INSERT INTO habit_completions (habit_id, completed_date, created_at) VALUES ('h1', '2026-10-14', 'c'), ('h1', '2026-10-15', 'c')`,
   );
-  db.run(`INSERT INTO goals (id, title, notes, created_at, updated_at) VALUES ('g1', 'Run', '', 'c', 'u')`);
+  db.run(
+    `INSERT INTO goals (id, title, notes, created_at, updated_at) VALUES ('g1', 'Run', '', 'c', 'u')`,
+  );
   db.run(
     `INSERT INTO milestones (id, goal_id, title, created_at, updated_at) VALUES ('m1', 'g1', 'Week 1', 'c', 'u')`,
   );
-  db.run(`INSERT INTO plan_focus (plan_date, task_id, position, created_at) VALUES ('2026-10-16', 't1', 0, 'c')`);
+  db.run(
+    `INSERT INTO plan_focus (plan_date, task_id, position, created_at) VALUES ('2026-10-16', 't1', 0, 'c')`,
+  );
   db.run(
     `INSERT INTO plan_blocks (id, plan_date, title, task_id, start_minutes, duration_minutes, created_at, updated_at)
      VALUES ('b1', '2026-10-16', 'Focus', 't1', 540, 60, 'c', 'u')`,
@@ -30,7 +34,9 @@ function filledSource() {
 }
 
 function counts(db: ReturnType<typeof createTestDatabase>) {
-  return APP_TABLES.map((table) => db.first<{ n: number }>(`SELECT count(*) AS n FROM ${table}`)?.n);
+  return APP_TABLES.map(
+    (table) => db.first<{ n: number }>(`SELECT count(*) AS n FROM ${table}`)?.n,
+  );
 }
 
 describe('copyAppData', () => {

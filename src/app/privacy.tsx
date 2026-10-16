@@ -9,7 +9,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: 'How your data is protected',
-    body: "Your journal, your notes (including verses and long texts), your tasks, habits, goals and day plans are stored in encrypted databases. The keys are created on your phone and kept in Android secure storage, so the data cannot be read from the files alone.",
+    body: 'Your journal, your notes (including verses and long texts), your tasks, habits, goals and day plans are stored in encrypted databases. The keys are created on your phone and kept in Android secure storage, so the data cannot be read from the files alone.',
   },
   {
     title: 'App lock',
