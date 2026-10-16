@@ -4,8 +4,10 @@ import {
   MAX_NAME_LENGTH,
   currentStreak,
   doneInLastDays,
+  lastDaysDone,
   longestStreak,
   todaySummary,
+  weekConsistency,
   validateHabitName,
 } from '../logic';
 
@@ -80,5 +82,71 @@ describe('todaySummary', () => {
 
   it('has zero progress when there are no habits', () => {
     expect(todaySummary([], TODAY)).toEqual({ done: 0, total: 0, progress: 0 });
+  });
+});
+
+describe('weekConsistency', () => {
+  // 2026-10-14 is a Wednesday; its week is Monday 12 to Sunday 18 October.
+  const habits = [
+    { completedDates: ['2026-10-12', '2026-10-13', '2026-10-14'] },
+    { completedDates: ['2026-10-12', '2026-10-14'] },
+  ];
+
+  it('marks each day of the week from Monday', () => {
+    const week = weekConsistency(habits, '2026-10-14');
+    expect(week.days.map((d) => d.date)).toEqual([
+      '2026-10-12',
+      '2026-10-13',
+      '2026-10-14',
+      '2026-10-15',
+      '2026-10-16',
+      '2026-10-17',
+      '2026-10-18',
+    ]);
+    expect(week.days.map((d) => d.label).join('')).toBe('MTWTFSS');
+    expect(week.days.map((d) => d.status)).toEqual([
+      'all',
+      'some',
+      'all',
+      'future',
+      'future',
+      'future',
+      'future',
+    ]);
+    expect(week.days[2].isToday).toBe(true);
+    expect(week.days[1].isToday).toBe(false);
+  });
+
+  it('counts check-ins against what was possible up to today', () => {
+    const week = weekConsistency(habits, '2026-10-14');
+    expect(week.done).toBe(5);
+    expect(week.possible).toBe(6);
+    expect(week.rate).toBeCloseTo(5 / 6);
+  });
+
+  it('starts a new week on Monday and handles a Sunday', () => {
+    expect(weekConsistency(habits, '2026-10-12').days[0].isToday).toBe(true);
+    const sunday = weekConsistency(habits, '2026-10-18');
+    expect(sunday.days[0].date).toBe('2026-10-12');
+    expect(sunday.days[6].isToday).toBe(true);
+  });
+
+  it('has no rate and marks days as missed when there are no habits', () => {
+    const week = weekConsistency([], '2026-10-14');
+    expect(week.rate).toBe(0);
+    expect(week.possible).toBe(0);
+    expect(week.days[0].status).toBe('none');
+  });
+});
+
+describe('lastDaysDone', () => {
+  it('lists the last days oldest first', () => {
+    expect(lastDaysDone(['2026-10-14', '2026-10-12'], '2026-10-14', 4)).toEqual([
+      false,
+      true,
+      false,
+      true,
+    ]);
+    expect(lastDaysDone([], '2026-10-14')).toEqual([false, false, false, false, false, false, false]);
   });
 });

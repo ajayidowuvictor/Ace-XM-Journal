@@ -24,12 +24,22 @@ const SAVE_TEXT: Record<SaveState, string> = {
 };
 
 /** Edits one entry (or starts a new one) and saves automatically when typing pauses. */
-export function EntryEditor({ entry }: { entry: JournalEntry | null }) {
+export function EntryEditor({
+  entry,
+  initialTitle,
+  bodyPrompt,
+}: {
+  entry: JournalEntry | null;
+  /** A title to start a new entry with, such as "Reflection: John 3:16". Never used for an existing entry. */
+  initialTitle?: string;
+  /** A question shown faintly in the empty text box of a new entry. It is not saved. */
+  bodyPrompt?: string;
+}) {
   const router = useRouter();
   const { colors } = useTheme();
   const { create, save, remove } = useJournal();
 
-  const [title, setTitle] = useState(entry?.title ?? '');
+  const [title, setTitle] = useState(entry?.title ?? initialTitle ?? '');
   const [body, setBody] = useState(entry?.body ?? '');
   const [mood, setMood] = useState<Mood | null>(entry?.mood ?? null);
   const [tagsText, setTagsText] = useState(tagsToText(entry?.tags ?? []));
@@ -144,7 +154,7 @@ export function EntryEditor({ entry }: { entry: JournalEntry | null }) {
             }}
             multiline
             textAlignVertical="top"
-            placeholder="Write freely. This stays private on your phone."
+            placeholder={bodyPrompt ?? 'Write freely. This stays private on your phone.'}
             autoFocus={!entry}
           />
 

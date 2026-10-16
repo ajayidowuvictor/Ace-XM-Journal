@@ -2,10 +2,14 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { CheckInCard } from '@/features/home/CheckInCard';
+import { checkInPrompt, verseOfTheDay } from '@/features/home/logic';
+import { VerseCard } from '@/features/home/VerseCard';
 import { useHabits } from '@/features/habits/HabitsContext';
 import { HabitRow } from '@/features/habits/HabitRow';
 import { todaySummary } from '@/features/habits/logic';
 import { useJournal } from '@/features/journal/JournalContext';
+import { useNotes } from '@/features/notes/NotesContext';
 import { useOnboarding } from '@/features/onboarding/OnboardingContext';
 import { CarryOverCard } from '@/features/planner/CarryOverCard';
 import { FocusCard } from '@/features/planner/FocusCard';
@@ -37,6 +41,7 @@ import { addDays, formatShortDate, parseLocalDate, toLocalDateString } from '@/l
 import { formatLongDate, greetingForHour } from '@/lib/greeting';
 import { useNow } from '@/lib/useNow';
 import {
+  AppHeader,
   Button,
   Card,
   EmptyState,
@@ -77,6 +82,7 @@ export default function HomeScreen() {
   const { habits, setDoneToday } = useHabits();
   const { focus, blocks, setFocus } = usePlanner();
   const { allEntries, create, save, status: journalStatus } = useJournal();
+  const { notes } = useNotes();
 
   const focusList = focusTasks(focus, tasks, planDate);
   const focusIds = focusList.map((task) => task.id);
@@ -104,6 +110,7 @@ export default function HomeScreen() {
   const habitSummary = todaySummary(habits, today);
   const carryOver = day === 'today' ? carryOverTasks(tasks, today) : [];
   const wrapUp = findWrapUp(allEntries, today);
+  const verse = verseOfTheDay(notes, today);
   const showWrapUp = day === 'today' && (now.getHours() >= WRAP_UP_HOUR || wrapUp !== null);
 
   function chooseFocus(task: Task) {
@@ -151,13 +158,43 @@ export default function HomeScreen() {
   }
 
   return (
-    <Screen>
+    <Screen
+      header={
+        <AppHeader
+          section="Home"
+          right={
+            <Button
+              label="Search"
+              variant="secondary"
+              size="compact"
+              onPress={() => router.push('/search')}
+            />
+          }
+        />
+      }
+    >
       <View style={styles.header}>
         <Text variant="title">{displayName ? `${greeting}, ${displayName}` : greeting}</Text>
         <Text variant="secondary" muted>
           {formatLongDate(day === 'today' ? now : (parseLocalDate(tomorrow) ?? now))}
         </Text>
       </View>
+
+      {day === 'today' ? (
+        <VerseCard
+          verse={verse}
+          onOpen={(item) => router.push({ pathname: '/read', params: { id: item.id } })}
+          onReflect={(item) =>
+            router.push({
+              pathname: '/entry',
+              params: {
+                title: item.reference.trim() ? `Reflection: ${item.reference.trim()}` : 'Reflection',
+              },
+            })
+          }
+          onAdd={() => router.push({ pathname: '/note', params: { kind: 'verse' } })}
+        />
+      ) : null}
 
       <SegmentedControl
         accessibilityLabel="Day to plan"
@@ -186,7 +223,7 @@ export default function HomeScreen() {
       />
 
       <SectionHeader
-        title="Plan the day"
+        title={day === 'today' ? "Today's flow" : "Tomorrow's flow"}
         actionLabel="Add block"
         onAction={() => blockEditor.open(null)}
       />
@@ -242,6 +279,15 @@ export default function HomeScreen() {
         </>
       ) : null}
 
+      {day === 'today' && !showWrapUp ? (
+        <CheckInCard
+          prompt={checkInPrompt(today)}
+          onWrite={() =>
+            router.push({ pathname: '/entry', params: { prompt: checkInPrompt(today) } })
+          }
+        />
+      ) : null}
+
       {showWrapUp ? (
         <WrapUpCard
           key={wrapUp?.id ?? 'new'}
@@ -253,9 +299,9 @@ export default function HomeScreen() {
 
       <View style={styles.shortcuts}>
         <Button
-          label="Search"
+          label="Calendar"
           variant="secondary"
-          onPress={() => router.push('/search')}
+          onPress={() => router.push('/calendar')}
           style={styles.shortcut}
         />
         <Button
@@ -266,20 +312,7 @@ export default function HomeScreen() {
         />
       </View>
 
-      <View style={styles.shortcuts}>
-        <Button
-          label="Calendar"
-          variant="secondary"
-          onPress={() => router.push('/calendar')}
-          style={styles.shortcut}
-        />
-        <Button
-          label="Weekly review"
-          variant="secondary"
-          onPress={() => router.push('/review')}
-          style={styles.shortcut}
-        />
-      </View>
+      <Button label="Weekly review" variant="secondary" onPress={() => router.push('/review')} />
 
       {taskEditor.element}
       {blockEditor.element}

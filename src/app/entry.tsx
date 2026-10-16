@@ -6,7 +6,11 @@ import { useJournal } from '@/features/journal/JournalContext';
 import { ErrorState, LoadingState, Screen } from '@/ui';
 
 export default function EntryScreen() {
-  const { id } = useLocalSearchParams<{ id?: string }>();
+  const { id, title, prompt } = useLocalSearchParams<{
+    id?: string;
+    title?: string;
+    prompt?: string;
+  }>();
   const { status, findEntry } = useJournal();
 
   if (status === 'loading') {
@@ -18,7 +22,7 @@ export default function EntryScreen() {
   }
 
   return status === 'ready' ? (
-    <Loaded id={id ?? null} findEntry={findEntry} />
+    <Loaded id={id ?? null} findEntry={findEntry} title={title} prompt={prompt} />
   ) : (
     <Screen>
       <ErrorState message="Your journal could not be unlocked on this device." />
@@ -29,9 +33,13 @@ export default function EntryScreen() {
 function Loaded({
   id,
   findEntry,
+  title,
+  prompt,
 }: {
   id: string | null;
   findEntry: ReturnType<typeof useJournal>['findEntry'];
+  title?: string;
+  prompt?: string;
 }) {
   // Read once so the editor keeps its own text while the user types.
   const [entry] = useState(() => (id ? findEntry(id) : null));
@@ -43,5 +51,5 @@ function Loaded({
       </Screen>
     );
   }
-  return <EntryEditor entry={entry} />;
+  return <EntryEditor entry={entry} initialTitle={title} bodyPrompt={prompt} />;
 }

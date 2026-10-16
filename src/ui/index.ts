@@ -1,3 +1,4 @@
+export { AppHeader } from './AppHeader';
 export { Button } from './Button';
 export { Card } from './Card';
 export { Checkbox } from './Checkbox';
@@ -9,6 +10,7 @@ export { Screen } from './Screen';
 export { SectionHeader } from './SectionHeader';
 export { SegmentedControl, type SegmentOption } from './SegmentedControl';
 export { EmptyState, ErrorState, LoadingState } from './states';
+export { StatusPill } from './StatusPill';
 export { Text } from './Text';
 export { TextField } from './TextField';
 export * from './tokens';
