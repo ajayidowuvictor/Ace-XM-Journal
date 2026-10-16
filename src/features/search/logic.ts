@@ -67,7 +67,8 @@ export function snippet(text: string, terms: readonly string[], around = 45): st
     at = lower.indexOf(term);
     if (at !== -1) break;
   }
-  if (at === -1) return flat.length > around * 2 ? `${flat.slice(0, around * 2).trimEnd()}...` : flat;
+  if (at === -1)
+    return flat.length > around * 2 ? `${flat.slice(0, around * 2).trimEnd()}...` : flat;
   const start = Math.max(0, at - around);
   const end = Math.min(flat.length, at + around);
   return `${start > 0 ? '...' : ''}${flat.slice(start, end).trim()}${end < flat.length ? '...' : ''}`;
@@ -81,7 +82,12 @@ function detailFrom(texts: readonly string[], terms: readonly string[]): string 
 
 function group(kind: SearchKind, all: SearchHit[]): SearchGroup | null {
   if (all.length === 0) return null;
-  return { kind, label: GROUP_LABELS[kind], hits: all.slice(0, MAX_HITS_PER_KIND), total: all.length };
+  return {
+    kind,
+    label: GROUP_LABELS[kind],
+    hits: all.slice(0, MAX_HITS_PER_KIND),
+    total: all.length,
+  };
 }
 
 /**
