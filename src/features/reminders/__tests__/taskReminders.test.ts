@@ -39,11 +39,15 @@ describe('reminderMoment', () => {
     expect(reminderMoment(task('a', { completedAt: '2026-10-15T00:00:00.000Z' }), NOW)).toBeNull();
     expect(reminderMoment(task('a', { dueDate: null }), NOW)).toBeNull();
     expect(reminderMoment(task('a', { reminderTime: null }), NOW)).toBeNull();
-    expect(reminderMoment(task('a', { dueDate: '2026-10-16', reminderTime: '09:00' }), NOW)).toBeNull();
-    expect(reminderMoment(task('a', { dueDate: '2026-10-16', reminderTime: '12:00' }), NOW)).toBeNull();
-    expect(reminderMoment(task('a', { dueDate: '2026-10-16', reminderTime: '12:01' }), NOW)).toEqual(
-      new Date(2026, 9, 16, 12, 1),
-    );
+    expect(
+      reminderMoment(task('a', { dueDate: '2026-10-16', reminderTime: '09:00' }), NOW),
+    ).toBeNull();
+    expect(
+      reminderMoment(task('a', { dueDate: '2026-10-16', reminderTime: '12:00' }), NOW),
+    ).toBeNull();
+    expect(
+      reminderMoment(task('a', { dueDate: '2026-10-16', reminderTime: '12:01' }), NOW),
+    ).toEqual(new Date(2026, 9, 16, 12, 1));
   });
 
   it('is nothing for damaged dates or times', () => {

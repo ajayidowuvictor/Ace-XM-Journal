@@ -127,7 +127,11 @@ describe('tasks repository', () => {
   it('keeps the repeat rule and reminder when an edit leaves them out, and changes them when given', () => {
     createTask(db, 'rep', { ...input, repeat: 'daily', reminderTime: '08:00' }, t1);
     updateTask(db, 'rep', { ...input, title: 'Renamed' }, t2);
-    expect(listTasks(db)[0]).toMatchObject({ title: 'Renamed', repeat: 'daily', reminderTime: '08:00' });
+    expect(listTasks(db)[0]).toMatchObject({
+      title: 'Renamed',
+      repeat: 'daily',
+      reminderTime: '08:00',
+    });
 
     updateTask(db, 'rep', { ...input, repeat: 'monthly', reminderTime: null }, t2);
     expect(listTasks(db)[0]).toMatchObject({ repeat: 'monthly', reminderTime: null });

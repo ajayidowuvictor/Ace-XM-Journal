@@ -77,7 +77,10 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
   }
 
   const reminderChoices = [
-    ...REMINDER_TIME_CHOICES.map((choice) => ({ value: choice.value as string, label: choice.label })),
+    ...REMINDER_TIME_CHOICES.map((choice) => ({
+      value: choice.value as string,
+      label: choice.label,
+    })),
     ...(task?.reminderTime && !REMINDER_TIME_CHOICES.some((c) => c.value === task.reminderTime)
       ? [{ value: task.reminderTime, label: task.reminderTime }]
       : []),
