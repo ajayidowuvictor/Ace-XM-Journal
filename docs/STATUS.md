@@ -4,7 +4,7 @@ Last updated: 2026-10-16
 
 ## Current phase
 
-Feature-complete for the first (local-only) release. The owner has now walked through every screen on a phone (Infinix Hot 30i, Android 12) and reported that each worked. Automated checks (type check, lint, format, 379 tests, Android bundle build) back everything else.
+Feature-complete for the first (local-only) release. The owner has now walked through every screen on a phone (Infinix Hot 30i, Android 12) and reported that each worked. Automated checks (type check, lint, format, 387 tests, Android bundle build) back everything else.
 
 ## Phase 1 (design and Today planner): merged
 
@@ -44,13 +44,18 @@ Built on branch `feat/repeat-reminders`; CI passed (38 test groups, 368 tests). 
 - **Database:** migration 5 (`repeat`, `reminder_time` on tasks). Exports and backups carry both fields; older exports and backups restore as "does not repeat, no reminder".
 - **Not confirmed:** that task reminder notifications appear at the chosen time (the daily reminder firing is also still unconfirmed).
 
-## In progress: Phase 4b (search and templates)
+## Phase 4b (search and templates)
 
-Built on branch `feat/search-templates` (on top of 4a); CI passed on f5bf496 (type check, lint, format, 40 test groups, 379 tests). Not yet seen on a phone:
+Built on branch `feat/search-templates` (on top of 4a); CI passed (40 test groups, 379 tests). Test build installed by the owner to try. What it added:
 
 - **Search everything** (button on Home, screen `/search`): looks through tasks, goals (and their steps), habits, journal entries and notes at once. Every word must match (any order, ignoring capitals), from 2 letters; up to 8 results per kind with a count; open tasks listed before done ones. Tapping a result opens it (task, goal and habit forms, the journal entry, the note's reading view). Nothing is saved or logged; text is shown on screen only.
 - **Templates:** a blank new journal entry offers Gratitude, Daily reflection, Prayer, Weekly check-in; a blank new note (kind Note) offers Sermon notes, Meeting notes, Book notes. A template fills the page only when nothing has been typed. A template left untouched is saved like any other entry (delete it if unwanted).
-- **Not built yet:** insights (4c).
+
+## In progress: Phase 4c (insights)
+
+Built on branch `feat/insights` (on top of 4b); CI passed on 9e121cb (type check, lint, format, 41 test groups, 387 tests). Not yet seen on a phone:
+
+- **Insights** (button on Home, screen `/insights`), worked out on the phone from existing data, nothing new stored: tasks finished in each of the last 8 weeks (bars; each week is the 7 days ending on the date shown, like the Weekly review); each habit's days done out of the last 30 and its current streak; journal days written out of the last 30, writing streak, average mood by week; totals so far (tasks finished, goals achieved, journal entries).
 
 ## What the app does
 
@@ -94,7 +99,7 @@ Built on branch `feat/search-templates` (on top of 4a); CI passed on f5bf496 (ty
 
 ## Next actions
 
-0. Owner merges pull request #5 (4a) and tests the Phase 4b build (search, templates). Then insights (4c). The owner has not yet reported how long a backup takes on the phone.
+0. Owner merges pull request #5 (4a) and tests the Phase 4b (search, templates) and 4c (insights) builds. Pull requests for 4b and 4c are opened after testing; each branch sits on the one before it. The owner has not yet reported how long a backup takes on the phone.
 
 1. Owner confirms the reminder (next morning) and the journal after erase-all, and reports anything else to fix.
 2. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.
