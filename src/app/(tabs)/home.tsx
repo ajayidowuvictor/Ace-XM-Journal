@@ -251,6 +251,12 @@ export default function HomeScreen() {
         />
       ) : null}
 
+      <Button
+        label="Search everything"
+        variant="secondary"
+        onPress={() => router.push('/search')}
+      />
+
       <View style={styles.shortcuts}>
         <Button
           label="Calendar"
