@@ -12,6 +12,8 @@ export const PREF_KEYS = {
   lockDelay: 'app-lock-delay',
   lockBiometric: 'app-lock-biometric',
   lockAttempts: 'app-lock-attempts',
+  lastBackup: 'last-backup-at',
+  backupSnooze: 'backup-nudge-snooze',
 } as const;
 
 /** Reads a stored preference. Returns null if nothing is stored or storage is unavailable. */
