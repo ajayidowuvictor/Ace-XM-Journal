@@ -4,7 +4,7 @@ import { success } from '../lib/haptics';
 import { useTheme } from '../theme/context';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
-import { minTouchTarget } from './tokens';
+import { maxFontScale, minTouchTarget } from './tokens';
 
 type Props = {
   checked: boolean;
@@ -41,7 +41,11 @@ export function Checkbox({ checked, onChange, accessibilityLabel }: Props) {
         ]}
       >
         {checked ? (
-          <Text variant="subheading" style={[styles.tick, { color: colors.surface }]}>
+          <Text
+            variant="subheading"
+            maxFontSizeMultiplier={maxFontScale.glyph}
+            style={[styles.tick, { color: colors.surface }]}
+          >
             ✓
           </Text>
         ) : null}

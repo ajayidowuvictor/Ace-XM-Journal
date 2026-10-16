@@ -1,7 +1,7 @@
 import { Modal, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
-import { Button, Card, PressableScale, Text, readingFont, radius, spacing } from '../../ui';
+import { Button, Card, PressableScale, Text, readingFont, radius, spacing, scrim } from '../../ui';
 import { shareText } from '../notes/logic';
 import { useNotes } from '../notes/NotesContext';
 
@@ -58,7 +58,7 @@ export function VersePicker({ visible, onPick, onClose }: Props) {
 }
 
 const styles = StyleSheet.create({
-  overlay: { flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'flex-end' },
+  overlay: { flex: 1, backgroundColor: scrim, justifyContent: 'flex-end' },
   sheet: {
     maxHeight: '75%',
     borderTopLeftRadius: radius.xl,

@@ -91,6 +91,10 @@ Branch `feat/backup-safety`. Not yet checked by CI or seen on a phone. The app k
 
 Branch `feat/reminder-check`. Not yet checked by CI or seen on a phone. Daily and task reminders have never been confirmed to arrive. Settings now has a "Check reminders" card: "Send a test reminder in 1 minute" (fixed text, one notification, same channel as the daily reminder) and "See what is scheduled" (says whether the daily reminder is set and how many task reminders are waiting). Purpose: find out whether this phone (Infinix, Android 12) lets reminders through when the app is closed; some makers block background apps. Any problem found there is fixed afterwards.
 
+## In progress: Phase 7 (polish pass)
+
+Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading the code (not by looking at a phone): empty screens were already covered on every list screen, and the colour contrast tests already cover both themes. Changed: (1) text size: all text may grow to 1.8 times the phone's "text size" setting and then stops, symbols inside small fixed circles and boxes (tick marks, weekly dots, PIN keys) grow at most 1.2 times so they stay inside; (2) the dim layer behind dialogs is one token (`scrim`) instead of eight copies; (3) bar labels on Insights can widen instead of being a fixed width; (4) the button squeeze animation is skipped when the phone's "remove animations" setting is on. Still to look at on a phone: dark mode on every screen, the largest text size, the splash screen.
+
 ## What the app does
 
 - **Shell and design:** brand theme (light, dark, system), first-run onboarding (optional name), five native tabs (Home, Tasks, Journal, Habits and goals, Settings), reusable accessible components. _Seen on a phone._

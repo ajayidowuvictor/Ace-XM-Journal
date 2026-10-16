@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
 
-import { Button, Card, Text, TextField, spacing } from '../../ui';
+import { Button, Card, Text, TextField, spacing, scrim } from '../../ui';
 import { MAX_NOTEBOOK_NAME, cleanNotebookName } from './logic';
 
 type Props = {
@@ -66,7 +66,7 @@ function OpenDialog({ title, confirmLabel, initialName = '', onCancel, onSave }:
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: scrim,
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing.lg,

@@ -1,7 +1,7 @@
 import { ActivityIndicator, Modal, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
-import { Card, Text, spacing } from '../../ui';
+import { Card, Text, spacing, scrim } from '../../ui';
 
 type Props = { visible: boolean; title: string; message: string };
 
@@ -29,7 +29,7 @@ export function BusyDialog({ visible, title, message }: Props) {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: scrim,
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing.lg,

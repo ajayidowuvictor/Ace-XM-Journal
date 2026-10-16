@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { failure, success } from '../../lib/haptics';
 import { useTheme } from '../../theme/context';
-import { Button, Card, Text, layout, radius, shadows, spacing } from '../../ui';
+import { Button, Card, Text, layout, radius, shadows, spacing, scrim } from '../../ui';
 import { useEraseAll } from '../settings/useEraseAll';
 import { WipeDialog } from '../settings/WipeDialog';
 import { formatWait } from './logic';
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   centered: { textAlign: 'center' },
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: scrim,
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing.lg,

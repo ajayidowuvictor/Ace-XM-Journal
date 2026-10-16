@@ -3,7 +3,7 @@ import { Modal, StyleSheet, View } from 'react-native';
 
 import { useNow } from '../../lib/useNow';
 import { useTheme } from '../../theme/context';
-import { Button, Card, Text, TextField, radius, spacing } from '../../ui';
+import { Button, Card, Text, TextField, radius, spacing, scrim } from '../../ui';
 import { useLastBackup } from '../backup/lastBackup';
 import { describeLastBackup } from '../backup/status';
 
@@ -87,7 +87,7 @@ export function WipeDialog({ visible, onConfirm, onCancel }: Props) {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: scrim,
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing.lg,

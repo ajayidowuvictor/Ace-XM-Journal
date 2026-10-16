@@ -1,7 +1,7 @@
 import { Text as RNText, type TextProps } from 'react-native';
 
 import { useTheme } from '../theme/context';
-import { typography } from './tokens';
+import { maxFontScale, typography } from './tokens';
 
 type Props = TextProps & {
   variant?: keyof typeof typography;
@@ -26,6 +26,10 @@ export function Text({ variant = 'body', muted = false, tone = 'default', style,
   const role = HEADER_VARIANTS.has(variant) ? 'header' : undefined;
 
   return (
-    <RNText accessibilityRole={role} {...rest} style={[typography[variant], { color }, style]} />
+    <RNText
+      accessibilityRole={role}
+      maxFontSizeMultiplier={maxFontScale.normal}
+      {...rest}
+      style={[typography[variant], { color }, style]} />
   );
 }

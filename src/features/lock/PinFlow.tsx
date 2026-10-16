@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
 
 import { success } from '../../lib/haptics';
-import { Button, Card, Text, spacing } from '../../ui';
+import { Button, Card, Text, spacing, scrim } from '../../ui';
 import { formatWait } from './logic';
 import { useLock } from './LockContext';
 import { PinPad } from './PinPad';
@@ -112,7 +112,7 @@ function OpenFlow({ mode, onClose }: { mode: PinFlowMode; onClose: (done: boolea
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: scrim,
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing.lg,

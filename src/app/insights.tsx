@@ -132,8 +132,8 @@ export default function InsightsScreen() {
 const styles = StyleSheet.create({
   back: { alignSelf: 'flex-start' },
   barRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  barLabel: { width: 52 },
-  barValue: { width: 28, textAlign: 'right' },
+  barLabel: { minWidth: 52 },
+  barValue: { minWidth: 28, textAlign: 'right' },
   track: { flex: 1, height: BAR_HEIGHT, borderRadius: radius.pill, overflow: 'hidden' },
   fill: { height: BAR_HEIGHT, borderRadius: radius.pill },
   habit: { gap: spacing.xs },
