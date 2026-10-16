@@ -140,7 +140,7 @@ describe('tasks repository', () => {
 
   it('saves the category, defaults to none, and keeps it when an edit leaves it out', () => {
     createTask(db, 'plain', input, t1);
-    createTask(db, 'cat', { ...input, category: 'deep' }, t1);
+    createTask(db, 'cat', { ...input, category: 'deep' }, t2);
     expect(listTasks(db).map((t) => t.category)).toEqual(['none', 'deep']);
 
     updateTask(db, 'cat', { ...input, title: 'Renamed' }, t2);
