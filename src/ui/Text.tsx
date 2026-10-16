@@ -30,6 +30,7 @@ export function Text({ variant = 'body', muted = false, tone = 'default', style,
       accessibilityRole={role}
       maxFontSizeMultiplier={maxFontScale.normal}
       {...rest}
-      style={[typography[variant], { color }, style]} />
+      style={[typography[variant], { color }, style]}
+    />
   );
 }
