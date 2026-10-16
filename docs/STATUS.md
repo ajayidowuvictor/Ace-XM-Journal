@@ -26,7 +26,7 @@ Tried on the owner's phone and reported working. Merged as pull request #3. What
 
 ## Phase 3 (app lock and encrypted backup): merged
 
-Tried on the owner's phone (app lock with PIN and fingerprint, backup and restore) and reported working. Merged as pull request #4. The backup duration on the phone was not reported. What it added:
+Tried on the owner's phone (app lock with PIN and fingerprint, backup and restore) and reported working. Merged as pull request #4. Making a backup takes about 20 seconds on the owner's phone (Infinix Hot 30i), so the scrypt setting (N=16384) is kept; the screen's warning says up to a minute. What it added:
 
 - **App lock (Settings > App lock):** six-digit PIN kept only as a salted SHA-256 fingerprint in Android secure storage; optional fingerprint (needs a saved finger; the permission is no longer blocked in `app.json`); lock right away, after 1 minute or after 5 minutes away; waits of 30 s, 1 min, 5 min, 15 min after 5 or more wrong PINs in a row; "Forgot PIN?" uses the phone's own screen lock to turn the app lock off, or offers erase-everything with the typed DELETE confirmation. The lock is a full-screen modal, so it also covers open pop-ups. It stops people who pick up an unlocked phone. It does **not** protect the data cryptographically: the journal key does not depend on the PIN, and tasks, habits and goals are still not encrypted.
 - **Encrypted backup (Settings > Backup and restore):** one file, `.acexmbackup`, made from a password of at least 10 characters. Key: scrypt (noble-hashes, N=16384, r=8, p=1, random 16-byte salt) then AES-256-GCM (expo-crypto) with the file settings bound in as authenticated data. Restore asks for the file and password, shows what it contains, and only after a confirmation replaces everything on the phone (each database all-or-nothing). A wrong password and a damaged file look the same.
@@ -99,7 +99,7 @@ Built on branch `feat/insights` (on top of 4b); CI passed on 9e121cb (type check
 
 ## Next actions
 
-0. Owner merges pull request #5 (4a) and tests the Phase 4b (search, templates) and 4c (insights) builds. Pull requests for 4b and 4c are opened after testing; each branch sits on the one before it. The owner has not yet reported how long a backup takes on the phone.
+0. Owner merges pull request #5 (4a) and tests the Phase 4b (search, templates) and 4c (insights) builds. Pull requests for 4b and 4c are opened after testing; each branch sits on the one before it.
 
 1. Owner confirms the reminder (next morning) and the journal after erase-all, and reports anything else to fix.
 2. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.
