@@ -36,6 +36,8 @@ type JournalValue = {
   remove: (id: string) => boolean;
   /** Permanently erases every entry. Returns true when done. */
   wipe: () => boolean;
+  /** Re-reads every entry from the database (used after a backup is restored). */
+  reload: () => void;
 };
 
 const JournalContext = createContext<JournalValue>({
@@ -50,6 +52,7 @@ const JournalContext = createContext<JournalValue>({
   save: () => false,
   remove: () => false,
   wipe: () => false,
+  reload: () => {},
 });
 
 export function JournalProvider({ children }: { children: ReactNode }) {
@@ -141,6 +144,13 @@ export function JournalProvider({ children }: { children: ReactNode }) {
     }
   }, [db]);
 
+  const reload = useCallback(() => {
+    if (!db) return;
+    const everything = listEntries(db);
+    setAllEntries(everything);
+    setEntries(query.trim() ? listEntries(db, query) : everything);
+  }, [db, query]);
+
   const value = useMemo(
     () => ({
       status,
@@ -154,8 +164,9 @@ export function JournalProvider({ children }: { children: ReactNode }) {
       save,
       remove,
       wipe,
+      reload,
     }),
-    [status, db, entries, allEntries, query, setQuery, findEntry, create, save, remove, wipe],
+    [status, db, entries, allEntries, query, setQuery, findEntry, create, save, remove, wipe, reload],
   );
 
   return <JournalContext.Provider value={value}>{children}</JournalContext.Provider>;

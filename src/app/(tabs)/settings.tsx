@@ -7,7 +7,9 @@ import { shareExport } from '@/features/export/shareExport';
 import { useGoals } from '@/features/goals/GoalsContext';
 import { useHabits } from '@/features/habits/HabitsContext';
 import { useJournal } from '@/features/journal/JournalContext';
+import { BackupCard } from '@/features/backup/BackupCard';
 import { AppLockCard } from '@/features/lock/AppLockCard';
+import { useLock } from '@/features/lock/LockContext';
 import { useNotes } from '@/features/notes/NotesContext';
 import {
   REMINDER_OPTIONS,
@@ -40,6 +42,7 @@ export default function SettingsScreen() {
   const { allEntries, status: journalStatus } = useJournal();
   const { notes, notebooks } = useNotes();
   const eraseAll = useEraseAll();
+  const { withoutLock } = useLock();
 
   const [reminder, setReminder] = useState<ReminderChoice>(() =>
     parseReminderChoice(readPreference(PREF_KEYS.reminder)),
@@ -85,7 +88,9 @@ export default function SettingsScreen() {
         },
         new Date().toISOString(),
       );
-      const shared = await shareExport(exportFileName(toLocalDateString(new Date())), text);
+      const shared = await withoutLock(() =>
+        shareExport(exportFileName(toLocalDateString(new Date())), text),
+      );
       setExportNote(
         !shared
           ? 'Sharing is not available on this device.'
@@ -175,6 +180,8 @@ export default function SettingsScreen() {
           </Text>
         ) : null}
       </Card>
+
+      <BackupCard />
 
       <Card>
         <Text variant="heading">Privacy</Text>
