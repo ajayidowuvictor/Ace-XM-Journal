@@ -1,0 +1,19 @@
+commit: a84c2931a7152eb1f09952dcfef021f3c672a24e
+
+Project is already linked; skipping eas init.
+Resolved "preview" environment for the build. Learn more: https://docs.expo.dev/eas/environment-variables/#setting-the-environment-for-your-builds
+No environment variables with visibility "Plain text" and "Sensitive" found for the "preview" environment on EAS.
+
+
+
+✔ Using remote Android credentials (Expo server)
+✔ Using Keystore from configuration: Build Credentials ndrkBeGVBu (default)
+
+Compressing project files and uploading to EAS Build. Learn more: https://expo.fyi/eas-build-archive
+- Uploading to EAS Build (0 / 2.9 MB)
+✔ Uploaded to EAS 
+- Computing project fingerprint
+✔ Computed project fingerprint
+This account has used its Android builds from the Free plan this month, which will reset in 15 days (on Sun Nov 01 2026). Upgrade your plan for more builds with shorter wait times and longer timeouts, and to run more builds concurrently with a subscription plan. https://expo.dev/accounts/ajayidowu/settings/billing
+Run eas billing:subscribe starter --account ajayidowu to upgrade to the Starter plan.
+    Error: build command failed.
