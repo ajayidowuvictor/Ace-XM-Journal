@@ -289,6 +289,11 @@ const styles = StyleSheet.create({
   body: { ...typography.body, minHeight: 240, padding: 0 },
   extras: { gap: spacing.md },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
-  status: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
+  status: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+  },
   statusText: { flex: 1 },
 });

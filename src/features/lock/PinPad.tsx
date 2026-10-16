@@ -70,7 +70,11 @@ export function PinPad({ value, onChange, onComplete, disabled = false, extraKey
           selectionTick();
           onPress();
         }}
-        style={[styles.key, { backgroundColor: colors.surface, opacity: disabled ? 0.5 : 1 }, shadow]}
+        style={[
+          styles.key,
+          { backgroundColor: colors.surface, opacity: disabled ? 0.5 : 1 },
+          shadow,
+        ]}
       >
         <RNText style={[styles.keyText, { color: colors.text }]}>{label}</RNText>
         {letters ? (
