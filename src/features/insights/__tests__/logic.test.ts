@@ -76,8 +76,21 @@ describe('weeklyTrends', () => {
 
 describe('habitRates', () => {
   const habits: Habit[] = [
-    { id: 'a', name: 'Walk', completedDates: ['2026-10-16', '2026-10-15', '2026-10-01'], createdAt: 'x' },
-    { id: 'b', name: 'Read', completedDates: Array.from({ length: 10 }, (_, i) => `2026-10-${String(i + 1).padStart(2, '0')}`), createdAt: 'x' },
+    {
+      id: 'a',
+      name: 'Walk',
+      completedDates: ['2026-10-16', '2026-10-15', '2026-10-01'],
+      createdAt: 'x',
+    },
+    {
+      id: 'b',
+      name: 'Read',
+      completedDates: Array.from(
+        { length: 10 },
+        (_, i) => `2026-10-${String(i + 1).padStart(2, '0')}`,
+      ),
+      createdAt: 'x',
+    },
     { id: 'c', name: 'Pray', completedDates: [], createdAt: 'x' },
   ];
 
@@ -96,7 +109,13 @@ describe('habitRates', () => {
 });
 
 describe('writing', () => {
-  const entries = [entry('2026-10-16'), entry('2026-10-16'), entry('2026-10-15'), entry('2026-10-13'), entry('2026-08-01')];
+  const entries = [
+    entry('2026-10-16'),
+    entry('2026-10-16'),
+    entry('2026-10-15'),
+    entry('2026-10-13'),
+    entry('2026-08-01'),
+  ];
 
   it('counts days with an entry in the window, not entries', () => {
     expect(writingDays(entries, TODAY, 30)).toBe(3);

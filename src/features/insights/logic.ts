@@ -50,7 +50,9 @@ export function habitRates(habits: readonly Habit[], today: string, days = 30): 
 export function writingDays(entries: readonly JournalEntry[], today: string, days = 30): number {
   const start = shiftDateString(today, -(days - 1)) ?? today;
   return new Set(
-    entries.filter((entry) => entry.entryDate >= start && entry.entryDate <= today).map((e) => e.entryDate),
+    entries
+      .filter((entry) => entry.entryDate >= start && entry.entryDate <= today)
+      .map((e) => e.entryDate),
   ).size;
 }
 
