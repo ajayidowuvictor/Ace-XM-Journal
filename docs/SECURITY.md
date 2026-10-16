@@ -19,7 +19,7 @@ CI still lists the audit output on every run (non-blocking) so new findings are 
 ## Data protection summary
 
 - Journal: encrypted database (SQLCipher), random 256-bit key held in Android secure storage. Never logged.
-- Tasks, habits and goals: stored on the phone, not encrypted by the app.
+- Tasks, habits, goals and day plans: encrypted database (SQLCipher, file `appdata.db`), a separate random 256-bit key (`app-encryption-key`) in Android secure storage. The old unencrypted file `acexm.db` is copied across once (row counts checked inside one transaction), then deleted; if the copy fails the old file is kept and used, and the move is retried at the next start. Deleting a file does not guarantee the old bytes are overwritten on flash storage. Never logged.
 - No accounts, analytics, advertising or network calls for user data.
 - Android cloud backup disabled so a restored file can never be paired with a missing key.
 - Export files are plain JSON and the user is warned before creating one.

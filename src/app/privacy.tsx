@@ -8,8 +8,8 @@ const SECTIONS: { title: string; body: string }[] = [
     body: 'Everything you write stays on this phone. ACE XM JOURNAL has no accounts, no cloud storage, no advertising and no analytics. Nothing you enter is sent to anyone.',
   },
   {
-    title: 'How the journal is protected',
-    body: 'Your journal and your notes (including verses and long texts) are stored in an encrypted database. The key is created on your phone and kept in Android secure storage, so they cannot be read from the file alone. Tasks, habits and goals are stored on the phone but are not encrypted by the app.',
+    title: 'How your data is protected',
+    body: "Your journal, your notes (including verses and long texts), your tasks, habits, goals and day plans are stored in encrypted databases. The keys are created on your phone and kept in Android secure storage, so the data cannot be read from the files alone.",
   },
   {
     title: 'App lock',

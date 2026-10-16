@@ -4,7 +4,7 @@ export type KeyStore = {
   set: (value: string) => Promise<void>;
 };
 
-const KEY_PATTERN = /^[0-9a-f]{64}$/;
+export const KEY_PATTERN = /^[0-9a-f]{64}$/;
 
 export function bytesToHex(bytes: Uint8Array): string {
   return Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');

@@ -14,6 +14,7 @@ export const PREF_KEYS = {
   lockAttempts: 'app-lock-attempts',
   lastBackup: 'last-backup-at',
   backupSnooze: 'backup-nudge-snooze',
+  appDataMoved: 'app-data-encrypted',
 } as const;
 
 /** Reads a stored preference. Returns null if nothing is stored or storage is unavailable. */

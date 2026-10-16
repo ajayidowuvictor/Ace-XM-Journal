@@ -7,6 +7,7 @@ import { shareExport } from '@/features/export/shareExport';
 import { useGoals } from '@/features/goals/GoalsContext';
 import { useHabits } from '@/features/habits/HabitsContext';
 import { useJournal } from '@/features/journal/JournalContext';
+import { isAppDataEncrypted } from '@/db/expoDatabase';
 import { BackupCard } from '@/features/backup/BackupCard';
 import { AppLockCard } from '@/features/lock/AppLockCard';
 import { useLock } from '@/features/lock/LockContext';
@@ -57,6 +58,7 @@ export default function SettingsScreen() {
   const { allEntries, status: journalStatus } = useJournal();
   const { notes, notebooks } = useNotes();
   const eraseAll = useEraseAll();
+  const dataEncrypted = isAppDataEncrypted();
   const { withoutLock } = useLock();
 
   const [reminder, setReminder] = useState<ReminderChoice>(() =>
@@ -140,9 +142,9 @@ export default function SettingsScreen() {
         <StatusPill label="On this phone only" />
         <Text variant="heading">Your data stays here</Text>
         <Text muted>
-          There are no accounts and nothing is sent to the cloud. Your journal and notes are
-          encrypted on this device. Tasks, habits and goals are kept on this phone too, but the app
-          does not encrypt them yet.
+          {dataEncrypted
+            ? 'There are no accounts and nothing is sent to the cloud. Your journal, notes, tasks, habits and goals are encrypted on this device.'
+            : 'There are no accounts and nothing is sent to the cloud. Your journal and notes are encrypted on this device. Your tasks, habits and goals could not be encrypted this time, so they are kept unencrypted for now. The app tries again each time it starts.'}
         </Text>
       </Card>
 

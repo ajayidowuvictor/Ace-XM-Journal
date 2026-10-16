@@ -91,6 +91,13 @@ Branch `feat/backup-safety`. Not yet checked by CI or seen on a phone. The app k
 
 Branch `feat/reminder-check`. Not yet checked by CI or seen on a phone. Daily and task reminders have never been confirmed to arrive. Settings now has a "Check reminders" card: "Send a test reminder in 1 minute" (fixed text, one notification, same channel as the daily reminder) and "See what is scheduled" (says whether the daily reminder is set and how many task reminders are waiting). Purpose: find out whether this phone (Infinix, Android 12) lets reminders through when the app is closed; some makers block background apps. Any problem found there is fixed afterwards.
 
+## In progress: Phase 8 (encrypt tasks, habits, goals and day plans)
+
+Branch `feat/encrypt-all`. Not yet checked by CI or seen on a phone. Until now only the journal and notes were encrypted. Now `openAppDatabase()` opens a new SQLCipher file `appdata.db` (own key `app-encryption-key` in secure storage, read synchronously with `SecureStore.getItem`), runs the same migrations 1 to 6, and on first start copies every row from the old `acexm.db` (`copyAppData`: all tables, row counts checked, all-or-nothing), records `app-data-encrypted = 1`, closes and deletes the old file. One shared connection for all screens. If the encrypted file cannot be opened before the move, the app keeps using the old file and retries next start (Settings then says tasks, habits and goals are not encrypted). After the move there is no fallback (it would show an empty app); an error is shown instead. Backup, restore and erase-all use the same shared connection. Privacy page, Settings card and `docs/SECURITY.md` updated.
+
+- **Tests:** key creation and refusal to replace a bad key; copying all seven tables (including deleted rows), twice in a row, failure leaving the target untouched, empty source. Not tested automatically: the real phone SQLCipher open, the SecureStore calls and file deletion (device check needed).
+- **Owner check:** open the new build and confirm the existing tasks, habits, goals, day plans and the journal are all still there; add one of each; close and reopen.
+
 ## What the app does
 
 - **Shell and design:** brand theme (light, dark, system), first-run onboarding (optional name), five native tabs (Home, Tasks, Journal, Habits and goals, Settings), reusable accessible components. _Seen on a phone._
@@ -124,7 +131,7 @@ Branch `feat/reminder-check`. Not yet checked by CI or seen on a phone. Daily an
 - Losing the phone, uninstalling the app or clearing its data loses all data (cloud backup is off by design); export is the only copy.
 - Habits are daily only; due dates use quick choices (Today, Tomorrow, In a week); tasks are not linked to goals; the journal list is not paged.
 - Screens work out "today" when they draw, so an app left open past midnight updates on the next interaction.
-- Tasks, habits and goals are stored on the phone but not encrypted by the app (only the journal is).
+- Tasks, habits, goals and day plans are encrypted since Phase 8 (see below); the move of existing data from the old file is untested on a real phone until the owner checks it.
 - Android only has been built. iOS later from the same code.
 - Cloud accounts and sync (roadmap Phase 7) are intentionally not built for this release.
 - Dependency audit: triaged in `docs/SECURITY.md`; five underlying advisories accepted with reasons.
