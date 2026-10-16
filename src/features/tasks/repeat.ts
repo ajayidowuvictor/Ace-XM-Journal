@@ -1,10 +1,17 @@
 import { addDays, isValidDateString, parseLocalDate, toLocalDateString } from '../../lib/dates';
-import type { RepeatRule, Task, TaskInput } from './types';
+import type { RepeatRule, Task, TaskCategory, TaskInput } from './types';
 
 const RULES: readonly RepeatRule[] = ['none', 'daily', 'weekdays', 'weekly', 'monthly'];
 
 export function toRepeatRule(value: unknown): RepeatRule {
   return RULES.includes(value as RepeatRule) ? (value as RepeatRule) : 'none';
+}
+
+const CATEGORIES: readonly TaskCategory[] = ['none', 'deep', 'routine', 'personal', 'health'];
+
+/** A stored category, or "none" when it is missing or not one we know. */
+export function toTaskCategory(value: unknown): TaskCategory {
+  return CATEGORIES.includes(value as TaskCategory) ? (value as TaskCategory) : 'none';
 }
 
 const TIME_PATTERN = /^([01]\d|2[0-3]):([0-5]\d)$/;
@@ -90,5 +97,6 @@ export function nextOccurrence(task: Task, today: string): TaskInput | null {
     priority: task.priority,
     repeat: task.repeat,
     reminderTime: task.reminderTime,
+    category: task.category,
   };
 }

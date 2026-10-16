@@ -6,6 +6,7 @@ import {
   nextOccurrence,
   toReminderTime,
   toRepeatRule,
+  toTaskCategory,
 } from '../repeat';
 import type { Task } from '../types';
 
@@ -18,6 +19,7 @@ function task(overrides: Partial<Task> = {}): Task {
     priority: 2,
     repeat: 'daily',
     reminderTime: '08:00',
+    category: 'routine',
     completedAt: null,
     createdAt: '2026-10-01T00:00:00.000Z',
     updatedAt: '2026-10-01T00:00:00.000Z',
@@ -97,7 +99,14 @@ describe('nextOccurrence', () => {
       priority: 2,
       repeat: 'daily',
       reminderTime: '08:00',
+      category: 'routine',
     });
+  });
+
+  it('reads a stored category and falls back to none', () => {
+    expect(toTaskCategory('health')).toBe('health');
+    expect(toTaskCategory('errands')).toBe('none');
+    expect(toTaskCategory(undefined)).toBe('none');
   });
 
   it('gives nothing for a task that does not repeat or has no date', () => {

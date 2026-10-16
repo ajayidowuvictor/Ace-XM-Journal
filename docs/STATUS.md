@@ -55,9 +55,9 @@ Built on branch `feat/search-templates` (on top of 4a); CI passed (40 test group
 
 Built on branch `feat/insights` (on top of 4b); CI passed (41 test groups, 387 tests). The owner installed the build. Insights (button on Home, screen `/insights`) is worked out on the phone from existing data, nothing new stored: tasks finished in each of the last 8 weeks (bars; each week is the 7 days ending on the date shown, like the Weekly review); each habit's days done out of the last 30 and its current streak; journal days written out of the last 30, writing streak, average mood by week; totals so far. Pull requests: #5 (4a), #6 (4b and 4c); not yet merged when Phase 5 started.
 
-## In progress: Phase 5a (new look from the owner's Stitch designs)
+## Done: Phase 5a (new look from the owner's Stitch designs)
 
-Built on branch `feat/redesign` (on top of 4c); CI passed on e5f719a (type check, lint, format, 42 test groups, 403 tests). Not yet seen on a phone. The owner supplied five Stitch screens (Home, Journal, Tasks, Settings, Habits and Goals). Copied: the look (header with logo, large titles, soft cards, chips, pill tab indicator, navy and green). Deliberately not copied because it would be untrue or does not exist: "Vault Encrypted / hardware keystore / Hardware Bound / AES-256 enclave" wording and an "Encrypted" badge on every screen (only the journal and notes are encrypted; the badge is on Journal only), "Sync Live", weather, voice memo and transcription, scripture translations, images in entries, hydration litres, AI habit suggestions and the Midday reset timer.
+Merged as pull request #7 (CI passed on e5f719a: type check, lint, format, 42 test groups, 403 tests). The owner supplied five Stitch screens (Home, Journal, Tasks, Settings, Habits and Goals). Copied: the look (header with logo, large titles, soft cards, chips, pill tab indicator, navy and green). Deliberately not copied because it would be untrue or does not exist: "Vault Encrypted / hardware keystore / Hardware Bound / AES-256 enclave" wording and an "Encrypted" badge on every screen (only the journal and notes are encrypted; the badge is on Journal only), "Sync Live", weather, voice memo and transcription, scripture translations, images in entries, hydration litres, AI habit suggestions and the Midday reset timer.
 
 - **Header** (`AppHeader`): logo, "ACE XM JOURNAL" and the screen name on Home, Tasks, Journal, Habits and Settings; Home has a Search button, Tasks a New task button, Journal an "Encrypted" pill. Tab bar indicator is a soft navy pill.
 - **Home:** Verse of the Day (picked by date from the owner's own saved verses; with none saved it invites adding one; "Reflect in your journal" opens a new entry titled "Reflection: <reference>"), "Today's flow" section name, a daily check-in card with a rotating question (shown as the faint hint in the new entry, never saved) that is replaced by the evening wrap-up from 17:00. Search moved to the header; shortcuts are Calendar, Insights and Weekly review.
@@ -66,6 +66,17 @@ Built on branch `feat/redesign` (on top of 4c); CI passed on e5f719a (type check
 - **Habits:** "Daily habits | Goals" switch, Weekly consistency card (Monday to Sunday circles and a percentage), a 7-day dot row on each habit.
 - **Settings:** an honest "Your data stays here" card at the top.
 - **Not done in this step:** the other screens (editors, reading view, lock screen, dialogs) keep their current look; Stitch screens for them were not supplied.
+
+## In progress: Phase 5b (editors, lock screen, task sheet, erase dialog)
+
+Branch `feat/redesign-2` (pull request #8). CI passed on f6dcd4e (type check, lint, format, 42 test groups, 407 tests). Build: Expo's free allowance ran out until Nov 1, so the app was built on GitHub with `.github/workflows/android-local.yml` (same signing key; arm64 only; 55,178,938 bytes; certificate digest matches earlier builds) and attached to the pre-release `test-f6dcd4e`. Not yet seen on a phone. The owner supplied four more Stitch screens (Journal Editor, Lock screen, Add-task sheet, Vault Wipe Confirmation). Copied: the look. Not copied because it would be untrue or does not exist: "End-to-End Encrypted", "Keystore Active", "Hardware Vault Secured", "Secure Enclave", "Zero telemetry", bold and italic formatting, voice memos, image attachments, the ".ace" file name (the real backup is `.acexmbackup`). Wording used instead: "Encrypted" (journal only), "Your journal stays on this phone."
+
+- **Lock screen:** logo tile with a lock badge, "Unlock ACE XM JOURNAL", PIN dots, round raised keys with phone-keypad letters under the digits, fingerprint key, Forgot PIN.
+- **Journal editor:** top bar with the date and Done, big borderless title and text, a card with mood, tags and "Insert a saved verse" (lists verses saved in Notes and adds one as a quotation at the end), footer with save state, word count and read time, and the Encrypted pill. Autosave unchanged, so there is no Cancel (it could not undo anything).
+- **Task sheet:** cards for the task, due/reminder/repeat, and priority/category; button reads "Add to today" for a task due today.
+- **Task categories (new feature, database version 6):** None, Deep work, Routine, Personal, Health; shown as a small label on the task; carried to the next copy of a repeating task; saved in backups and restored (older backups restore with no category).
+- **Erase dialog:** warning icon, clear text, a note about making an encrypted `.acexmbackup` first (the backup button itself is in Settings), typed DELETE still required, Erase all and Cancel.
+- **Not done:** an "export first" button inside the erase dialog.
 
 ## What the app does
 
@@ -109,7 +120,7 @@ Built on branch `feat/redesign` (on top of 4c); CI passed on e5f719a (type check
 
 ## Next actions
 
-0. Owner merges pull requests #5 then #6, and tries the Phase 5a build (new look). Then: backup safety net (last backup date and weekly nudge), reminder check, polish pass, encrypting tasks, habits and goals.
+0. Owner tries the Phase 5a build (new look) and the Phase 5b build, merges the pull request for 5b. Then: backup safety net (last backup date and weekly nudge), reminder check, polish pass, encrypting tasks, habits and goals.
 
 1. Owner confirms the reminder (next morning) and the journal after erase-all, and reports anything else to fix.
 2. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.

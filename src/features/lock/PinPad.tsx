@@ -2,7 +2,7 @@ import { StyleSheet, Text as RNText, View } from 'react-native';
 
 import { selectionTick } from '../../lib/haptics';
 import { useTheme } from '../../theme/context';
-import { PressableScale, fonts, minTouchTarget, radius, spacing } from '../../ui';
+import { PressableScale, fonts, minTouchTarget, radius, shadows, spacing } from '../../ui';
 import { PIN_LENGTH } from './logic';
 
 const ROWS = [
@@ -11,7 +11,19 @@ const ROWS = [
   ['7', '8', '9'],
 ] as const;
 
-const KEY_SIZE = 72;
+/** The letters printed under each digit on a phone keypad (decoration only). */
+const LETTERS: Record<string, string> = {
+  '2': 'ABC',
+  '3': 'DEF',
+  '4': 'GHI',
+  '5': 'JKL',
+  '6': 'MNO',
+  '7': 'PQRS',
+  '8': 'TUV',
+  '9': 'WXYZ',
+};
+
+const KEY_SIZE = 76;
 
 type Props = {
   value: string;
@@ -25,7 +37,8 @@ type Props = {
 
 /** Six dots and a big number pad, used to enter or choose a PIN. */
 export function PinPad({ value, onChange, onComplete, disabled = false, extraKey }: Props) {
-  const { colors } = useTheme();
+  const { colors, scheme } = useTheme();
+  const shadow = scheme === 'dark' ? { borderWidth: 1, borderColor: colors.border } : shadows.thumb;
 
   function press(digit: string) {
     if (disabled || value.length >= PIN_LENGTH) return;
@@ -40,7 +53,12 @@ export function PinPad({ value, onChange, onComplete, disabled = false, extraKey
     onChange(value.slice(0, -1));
   }
 
-  function renderKey(label: string, accessibilityLabel: string, onPress: () => void) {
+  function renderKey(
+    label: string,
+    accessibilityLabel: string,
+    onPress: () => void,
+    letters?: string,
+  ) {
     return (
       <PressableScale
         key={accessibilityLabel}
@@ -52,9 +70,22 @@ export function PinPad({ value, onChange, onComplete, disabled = false, extraKey
           selectionTick();
           onPress();
         }}
-        style={[styles.key, { backgroundColor: colors.surfaceMuted, opacity: disabled ? 0.5 : 1 }]}
+        style={[
+          styles.key,
+          { backgroundColor: colors.surface, opacity: disabled ? 0.5 : 1 },
+          shadow,
+        ]}
       >
         <RNText style={[styles.keyText, { color: colors.text }]}>{label}</RNText>
+        {letters ? (
+          <RNText
+            accessible={false}
+            importantForAccessibility="no"
+            style={[styles.letters, { color: colors.textMuted }]}
+          >
+            {letters}
+          </RNText>
+        ) : null}
       </PressableScale>
     );
   }
@@ -83,7 +114,7 @@ export function PinPad({ value, onChange, onComplete, disabled = false, extraKey
       <View style={styles.pad}>
         {ROWS.map((row) => (
           <View key={row.join('')} style={styles.row}>
-            {row.map((digit) => renderKey(digit, digit, () => press(digit)))}
+            {row.map((digit) => renderKey(digit, digit, () => press(digit), LETTERS[digit]))}
           </View>
         ))}
         <View style={styles.row}>
@@ -113,5 +144,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  keyText: { fontFamily: fonts.medium, fontSize: 28, lineHeight: 34 },
+  keyText: { fontFamily: fonts.medium, fontSize: 28, lineHeight: 32 },
+  letters: { fontFamily: fonts.medium, fontSize: 10, lineHeight: 12, letterSpacing: 1.5 },
 });

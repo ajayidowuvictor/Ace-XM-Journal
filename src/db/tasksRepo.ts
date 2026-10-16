@@ -1,4 +1,9 @@
-import { nextOccurrence, toReminderTime, toRepeatRule } from '../features/tasks/repeat';
+import {
+  nextOccurrence,
+  toReminderTime,
+  toRepeatRule,
+  toTaskCategory,
+} from '../features/tasks/repeat';
 import type { Priority, Task, TaskInput } from '../features/tasks/types';
 import type { SqlDatabase } from './types';
 
@@ -10,13 +15,14 @@ type Row = {
   priority: number;
   repeat: string;
   reminder_time: string | null;
+  category: string;
   completed_at: string | null;
   created_at: string;
   updated_at: string;
 };
 
 const COLUMNS =
-  'id, title, notes, due_date, priority, repeat, reminder_time, completed_at, created_at, updated_at';
+  'id, title, notes, due_date, priority, repeat, reminder_time, category, completed_at, created_at, updated_at';
 
 function toTask(row: Row): Task {
   return {
@@ -27,6 +33,7 @@ function toTask(row: Row): Task {
     priority: row.priority as Priority,
     repeat: toRepeatRule(row.repeat),
     reminderTime: toReminderTime(row.reminder_time),
+    category: toTaskCategory(row.category),
     completedAt: row.completed_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -42,8 +49,8 @@ export function listTasks(db: SqlDatabase): Task[] {
 
 export function createTask(db: SqlDatabase, id: string, input: TaskInput, nowIso: string): void {
   db.run(
-    `INSERT INTO tasks (id, title, notes, due_date, priority, repeat, reminder_time, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO tasks (id, title, notes, due_date, priority, repeat, reminder_time, category, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       id,
       input.title,
@@ -52,13 +59,14 @@ export function createTask(db: SqlDatabase, id: string, input: TaskInput, nowIso
       input.priority,
       input.repeat ?? 'none',
       input.reminderTime ?? null,
+      input.category ?? 'none',
       nowIso,
       nowIso,
     ],
   );
 }
 
-/** Saves the edited fields. A repeat rule or reminder time that is left out stays as it was. */
+/** Saves the edited fields. A repeat rule, reminder time or category that is left out stays as it was. */
 export function updateTask(db: SqlDatabase, id: string, input: TaskInput, nowIso: string): void {
   db.run(
     `UPDATE tasks SET title = ?, notes = ?, due_date = ?, priority = ?, updated_at = ?
@@ -67,6 +75,12 @@ export function updateTask(db: SqlDatabase, id: string, input: TaskInput, nowIso
   );
   if (input.repeat !== undefined) {
     db.run('UPDATE tasks SET repeat = ? WHERE id = ? AND deleted_at IS NULL', [input.repeat, id]);
+  }
+  if (input.category !== undefined) {
+    db.run('UPDATE tasks SET category = ? WHERE id = ? AND deleted_at IS NULL', [
+      input.category,
+      id,
+    ]);
   }
   if (input.reminderTime !== undefined) {
     db.run('UPDATE tasks SET reminder_time = ? WHERE id = ? AND deleted_at IS NULL', [

@@ -1,0 +1,96 @@
+name: Android preview build on GitHub (free, no Expo build quota)
+
+# Manually started. Builds the same installable Android test app (.apk) as android-preview.yml,
+# but on GitHub's own computers with `eas build --local`, so it does not use Expo's monthly
+# build allowance. It still signs with the app's existing Expo-held key, so the app installs
+# over the current one. The file is attached to a pre-release on GitHub for download, and the
+# checks (64-bit only, same signing certificate) are saved to the local-build-logs branch.
+# Needs the repository secret EXPO_TOKEN.
+
+on:
+  # Pushing to the branch `build-local` also starts it (a new workflow can only be started by hand
+  # after it has been merged into main).
+  push:
+    branches: [build-local]
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: 'Build profile from eas.json'
+        required: false
+        default: 'preview-arm64'
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      # The signing certificate every earlier test build has used (SHA-256).
+      EXPECTED_CERT: bfa50fcbdd32828f82e9a3eaafc5b38215a67251cb75cb9af86f8ffea6acb797
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - run: npm ci
+      - name: Build the app on this computer
+        env:
+          PROFILE: ${{ inputs.profile || 'preview-arm64' }}
+        run: |
+          set -o pipefail
+          eas build --platform android --profile "$PROFILE" --local --non-interactive --output "$PWD/ace-xm-journal.apk" 2>&1 | tee /tmp/local-build.log
+      - name: Check the file
+        run: |
+          set +e
+          APK="$PWD/ace-xm-journal.apk"
+          AAPT=$(ls $ANDROID_HOME/build-tools/*/aapt2 2>/dev/null | tail -1)
+          APKSIGNER=$(ls $ANDROID_HOME/build-tools/*/apksigner 2>/dev/null | tail -1)
+          {
+            echo "commit: ${GITHUB_SHA}"
+            ls -l "$APK"
+            echo "-- zip test"; unzip -tq "$APK" | tail -1
+            echo "-- package"; "$AAPT" dump badging "$APK" 2>&1 | grep -E "^package:|sdkVersion|targetSdkVersion|native-code|application-label:" | head -8
+            echo "-- abis in apk"; unzip -l "$APK" | grep -oE "lib/[a-z0-9_-]+/" | sort -u
+            echo "-- signature"; "$APKSIGNER" verify --verbose --print-certs "$APK" 2>&1 | grep -E "Verifies|DOES NOT|ERROR|certificate SHA-256" | head -6
+            if "$APKSIGNER" verify --print-certs "$APK" 2>&1 | grep -q "$EXPECTED_CERT"; then
+              echo "CERT MATCH: same signing certificate as earlier builds"
+            else
+              echo "CERT DIFFERENT: this file will NOT install over the current app"
+            fi
+          } 2>&1 | tee /tmp/local-check.log
+      - name: Attach the app to a pre-release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SHORT="${GITHUB_SHA::7}"
+          TAG="test-${SHORT}"
+          gh release create "$TAG" "ace-xm-journal.apk#ACE-XM-JOURNAL-${SHORT}.apk" --prerelease --title "Test build ${SHORT}" --notes "Test build of commit ${GITHUB_SHA}. Not for the Play Store." 2>&1 | tee /tmp/local-release.log
+      - name: Save results to the local-build-logs branch
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f ace-xm-journal.apk
+          git checkout -q --orphan local-build-logs
+          git rm -rf -q --cached . > /dev/null 2>&1 || true
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          { echo "commit: ${GITHUB_SHA}"; echo; tail -n 60 /tmp/local-build.log 2>/dev/null; echo; echo "===== CHECK ====="; cat /tmp/local-check.log 2>/dev/null; echo; echo "===== RELEASE ====="; cat /tmp/local-release.log 2>/dev/null; } > local-build.log
+          git add local-build.log
+          git commit -q -m "Local build output for ${GITHUB_SHA}"
+          git push -f origin local-build-logs

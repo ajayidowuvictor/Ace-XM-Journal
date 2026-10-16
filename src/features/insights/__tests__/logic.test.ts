@@ -36,6 +36,7 @@ function doneTask(id: string, completedAt: string): Task {
     priority: 0,
     repeat: 'none',
     reminderTime: null,
+    category: 'none',
     completedAt,
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',

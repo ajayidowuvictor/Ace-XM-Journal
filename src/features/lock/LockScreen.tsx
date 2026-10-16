@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react';
-import { Modal, StyleSheet, View } from 'react-native';
+import { Image, Modal, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { failure, success } from '../../lib/haptics';
 import { useTheme } from '../../theme/context';
-import { Button, Card, Text, fonts, layout, spacing } from '../../ui';
+import { Button, Card, Text, layout, radius, shadows, spacing } from '../../ui';
 import { useEraseAll } from '../settings/useEraseAll';
 import { WipeDialog } from '../settings/WipeDialog';
 import { formatWait } from './logic';
 import { useLock } from './LockContext';
 import { PinPad } from './PinPad';
 
+const LOGO = require('../../../assets/images/icon.png');
+
 /** Covers the whole app until the right PIN (or fingerprint) is given. */
 export function LockScreen() {
-  const { colors } = useTheme();
+  const { colors, scheme } = useTheme();
   const {
     locked,
     biometric,
@@ -92,7 +94,24 @@ export function LockScreen() {
       <SafeAreaView style={[styles.screen, { backgroundColor: colors.background }]}>
         <View style={styles.inner}>
           <View style={styles.header}>
-            <Text style={[styles.brand, { color: colors.primary }]}>ACE XM JOURNAL</Text>
+            <View style={[styles.logoWrap, scheme === 'dark' ? null : shadows.card]}>
+              <Image source={LOGO} accessibilityLabel="ACE XM JOURNAL logo" style={styles.logo} />
+              <View
+                accessible={false}
+                importantForAccessibility="no-hide-descendants"
+                style={[
+                  styles.badge,
+                  { backgroundColor: colors.primary, borderColor: colors.background },
+                ]}
+              >
+                <Text variant="caption" style={{ color: colors.onPrimary }}>
+                  🔒
+                </Text>
+              </View>
+            </View>
+            <Text variant="title" style={styles.centered}>
+              Unlock ACE XM JOURNAL
+            </Text>
             <Text
               variant="secondary"
               tone={isProblem ? 'danger' : undefined}
@@ -120,7 +139,12 @@ export function LockScreen() {
             }
           />
 
-          <Button label="Forgot PIN?" variant="ghost" onPress={() => setForgetting(true)} />
+          <View style={styles.footer}>
+            <Button label="Forgot PIN?" variant="ghost" onPress={() => setForgetting(true)} />
+            <Text variant="caption" muted style={styles.centered}>
+              Your journal stays on this phone.
+            </Text>
+          </View>
         </View>
 
         <Modal
@@ -178,7 +202,20 @@ const styles = StyleSheet.create({
     padding: layout.gutter,
   },
   header: { alignItems: 'center', gap: spacing.md },
-  brand: { fontFamily: fonts.bold, fontSize: 22, lineHeight: 28, letterSpacing: 1.5 },
+  logoWrap: { marginBottom: spacing.sm },
+  logo: { width: 84, height: 84, borderRadius: radius.xl },
+  badge: {
+    position: 'absolute',
+    right: -8,
+    bottom: -8,
+    width: 32,
+    height: 32,
+    borderRadius: radius.pill,
+    borderWidth: 3,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  footer: { alignItems: 'center', gap: spacing.xs },
   centered: { textAlign: 'center' },
   overlay: {
     flex: 1,

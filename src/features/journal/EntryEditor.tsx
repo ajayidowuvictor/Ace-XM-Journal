@@ -1,15 +1,37 @@
 import { useRouter } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { AppState, KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
+import {
+  AppState,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { formatLongDate } from '../../lib/greeting';
 import { parseLocalDate, toLocalDateString } from '../../lib/dates';
 import { useTheme } from '../../theme/context';
-import { Button, ConfirmDialog, Text, TextField, spacing } from '../../ui';
+import {
+  Button,
+  Card,
+  Chip,
+  ConfirmDialog,
+  StatusPill,
+  Text,
+  TextField,
+  fonts,
+  layout,
+  spacing,
+  typography,
+} from '../../ui';
 import { createAutosaver, type Autosaver } from './autosave';
 import { useJournal } from './JournalContext';
-import { isEmptyEntry, parseTags, tagsToText } from './logic';
+import { appendQuote, isEmptyEntry, parseTags, tagsToText } from './logic';
+import { readingSummary } from '../notes/logic';
+import { VersePicker } from './VersePicker';
 import { ENTRY_TEMPLATES, canApplyTemplate } from '../templates/logic';
 import { TemplatePicker } from '../templates/TemplatePicker';
 import { MoodPicker } from './MoodPicker';
@@ -19,7 +41,7 @@ type SaveState = 'idle' | 'saved' | 'error';
 
 const SAVE_TEXT: Record<SaveState, string> = {
   idle: '',
-  saved: 'Saved on this device',
+  saved: 'Saved on this device just now',
   error: 'Not saved. Your changes are still on screen; keep this page open and try again.',
 };
 
@@ -46,6 +68,7 @@ export function EntryEditor({
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [createdHere, setCreatedHere] = useState(false);
+  const [pickingVerse, setPickingVerse] = useState(false);
 
   const entryId = useRef<string | null>(entry?.id ?? null);
   const draft = useRef<EntryInput & { tagsText: string }>({
@@ -114,17 +137,25 @@ export function EntryEditor({
 
   const date = parseLocalDate(entry?.entryDate ?? toLocalDateString(new Date()));
 
+  const summary = readingSummary(body);
+
   return (
     <SafeAreaView edges={['top']} style={[styles.flex, { backgroundColor: colors.background }]}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.flex}
       >
-        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-          <Button label="Done" variant="ghost" onPress={close} style={styles.done} />
-          <Text variant="title">{entry ? 'Journal entry' : 'New entry'}</Text>
-          {date ? <Text muted>{formatLongDate(date)}</Text> : null}
+        <View style={[styles.topBar, { borderBottomColor: colors.border }]}>
+          <View style={styles.topText}>
+            <Text variant="caption" muted>
+              {entry ? 'Journal entry' : 'New entry'}
+            </Text>
+            {date ? <Text variant="subheading">{formatLongDate(date)}</Text> : null}
+          </View>
+          <Button label="Done" variant="secondary" size="compact" onPress={close} />
+        </View>
 
+        <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           {!entry && !createdHere && canApplyTemplate(title, body) ? (
             <TemplatePicker
               templates={ENTRY_TEMPLATES}
@@ -136,17 +167,21 @@ export function EntryEditor({
             />
           ) : null}
 
-          <TextField
-            label="Title (optional)"
+          <TextInput
+            accessibilityLabel="Title (optional)"
             value={title}
             onChangeText={(text) => {
               setTitle(text);
               edit({ title: text });
             }}
             placeholder="Give this day a title"
+            placeholderTextColor={colors.textMuted}
+            selectionColor={colors.primary}
+            multiline
+            style={[styles.title, { color: colors.text }]}
           />
-          <TextField
-            label="What's on your mind?"
+          <TextInput
+            accessibilityLabel="What's on your mind?"
             value={body}
             onChangeText={(text) => {
               setBody(text);
@@ -155,39 +190,54 @@ export function EntryEditor({
             multiline
             textAlignVertical="top"
             placeholder={bodyPrompt ?? 'Write freely. This stays private on your phone.'}
+            placeholderTextColor={colors.textMuted}
+            selectionColor={colors.primary}
             autoFocus={!entry}
+            style={[styles.body, { color: colors.text }]}
           />
 
-          <Text variant="caption" muted>
-            How are you feeling?
-          </Text>
-          <MoodPicker
-            value={mood}
-            onChange={(next) => {
-              setMood(next);
-              edit({ mood: next });
-            }}
-          />
+          <Card style={styles.extras}>
+            <Text variant="caption" muted>
+              How are you feeling?
+            </Text>
+            <MoodPicker
+              value={mood}
+              onChange={(next) => {
+                setMood(next);
+                edit({ mood: next });
+              }}
+            />
+            <TextField
+              label="Tags (optional)"
+              hint="Separate with commas, for example: work, family"
+              value={tagsText}
+              onChangeText={(text) => {
+                setTagsText(text);
+                edit({ tagsText: text });
+              }}
+              autoCapitalize="none"
+            />
+            <View style={styles.chips}>
+              <Chip
+                label="Insert a saved verse"
+                accessibilityLabel="Insert a saved verse from Notes"
+                onPress={() => setPickingVerse(true)}
+              />
+            </View>
+          </Card>
 
-          <TextField
-            label="Tags (optional)"
-            hint="Separate with commas, for example: work, family"
-            value={tagsText}
-            onChangeText={(text) => {
-              setTagsText(text);
-              edit({ tagsText: text });
-            }}
-            autoCapitalize="none"
-          />
-
-          <Text
-            variant="caption"
-            tone={saveState === 'error' ? 'danger' : undefined}
-            muted={saveState !== 'error'}
-            accessibilityLiveRegion="polite"
-          >
-            {SAVE_TEXT[saveState]}
-          </Text>
+          <View style={styles.status}>
+            <Text
+              variant="caption"
+              tone={saveState === 'error' ? 'danger' : undefined}
+              muted={saveState !== 'error'}
+              accessibilityLiveRegion="polite"
+              style={styles.statusText}
+            >
+              {[SAVE_TEXT[saveState], summary].filter(Boolean).join('  ·  ')}
+            </Text>
+            <StatusPill label="Encrypted" accessibilityLabel="Encrypted on this device" />
+          </View>
 
           {entry || createdHere ? (
             <Button
@@ -197,6 +247,17 @@ export function EntryEditor({
             />
           ) : null}
         </ScrollView>
+
+        <VersePicker
+          visible={pickingVerse}
+          onClose={() => setPickingVerse(false)}
+          onPick={(quote) => {
+            const next = appendQuote(draft.current.body, quote);
+            setBody(next);
+            edit({ body: next });
+            setPickingVerse(false);
+          }}
+        />
 
         <ConfirmDialog
           visible={confirmingDelete}
@@ -214,6 +275,25 @@ export function EntryEditor({
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  content: { padding: spacing.lg, gap: spacing.md, paddingBottom: spacing.xxl },
-  done: { alignSelf: 'flex-end' },
+  topBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: layout.gutter,
+    paddingVertical: spacing.sm,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  topText: { flex: 1 },
+  content: { padding: layout.gutter, gap: spacing.md, paddingBottom: spacing.xxl },
+  title: { ...typography.title, fontFamily: fonts.bold, padding: 0 },
+  body: { ...typography.body, minHeight: 240, padding: 0 },
+  extras: { gap: spacing.md },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  status: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+  },
+  statusText: { flex: 1 },
 });

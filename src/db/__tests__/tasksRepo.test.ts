@@ -42,6 +42,7 @@ describe('tasks repository', () => {
         priority: 2,
         repeat: 'none',
         reminderTime: null,
+        category: 'none',
         completedAt: null,
         createdAt: t1,
         updatedAt: t1,
@@ -135,6 +136,17 @@ describe('tasks repository', () => {
 
     updateTask(db, 'rep', { ...input, repeat: 'monthly', reminderTime: null }, t2);
     expect(listTasks(db)[0]).toMatchObject({ repeat: 'monthly', reminderTime: null });
+  });
+
+  it('saves the category, defaults to none, and keeps it when an edit leaves it out', () => {
+    createTask(db, 'plain', input, t1);
+    createTask(db, 'cat', { ...input, category: 'deep' }, t2);
+    expect(listTasks(db).map((t) => t.category)).toEqual(['none', 'deep']);
+
+    updateTask(db, 'cat', { ...input, title: 'Renamed' }, t2);
+    expect(listTasks(db)[1].category).toBe('deep');
+    updateTask(db, 'cat', { ...input, category: 'health' }, t2);
+    expect(listTasks(db)[1].category).toBe('health');
   });
 
   it('adds the next copy when a repeating task is finished', () => {
