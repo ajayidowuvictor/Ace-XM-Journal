@@ -6,14 +6,23 @@ Last updated: 2026-10-16
 
 Feature-complete for the first (local-only) release. The owner has now walked through every screen on a phone (Infinix Hot 30i, Android 12) and reported that each worked. Automated checks (type check, lint, format, 179 tests, Android bundle build) back everything else.
 
-## In progress: Phase 1 (design and Today planner)
+## Phase 1 (design and Today planner): merged
 
-Built on branch `feat/design-and-today` and checked by CI (type check, lint, format, 251 tests, Android bundle). Not yet seen on a phone:
+Built, checked by CI and tried on the owner's phone (the new look worked and the haptic tap was felt). Merged to `main` as pull request #2. Details are in `docs/DESIGN.md`.
 
-- **New look:** Inter font, cool-mist palette, new buttons, cards, round check circles, haptics (see `docs/DESIGN.md`).
-- **Today planner (Home tab):** a Today / Tomorrow switch, up to three focus tasks, a time rail of blocks (start time, length, optional linked task, "now" marker, free-time gaps), gentle "Still waiting from earlier" tasks that can be moved to today or tomorrow, habits, and an evening wrap-up saved as an encrypted journal entry (shown from 17:00).
-- **Also changed:** saving the weekly review twice for the same week updates the first entry; older tasks read "From earlier" instead of "Overdue". Day plans are included in the export and removed by "Erase all my data".
-- **Database:** migration 4 adds `plan_focus` and `plan_blocks`. Existing tasks, habits, goals and journal entries are not touched.
+- **New look:** Inter font, cool-mist palette, new buttons, cards, round check circles, haptics.
+- **Today planner (Home tab):** Today / Tomorrow switch, up to three focus tasks, a time rail of blocks, gentle "Still waiting from earlier" tasks, habits, and an evening wrap-up saved as an encrypted journal entry (from 17:00).
+- **Database:** migration 4 (`plan_focus`, `plan_blocks`).
+
+## In progress: Phase 2 (Notes)
+
+Built on branch `feat/notes` and checked by CI (type check, lint, format, tests, Android bundle). Not yet seen on a phone:
+
+- **Where:** the Journal tab now has a Journal | Notes switch.
+- **Notes, verses and long texts:** three kinds in one editor (switchable). A verse has a reference field (for example "John 3:16 (KJV)"); the owner types or pastes verses, there is no built-in Bible. A long text has an optional source and shows words and reading time.
+- **Notebooks:** make, rename and delete (deleting keeps the notes), file a note in one, pin notes to the top, filter by notebook and kind, search title, text and reference.
+- **Reading view:** full-screen serif page. Verses are centred with a quotation mark and the reference; long texts show as paragraphs. Five text sizes (remembered), Share (the phone's share sheet, only when the owner taps it), Edit.
+- **Storage:** inside the encrypted journal database (journal migration 2: `notebooks`, `notes`). Deleting a note erases its text. Notes are included in the export and removed by "Erase all my data". The privacy page wording was updated.
 
 ## What the app does
 
@@ -57,7 +66,7 @@ Built on branch `feat/design-and-today` and checked by CI (type check, lint, for
 
 ## Next actions
 
-0. Owner tests the Phase 1 build on the phone and reports what to adjust (look, planner, wording). Then merge the branch.
+0. Owner tests the Phase 2 (Notes) build on the phone and reports what to adjust. Then merge `feat/notes`. Then Phase 3 (app lock, encrypted backup) and Phase 4 (repeating tasks, flexible habits, search across the app, insights, templates, per-task reminders).
 
 1. Owner confirms the reminder (next morning) and the journal after erase-all, and reports anything else to fix.
 2. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.
