@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 
 import { openAppDatabase } from '../../db/expoDatabase';
 import {
+  completeTask,
   createTask,
   deleteTask,
   listTasks,
@@ -9,6 +10,7 @@ import {
   updateTask,
 } from '../../db/tasksRepo';
 import type { SqlDatabase } from '../../db/types';
+import { toLocalDateString } from '../../lib/dates';
 import { newId } from '../../lib/id';
 import { cleanInput, validateTitle } from './logic';
 import type { Task, TaskInput } from './types';
@@ -107,7 +109,10 @@ export function TasksProvider({ children }: { children: ReactNode }) {
 
   const setCompleted = useCallback(
     (id: string, completed: boolean) => {
-      run((database, now) => setTaskCompleted(database, id, completed, now));
+      run((database, now) => {
+        if (completed) completeTask(database, id, toLocalDateString(new Date()), now, newId());
+        else setTaskCompleted(database, id, false, now);
+      });
     },
     [run],
   );

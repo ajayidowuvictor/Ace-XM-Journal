@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { formatShortDate } from '../../lib/dates';
 import { Checkbox, Text, minTouchTarget, spacing } from '../../ui';
-import { PRIORITY_LABELS, type Task } from './types';
+import { PRIORITY_LABELS, REPEAT_LABELS, type Task } from './types';
 
 type Props = {
   task: Task;
@@ -15,6 +15,8 @@ export function TaskRow({ task, overdue = false, onToggle, onOpen }: Props) {
   const done = task.completedAt !== null;
   const details = [
     task.dueDate ? `${overdue ? 'From ' : ''}${formatShortDate(task.dueDate)}` : null,
+    task.reminderTime && task.dueDate ? `Reminder ${task.reminderTime}` : null,
+    task.repeat !== 'none' ? REPEAT_LABELS[task.repeat].replace('Every ', 'Repeats ') : null,
     task.priority > 0 ? `${PRIORITY_LABELS[task.priority]} priority` : null,
   ].filter((part): part is string => part !== null);
 

@@ -91,6 +91,13 @@ export const migrations: readonly Migration[] = [
       CREATE INDEX idx_plan_blocks_date ON plan_blocks (plan_date);
     `,
   },
+  {
+    version: 5,
+    sql: `
+      ALTER TABLE tasks ADD COLUMN repeat TEXT NOT NULL DEFAULT 'none';
+      ALTER TABLE tasks ADD COLUMN reminder_time TEXT;
+    `,
+  },
 ];
 
 /** Applies any migrations the database has not seen yet. Returns the resulting version. */

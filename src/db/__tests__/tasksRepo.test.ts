@@ -2,7 +2,14 @@ import { beforeEach, describe, expect, it } from '@jest/globals';
 
 import type { TaskInput } from '../../features/tasks/types';
 import { migrate } from '../migrations';
-import { createTask, deleteTask, listTasks, setTaskCompleted, updateTask } from '../tasksRepo';
+import {
+  completeTask,
+  createTask,
+  deleteTask,
+  listTasks,
+  setTaskCompleted,
+  updateTask,
+} from '../tasksRepo';
 import type { SqlDatabase } from '../types';
 import { createTestDatabase } from '../testing/testDatabase';
 
@@ -33,6 +40,8 @@ describe('tasks repository', () => {
         notes: 'Ask about fees',
         dueDate: '2026-10-14',
         priority: 2,
+        repeat: 'none',
+        reminderTime: null,
         completedAt: null,
         createdAt: t1,
         updatedAt: t1,
@@ -105,5 +114,53 @@ describe('tasks repository', () => {
     createTask(db, 'id-1', { ...input, title: awkward }, t1);
 
     expect(listTasks(db)[0].title).toBe(awkward);
+  });
+
+  it('saves the repeat rule and reminder time and gives older tasks the defaults', () => {
+    createTask(db, 'plain', input, t1);
+    createTask(db, 'rep', { ...input, repeat: 'weekly', reminderTime: '17:00' }, t2);
+    const [plain, rep] = listTasks(db);
+    expect(plain).toMatchObject({ repeat: 'none', reminderTime: null });
+    expect(rep).toMatchObject({ repeat: 'weekly', reminderTime: '17:00' });
+  });
+
+  it('keeps the repeat rule and reminder when an edit leaves them out, and changes them when given', () => {
+    createTask(db, 'rep', { ...input, repeat: 'daily', reminderTime: '08:00' }, t1);
+    updateTask(db, 'rep', { ...input, title: 'Renamed' }, t2);
+    expect(listTasks(db)[0]).toMatchObject({ title: 'Renamed', repeat: 'daily', reminderTime: '08:00' });
+
+    updateTask(db, 'rep', { ...input, repeat: 'monthly', reminderTime: null }, t2);
+    expect(listTasks(db)[0]).toMatchObject({ repeat: 'monthly', reminderTime: null });
+  });
+
+  it('adds the next copy when a repeating task is finished', () => {
+    createTask(db, 'rep', { ...input, repeat: 'daily', reminderTime: '08:00' }, t1);
+    const created = completeTask(db, 'rep', '2026-10-14', t2, 'next-1');
+
+    expect(created).toBe('next-1');
+    const tasks = listTasks(db);
+    expect(tasks).toHaveLength(2);
+    expect(tasks[0]).toMatchObject({ id: 'rep', completedAt: t2 });
+    expect(tasks[1]).toMatchObject({
+      id: 'next-1',
+      title: 'Call the bank',
+      notes: 'Ask about fees',
+      dueDate: '2026-10-15',
+      priority: 2,
+      repeat: 'daily',
+      reminderTime: '08:00',
+      completedAt: null,
+    });
+  });
+
+  it('adds no copy for a task that does not repeat, and none for a second tap', () => {
+    createTask(db, 'once', input, t1);
+    expect(completeTask(db, 'once', '2026-10-14', t2, 'x')).toBeNull();
+    expect(listTasks(db)).toHaveLength(1);
+
+    createTask(db, 'rep', { ...input, repeat: 'daily' }, t1);
+    completeTask(db, 'rep', '2026-10-14', t2, 'n1');
+    expect(completeTask(db, 'rep', '2026-10-14', t2, 'n2')).toBeNull();
+    expect(listTasks(db)).toHaveLength(3);
   });
 });

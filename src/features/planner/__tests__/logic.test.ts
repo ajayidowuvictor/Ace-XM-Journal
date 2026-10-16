@@ -47,6 +47,8 @@ function task(id: string, overrides: Partial<Task> = {}): Task {
     notes: '',
     dueDate: null,
     priority: 0,
+    repeat: 'none',
+    reminderTime: null,
     completedAt: null,
     createdAt: `2026-10-0${id.length}T00:00:00.000Z`,
     updatedAt: 'x',

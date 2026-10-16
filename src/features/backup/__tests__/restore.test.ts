@@ -24,7 +24,14 @@ function filledDatabases() {
   createTask(
     app,
     'task-1',
-    { title: 'Pay rent', notes: 'Bank "A"', dueDate: '2026-10-14', priority: 3 },
+    {
+      title: 'Pay rent',
+      notes: 'Bank "A"',
+      dueDate: '2026-10-14',
+      priority: 3,
+      repeat: 'monthly',
+      reminderTime: '09:00',
+    },
     t(1),
   );
   createTask(app, 'task-2', { title: 'Call mum', notes: '', dueDate: null, priority: 0 }, t(2));
@@ -183,6 +190,35 @@ describe('parseBackupData', () => {
     expect(data).not.toBeNull();
     expect(data!.notes).toEqual([]);
     expect(data!.focus).toEqual([]);
+  });
+});
+
+describe('tasks from before repeats and reminders existed', () => {
+  it('come back as tasks that do not repeat and have no reminder', () => {
+    const data = parseBackupData(
+      JSON.stringify({
+        app: 'ACE XM JOURNAL',
+        exportVersion: 1,
+        tasks: [
+          {
+            id: 'old',
+            title: 'Old task',
+            notes: '',
+            dueDate: '2026-10-14',
+            priority: 1,
+            completedAt: null,
+            createdAt: '2026-10-01T00:00:00.000Z',
+            updatedAt: '2026-10-01T00:00:00.000Z',
+          },
+          { id: 'odd', title: 'Odd', createdAt: 'x', repeat: 'hourly', reminderTime: '99:99' },
+        ],
+        habits: [],
+        goals: [],
+        journalEntries: [],
+      }),
+    );
+    expect(data!.tasks[0]).toMatchObject({ repeat: 'none', reminderTime: null });
+    expect(data!.tasks[1]).toMatchObject({ repeat: 'none', reminderTime: null });
   });
 });
 

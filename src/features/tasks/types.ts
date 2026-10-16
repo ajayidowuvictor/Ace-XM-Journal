@@ -7,6 +7,17 @@ export const PRIORITY_LABELS: Record<Priority, string> = {
   3: 'High',
 };
 
+/** How often a task comes back after it is done. */
+export type RepeatRule = 'none' | 'daily' | 'weekdays' | 'weekly' | 'monthly';
+
+export const REPEAT_LABELS: Record<RepeatRule, string> = {
+  none: 'Does not repeat',
+  daily: 'Every day',
+  weekdays: 'Every weekday',
+  weekly: 'Every week',
+  monthly: 'Every month',
+};
+
 export type Task = {
   id: string;
   title: string;
@@ -14,6 +25,9 @@ export type Task = {
   /** Local calendar date `YYYY-MM-DD`, or null when the task has no date. */
   dueDate: string | null;
   priority: Priority;
+  repeat: RepeatRule;
+  /** Local time `HH:MM` for a reminder on the due date, or null for no reminder. */
+  reminderTime: string | null;
   /** UTC timestamp (ISO 8601) when completed, or null while still open. */
   completedAt: string | null;
   createdAt: string;
@@ -25,4 +39,8 @@ export type TaskInput = {
   notes: string;
   dueDate: string | null;
   priority: Priority;
+  /** Left out means "does not repeat" when adding and "unchanged" when editing. */
+  repeat?: RepeatRule;
+  /** Left out means "no reminder" when adding and "unchanged" when editing. */
+  reminderTime?: string | null;
 };

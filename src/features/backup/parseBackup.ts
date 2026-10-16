@@ -1,3 +1,4 @@
+import { toReminderTime, toRepeatRule } from '../tasks/repeat';
 import type { Priority } from '../tasks/types';
 import type { Mood } from '../journal/types';
 import type { NoteKind } from '../notes/types';
@@ -66,6 +67,8 @@ export function parseBackupData(jsonText: string): BackupData | null {
           notes: text(t.notes, ''),
           dueDate: textOrNull(t.dueDate),
           priority: (priority >= 0 && priority <= 3 ? priority : 0) as Priority,
+          repeat: toRepeatRule(t.repeat),
+          reminderTime: toReminderTime(t.reminderTime),
           completedAt: textOrNull(t.completedAt),
           createdAt,
           updatedAt: text(t.updatedAt, createdAt),
