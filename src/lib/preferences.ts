@@ -6,6 +6,7 @@ export const PREF_KEYS = {
   onboardingComplete: 'onboarding-complete',
   displayName: 'display-name',
   reminder: 'daily-reminder',
+  taskNames: 'task-reminder-names',
   readerSize: 'reader-text-size',
   lockEnabled: 'app-lock-enabled',
   lockDelay: 'app-lock-delay',

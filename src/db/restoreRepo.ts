@@ -18,9 +18,20 @@ export function restoreAppData(db: SqlDatabase, data: BackupData, nowIso: string
 
     for (const t of data.tasks) {
       db.run(
-        `INSERT INTO tasks (id, title, notes, due_date, priority, completed_at, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [t.id, t.title, t.notes, t.dueDate, t.priority, t.completedAt, t.createdAt, t.updatedAt],
+        `INSERT INTO tasks (id, title, notes, due_date, priority, repeat, reminder_time, completed_at, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        [
+          t.id,
+          t.title,
+          t.notes,
+          t.dueDate,
+          t.priority,
+          t.repeat,
+          t.reminderTime,
+          t.completedAt,
+          t.createdAt,
+          t.updatedAt,
+        ],
       );
     }
 

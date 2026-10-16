@@ -12,6 +12,8 @@ describe('buildExport', () => {
           notes: '',
           dueDate: '2026-10-14',
           priority: 2,
+          repeat: 'none',
+          reminderTime: null,
           completedAt: null,
           createdAt: 'x',
           updatedAt: 'x',

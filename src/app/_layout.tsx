@@ -16,6 +16,7 @@ import { LockProvider } from '@/features/lock/LockContext';
 import { LockScreen } from '@/features/lock/LockScreen';
 import { NotesProvider } from '@/features/notes/NotesContext';
 import { PlannerProvider } from '@/features/planner/PlannerContext';
+import { TaskRemindersSync } from '@/features/reminders/TaskRemindersSync';
 import { TasksProvider } from '@/features/tasks/TasksContext';
 import { ThemeProvider } from '@/theme/ThemeProvider';
 import { useAppFonts } from '@/theme/useAppFonts';
@@ -75,6 +76,7 @@ export default function RootLayout() {
     <ThemeProvider>
       <OnboardingProvider>
         <TasksProvider>
+          <TaskRemindersSync />
           <HabitsProvider>
             <GoalsProvider>
               <PlannerProvider>

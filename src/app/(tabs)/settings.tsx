@@ -16,7 +16,12 @@ import {
   parseReminderChoice,
   type ReminderChoice,
 } from '@/features/reminders/logic';
-import { applyReminder } from '@/features/reminders/service';
+import { applyReminder, refreshTaskReminders } from '@/features/reminders/service';
+import {
+  TASK_NAME_OPTIONS,
+  parseTaskNameChoice,
+  type TaskNameChoice,
+} from '@/features/reminders/taskReminders';
 import { WipeDialog } from '@/features/settings/WipeDialog';
 import { useEraseAll } from '@/features/settings/useEraseAll';
 import { usePlanner } from '@/features/planner/PlannerContext';
@@ -48,11 +53,20 @@ export default function SettingsScreen() {
     parseReminderChoice(readPreference(PREF_KEYS.reminder)),
   );
   const [reminderNote, setReminderNote] = useState<string | null>(null);
+  const [taskNames, setTaskNames] = useState<TaskNameChoice>(() =>
+    parseTaskNameChoice(readPreference(PREF_KEYS.taskNames)),
+  );
   const [exportNote, setExportNote] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [confirmingExport, setConfirmingExport] = useState(false);
   const [confirmingWipe, setConfirmingWipe] = useState(false);
   const [wipeNote, setWipeNote] = useState<string | null>(null);
+
+  function chooseTaskNames(choice: TaskNameChoice) {
+    setTaskNames(choice);
+    writePreference(PREF_KEYS.taskNames, choice);
+    void refreshTaskReminders(tasks);
+  }
 
   async function chooseReminder(choice: ReminderChoice) {
     setReminderNote(null);
@@ -141,6 +155,20 @@ export default function SettingsScreen() {
             {reminderNote}
           </Text>
         ) : null}
+      </Card>
+
+      <Card>
+        <Text variant="heading">Task reminders</Text>
+        <SegmentedControl<TaskNameChoice>
+          accessibilityLabel="Task names in reminders"
+          options={TASK_NAME_OPTIONS}
+          value={taskNames}
+          onChange={chooseTaskNames}
+        />
+        <Text variant="caption" muted>
+          Set a reminder time on any task. By default the notification does not show the task, so
+          nothing private appears on a locked screen.
+        </Text>
       </Card>
 
       <AppLockCard />

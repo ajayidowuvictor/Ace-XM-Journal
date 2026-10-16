@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
+import { REMINDER_TIME_CHOICES, reminderChoiceFor } from '../reminders/taskReminders';
 import {
   Button,
+  Chip,
   ConfirmDialog,
   SegmentedControl,
   Text,
@@ -12,7 +14,7 @@ import {
   type SegmentOption,
 } from '../../ui';
 import { choiceFor, dueDateFor, type DueChoice } from './logic';
-import type { Priority, Task, TaskInput } from './types';
+import { REPEAT_LABELS, type Priority, type RepeatRule, type Task, type TaskInput } from './types';
 
 type Props = {
   visible: boolean;
@@ -23,6 +25,8 @@ type Props = {
   onDelete: () => void;
   onClose: () => void;
 };
+
+const REPEAT_RULES: readonly RepeatRule[] = ['none', 'daily', 'weekdays', 'weekly', 'monthly'];
 
 const PRIORITY_OPTIONS: readonly SegmentOption<`${Priority}`>[] = [
   { value: '0', label: 'None' },
@@ -40,6 +44,8 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
   const [startingChoice] = useState<DueChoice>(() => choiceFor(task?.dueDate ?? null, now));
   const [dueChoice, setDueChoice] = useState<DueChoice>(startingChoice);
   const [priority, setPriority] = useState<`${Priority}`>(`${task?.priority ?? 0}`);
+  const [repeat, setRepeat] = useState<RepeatRule>(task?.repeat ?? 'none');
+  const [reminder, setReminder] = useState<string>(reminderChoiceFor(task?.reminderTime ?? null));
   const [error, setError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
@@ -51,12 +57,44 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
     ...(startingChoice === 'keep' ? [{ value: 'keep' as const, label: task?.dueDate ?? '' }] : []),
   ];
 
+  // Repeating and reminders both need a date, so choosing one gives the task today's date.
+  function chooseDue(choice: DueChoice) {
+    setDueChoice(choice);
+    if (choice === 'none') {
+      setRepeat('none');
+      setReminder('off');
+    }
+  }
+
+  function chooseRepeat(rule: RepeatRule) {
+    setRepeat(rule);
+    if (rule !== 'none' && dueChoice === 'none') setDueChoice('today');
+  }
+
+  function chooseReminder(time: string) {
+    setReminder(time);
+    if (time !== 'off' && dueChoice === 'none') setDueChoice('today');
+  }
+
+  const reminderChoices = [
+    ...REMINDER_TIME_CHOICES.map((choice) => ({
+      value: choice.value as string,
+      label: choice.label,
+    })),
+    ...(task?.reminderTime && !REMINDER_TIME_CHOICES.some((c) => c.value === task.reminderTime)
+      ? [{ value: task.reminderTime, label: task.reminderTime }]
+      : []),
+  ];
+
   function save() {
+    const dueDate = dueDateFor(dueChoice, task?.dueDate ?? null, new Date());
     const problem = onSave({
       title,
       notes,
-      dueDate: dueDateFor(dueChoice, task?.dueDate ?? null, new Date()),
+      dueDate,
       priority: Number(priority) as Priority,
+      repeat: dueDate ? repeat : 'none',
+      reminderTime: dueDate && reminder !== 'off' ? reminder : null,
     });
     if (problem) setError(problem);
   }
@@ -98,8 +136,44 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
               accessibilityLabel="Due date"
               options={dueOptions}
               value={dueChoice}
-              onChange={setDueChoice}
+              onChange={chooseDue}
             />
+          </View>
+
+          <View style={styles.group}>
+            <Text variant="caption" muted>
+              Repeat
+            </Text>
+            <View style={styles.chips}>
+              {REPEAT_RULES.map((rule) => (
+                <Chip
+                  key={rule}
+                  label={rule === 'none' ? 'Never' : REPEAT_LABELS[rule].replace('Every ', '')}
+                  accessibilityLabel={REPEAT_LABELS[rule]}
+                  selected={repeat === rule}
+                  onPress={() => chooseRepeat(rule)}
+                />
+              ))}
+            </View>
+          </View>
+
+          <View style={styles.group}>
+            <Text variant="caption" muted>
+              Remind me on the due date at
+            </Text>
+            <View style={styles.chips}>
+              {reminderChoices.map((choice) => (
+                <Chip
+                  key={choice.value}
+                  label={choice.label}
+                  accessibilityLabel={
+                    choice.value === 'off' ? 'No reminder' : `Remind me at ${choice.label}`
+                  }
+                  selected={reminder === choice.value}
+                  onPress={() => chooseReminder(choice.value)}
+                />
+              ))}
+            </View>
           </View>
 
           <View style={styles.group}>
@@ -146,4 +220,5 @@ const styles = StyleSheet.create({
   flex: { flex: 1 },
   content: { padding: spacing.lg, paddingTop: spacing.xxl, gap: spacing.md },
   group: { gap: spacing.xs },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
 });
