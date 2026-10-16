@@ -56,8 +56,9 @@ export function WipeDialog({ visible, onConfirm, onCancel }: Props) {
           </Text>
           <Card variant="inset" style={styles.tip}>
             <Text variant="secondary">
-              {describeLastBackup(lastBackup, now)} Want to keep a copy first? Cancel, then use Create encrypted backup in Settings. It
-              saves a .acexmbackup file you can restore later.
+              {describeLastBackup(lastBackup, now)} Want to keep a copy first? Cancel, then use
+              Create encrypted backup in Settings. It saves a .acexmbackup file you can restore
+              later.
             </Text>
           </Card>
           <TextField
