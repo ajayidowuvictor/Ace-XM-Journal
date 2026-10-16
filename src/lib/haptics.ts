@@ -27,3 +27,8 @@ export function selectionTick(): void {
 export function success(): void {
   run(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success));
 }
+
+/** A short double buzz, for something that did not work (a wrong PIN). */
+export function failure(): void {
+  run(() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error));
+}

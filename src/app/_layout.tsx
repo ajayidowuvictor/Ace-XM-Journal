@@ -12,6 +12,8 @@ import { OnboardingProvider, useOnboarding } from '@/features/onboarding/Onboard
 import { GoalsProvider } from '@/features/goals/GoalsContext';
 import { HabitsProvider } from '@/features/habits/HabitsContext';
 import { JournalProvider } from '@/features/journal/JournalContext';
+import { LockProvider } from '@/features/lock/LockContext';
+import { LockScreen } from '@/features/lock/LockScreen';
 import { NotesProvider } from '@/features/notes/NotesContext';
 import { PlannerProvider } from '@/features/planner/PlannerContext';
 import { TasksProvider } from '@/features/tasks/TasksContext';
@@ -78,7 +80,10 @@ export default function RootLayout() {
               <PlannerProvider>
                 <JournalProvider>
                   <NotesProvider>
-                    <RootNavigator />
+                    <LockProvider>
+                      <RootNavigator />
+                      <LockScreen />
+                    </LockProvider>
                   </NotesProvider>
                 </JournalProvider>
               </PlannerProvider>

@@ -32,8 +32,8 @@ export function WipeDialog({ visible, onConfirm, onCancel }: Props) {
         <Card style={styles.dialog}>
           <Text variant="heading">Erase everything?</Text>
           <Text muted>
-            Every task, habit, goal and journal entry will be permanently erased from this phone.
-            There is no way to bring them back. Type {WIPE_WORD} to confirm.
+            Every task, habit, goal, journal entry and note will be permanently erased from this
+            phone. There is no way to bring them back. Type {WIPE_WORD} to confirm.
           </Text>
           <TextField
             label={`Type ${WIPE_WORD}`}
