@@ -2,6 +2,9 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
+import { BackupNudgeCard } from '@/features/backup/BackupNudgeCard';
+import { snoozeBackupNudge, useBackupSnooze, useLastBackup } from '@/features/backup/lastBackup';
+import { shouldNudge, snoozeUntil } from '@/features/backup/status';
 import { CheckInCard } from '@/features/home/CheckInCard';
 import { checkInPrompt, verseOfTheDay } from '@/features/home/logic';
 import { VerseCard } from '@/features/home/VerseCard';
@@ -83,6 +86,8 @@ export default function HomeScreen() {
   const { focus, blocks, setFocus } = usePlanner();
   const { allEntries, create, save, status: journalStatus } = useJournal();
   const { notes } = useNotes();
+  const lastBackup = useLastBackup();
+  const backupSnooze = useBackupSnooze();
 
   const focusList = focusTasks(focus, tasks, planDate);
   const focusIds = focusList.map((task) => task.id);
@@ -111,6 +116,9 @@ export default function HomeScreen() {
   const carryOver = day === 'today' ? carryOverTasks(tasks, today) : [];
   const wrapUp = findWrapUp(allEntries, today);
   const verse = verseOfTheDay(notes, today);
+  const hasData =
+    tasks.length > 0 || habits.length > 0 || allEntries.length > 0 || notes.length > 0;
+  const showBackupNudge = day === 'today' && shouldNudge(lastBackup, backupSnooze, now, hasData);
   const showWrapUp = day === 'today' && (now.getHours() >= WRAP_UP_HOUR || wrapUp !== null);
 
   function chooseFocus(task: Task) {
@@ -179,6 +187,15 @@ export default function HomeScreen() {
           {formatLongDate(day === 'today' ? now : (parseLocalDate(tomorrow) ?? now))}
         </Text>
       </View>
+
+      {showBackupNudge ? (
+        <BackupNudgeCard
+          lastBackup={lastBackup}
+          now={now}
+          onBackUp={() => router.push('/settings')}
+          onLater={() => snoozeBackupNudge(snoozeUntil(now))}
+        />
+      ) : null}
 
       {day === 'today' ? (
         <VerseCard

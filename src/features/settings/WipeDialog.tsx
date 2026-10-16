@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
 
+import { useNow } from '../../lib/useNow';
 import { useTheme } from '../../theme/context';
 import { Button, Card, Text, TextField, radius, spacing } from '../../ui';
+import { useLastBackup } from '../backup/lastBackup';
+import { describeLastBackup } from '../backup/status';
 
 export const WIPE_WORD = 'DELETE';
 
@@ -21,6 +24,8 @@ type Props = {
 export function WipeDialog({ visible, onConfirm, onCancel }: Props) {
   const [typed, setTyped] = useState('');
   const ready = isWipeConfirmed(typed);
+  const lastBackup = useLastBackup();
+  const now = useNow();
 
   function close() {
     setTyped('');
@@ -51,7 +56,7 @@ export function WipeDialog({ visible, onConfirm, onCancel }: Props) {
           </Text>
           <Card variant="inset" style={styles.tip}>
             <Text variant="secondary">
-              Want to keep a copy first? Cancel, then use Create encrypted backup in Settings. It
+              {describeLastBackup(lastBackup, now)} Want to keep a copy first? Cancel, then use Create encrypted backup in Settings. It
               saves a .acexmbackup file you can restore later.
             </Text>
           </Card>

@@ -78,6 +78,15 @@ Branch `feat/redesign-2` (pull request #8). CI passed on f6dcd4e (type check, li
 - **Erase dialog:** warning icon, clear text, a note about making an encrypted `.acexmbackup` first (the backup button itself is in Settings), typed DELETE still required, Erase all and Cancel.
 - **Not done:** an "export first" button inside the erase dialog.
 
+## In progress: Phase 6a (backup safety net)
+
+Branch `feat/backup-safety`. Not yet checked by CI or seen on a phone. The app keeps data only on the phone, so a backup is the only protection against loss.
+
+- **Last backup:** the time is remembered on the phone after the share sheet opens for a new backup file (`last-backup-at` preference). Backup card shows "Last backup file made today / yesterday / N days ago" or "No backup made yet" (in red when 7+ days or none). It records that the file was handed to the share sheet, not that the person saved it somewhere.
+- **Weekly nudge:** Home shows "Keep a copy of your journal" when there is any data and the last backup is missing or 7+ days old. "Back up now" opens Settings; "Not now" hides it for 3 days.
+- **Warnings:** the erase dialog and the restore confirmation both state when the last backup was made and suggest backing up first.
+- **Tests:** day counting, wording, nudge and snooze rules.
+
 ## What the app does
 
 - **Shell and design:** brand theme (light, dark, system), first-run onboarding (optional name), five native tabs (Home, Tasks, Journal, Habits and goals, Settings), reusable accessible components. _Seen on a phone._

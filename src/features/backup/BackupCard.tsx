@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { toLocalDateString } from '../../lib/dates';
+import { useNow } from '../../lib/useNow';
 import { Button, Card, ConfirmDialog, Text } from '../../ui';
 import { buildExport } from '../export/buildExport';
 import { useExportInputs } from '../export/useExportInputs';
@@ -10,8 +11,10 @@ import { BusyDialog } from './BusyDialog';
 import { phoneCrypto } from './backupCrypto';
 import { createBackupFile, openBackupFile, readEnvelope } from './backupFormat';
 import { backupFileName, pickBackupFile, shareBackupFile } from './files';
+import { recordBackup, useLastBackup } from './lastBackup';
 import { PasswordDialog } from './PasswordDialog';
 import { parseBackupData, summarizeBackup } from './parseBackup';
+import { BACKUP_DUE_DAYS, daysSinceBackup, describeLastBackup } from './status';
 import type { BackupData } from './types';
 import { useRestore } from './useRestore';
 
@@ -36,6 +39,8 @@ export function BackupCard() {
   const { status } = useJournal();
   const { withoutLock } = useLock();
   const restore = useRestore();
+  const lastBackup = useLastBackup();
+  const now = useNow();
 
   const [phase, setPhase] = useState<Phase>({ name: 'idle' });
   const [note, setNote] = useState<string | null>(null);
@@ -50,6 +55,7 @@ export function BackupCard() {
       const shared = await withoutLock(() =>
         shareBackupFile(backupFileName(toLocalDateString(new Date())), file),
       );
+      if (shared) recordBackup(new Date().toISOString());
       setNote(
         shared
           ? 'Backup created. Keep the file and your password safe. The file cannot be opened without the password, and nobody can recover the password for you.'
@@ -118,6 +124,8 @@ export function BackupCard() {
   }
 
   const journalReady = status === 'ready';
+  const lastDays = daysSinceBackup(lastBackup, now);
+  const backupIsDue = lastDays === null || lastDays >= BACKUP_DUE_DAYS;
 
   return (
     <Card>
@@ -126,6 +134,9 @@ export function BackupCard() {
         Save everything in one file locked with a password, so you can move to a new phone or
         recover from a loss. Without the password the file cannot be opened, and nobody can reset it
         for you.
+      </Text>
+      <Text variant="secondary" tone={backupIsDue ? 'danger' : undefined} muted={!backupIsDue}>
+        {describeLastBackup(lastBackup, now)}
       </Text>
       <Button
         label="Create encrypted backup"
@@ -183,7 +194,7 @@ export function BackupCard() {
         title="Replace everything with this backup?"
         message={
           phase.name === 'restore-confirm'
-            ? `This backup contains ${summarizeBackup(phase.data)}. Everything now on this phone will be replaced by it. This cannot be undone.`
+            ? `This backup contains ${summarizeBackup(phase.data)}. Everything now on this phone will be replaced by it. This cannot be undone. ${describeLastBackup(lastBackup, now)} If what is on this phone now matters, cancel and create a backup of it first.`
             : ''
         }
         confirmLabel="Replace everything"
