@@ -9,9 +9,11 @@ type Props = Omit<TextInputProps, 'style'> & {
   label: string;
   hint?: string;
   error?: string;
+  /** Makes a multi-line field taller than usual, such as the page of a note. */
+  minInputHeight?: number;
 };
 
-export function TextField({ label, hint, error, onFocus, onBlur, ...rest }: Props) {
+export function TextField({ label, hint, error, minInputHeight, onFocus, onBlur, ...rest }: Props) {
   const { colors } = useTheme();
   const [focused, setFocused] = useState(false);
 
@@ -39,6 +41,7 @@ export function TextField({ label, hint, error, onFocus, onBlur, ...rest }: Prop
           styles.input,
           typography.body,
           { color: colors.text, backgroundColor: colors.surfaceMuted, borderColor },
+          minInputHeight ? { minHeight: minInputHeight } : null,
         ]}
       />
       {error ? (

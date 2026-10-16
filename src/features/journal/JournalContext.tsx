@@ -20,6 +20,8 @@ type Status = 'loading' | 'ready' | 'error';
 
 type JournalValue = {
   status: Status;
+  /** The unlocked encrypted database, shared with the notes. Null until the journal is ready. */
+  database: SqlDatabase | null;
   /** Entries matching the current search (all entries when the search is empty). */
   entries: JournalEntry[];
   /** Every entry, ignoring the search. Used by the calendar and reviews. */
@@ -38,6 +40,7 @@ type JournalValue = {
 
 const JournalContext = createContext<JournalValue>({
   status: 'loading',
+  database: null,
   entries: [],
   allEntries: [],
   query: '',
@@ -139,8 +142,20 @@ export function JournalProvider({ children }: { children: ReactNode }) {
   }, [db]);
 
   const value = useMemo(
-    () => ({ status, entries, allEntries, query, setQuery, findEntry, create, save, remove, wipe }),
-    [status, entries, allEntries, query, setQuery, findEntry, create, save, remove, wipe],
+    () => ({
+      status,
+      database: db,
+      entries,
+      allEntries,
+      query,
+      setQuery,
+      findEntry,
+      create,
+      save,
+      remove,
+      wipe,
+    }),
+    [status, db, entries, allEntries, query, setQuery, findEntry, create, save, remove, wipe],
   );
 
   return <JournalContext.Provider value={value}>{children}</JournalContext.Provider>;

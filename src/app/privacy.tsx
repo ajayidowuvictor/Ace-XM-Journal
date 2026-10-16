@@ -9,7 +9,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: 'How the journal is protected',
-    body: 'Your journal is stored in an encrypted database. The key is created on your phone and kept in Android secure storage, so the journal cannot be read from the file alone. Tasks, habits and goals are stored on the phone but are not encrypted by the app.',
+    body: 'Your journal and your notes (including verses and long texts) are stored in an encrypted database. The key is created on your phone and kept in Android secure storage, so they cannot be read from the file alone. Tasks, habits and goals are stored on the phone but are not encrypted by the app.',
   },
   {
     title: 'Backups',
@@ -17,7 +17,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: 'Exports',
-    body: 'An export is a plain file that is not encrypted, and it includes your journal. You choose where it goes. Keep it somewhere private.',
+    body: 'An export is a plain file that is not encrypted, and it includes your journal and notes. You choose where it goes. Keep it somewhere private.',
   },
   {
     title: 'Reminders',
@@ -25,7 +25,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: 'Erasing your data',
-    body: 'Erase all my data in Settings permanently removes your tasks, habits, goals and journal entries from this phone.',
+    body: 'Erase all my data in Settings permanently removes your tasks, habits, goals, journal entries and notes from this phone.',
   },
 ];
 

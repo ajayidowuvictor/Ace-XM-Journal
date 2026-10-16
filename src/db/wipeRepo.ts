@@ -13,10 +13,12 @@ export function wipeAppData(db: SqlDatabase): void {
   });
 }
 
-/** Permanently removes every journal entry and tag. */
+/** Permanently removes every journal entry and tag, and every note and notebook. */
 export function wipeJournalData(db: SqlDatabase): void {
   db.transaction(() => {
     db.run('DELETE FROM entry_tags');
     db.run('DELETE FROM journal_entries');
+    db.run('DELETE FROM notes');
+    db.run('DELETE FROM notebooks');
   });
 }

@@ -12,6 +12,7 @@ import { OnboardingProvider, useOnboarding } from '@/features/onboarding/Onboard
 import { GoalsProvider } from '@/features/goals/GoalsContext';
 import { HabitsProvider } from '@/features/habits/HabitsContext';
 import { JournalProvider } from '@/features/journal/JournalContext';
+import { NotesProvider } from '@/features/notes/NotesContext';
 import { PlannerProvider } from '@/features/planner/PlannerContext';
 import { TasksProvider } from '@/features/tasks/TasksContext';
 import { ThemeProvider } from '@/theme/ThemeProvider';
@@ -51,6 +52,8 @@ function RootNavigator() {
         <Stack.Protected guard={completed}>
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="entry" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="note" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="read" />
           <Stack.Screen name="calendar" />
           <Stack.Screen name="review" />
           <Stack.Screen name="privacy" />
@@ -74,7 +77,9 @@ export default function RootLayout() {
             <GoalsProvider>
               <PlannerProvider>
                 <JournalProvider>
-                  <RootNavigator />
+                  <NotesProvider>
+                    <RootNavigator />
+                  </NotesProvider>
                 </JournalProvider>
               </PlannerProvider>
             </GoalsProvider>

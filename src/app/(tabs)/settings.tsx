@@ -9,6 +9,7 @@ import { shareExport } from '@/features/export/shareExport';
 import { useGoals } from '@/features/goals/GoalsContext';
 import { useHabits } from '@/features/habits/HabitsContext';
 import { useJournal } from '@/features/journal/JournalContext';
+import { useNotes } from '@/features/notes/NotesContext';
 import {
   REMINDER_OPTIONS,
   parseReminderChoice,
@@ -37,6 +38,7 @@ export default function SettingsScreen() {
   const { goals, reload: reloadGoals } = useGoals();
   const { focus, blocks, reload: reloadPlanner } = usePlanner();
   const { allEntries, wipe: wipeJournal, status: journalStatus } = useJournal();
+  const { notes, notebooks, reload: reloadNotes } = useNotes();
 
   const [reminder, setReminder] = useState<ReminderChoice>(() =>
     parseReminderChoice(readPreference(PREF_KEYS.reminder)),
@@ -72,7 +74,14 @@ export default function SettingsScreen() {
     setExportNote(null);
     try {
       const text = buildExport(
-        { tasks, habits, goals, entries: allEntries, plan: { focus, blocks } },
+        {
+          tasks,
+          habits,
+          goals,
+          entries: allEntries,
+          plan: { focus, blocks },
+          notes: { notebooks, notes },
+        },
         new Date().toISOString(),
       );
       const shared = await shareExport(exportFileName(toLocalDateString(new Date())), text);
@@ -81,7 +90,7 @@ export default function SettingsScreen() {
           ? 'Sharing is not available on this device.'
           : journalStatus === 'ready'
             ? 'Export ready. Check where you sent it.'
-            : 'Export ready, but the journal could not be included because it was not available.',
+            : 'Export ready, but the journal and notes could not be included because they were not available.',
       );
     } catch {
       setExportNote('The export could not be created. Please try again.');
@@ -98,10 +107,12 @@ export default function SettingsScreen() {
       reloadHabits();
       reloadGoals();
       reloadPlanner();
+      const journalWiped = wipeJournal();
+      reloadNotes();
       setWipeNote(
-        wipeJournal()
+        journalWiped
           ? 'Everything has been erased.'
-          : 'Your tasks, habits and goals were erased, but the journal could not be erased. Please try again.',
+          : 'Your tasks, habits and goals were erased, but the journal and notes could not be erased. Please try again.',
       );
     } catch {
       setWipeNote('Nothing was erased because something went wrong. Please try again.');
@@ -199,7 +210,7 @@ export default function SettingsScreen() {
       <ConfirmDialog
         visible={confirmingExport}
         title="Export your data?"
-        message="The export is a plain file that is NOT encrypted and includes your journal. Only send it somewhere you trust."
+        message="The export is a plain file that is NOT encrypted and includes your journal and notes. Only send it somewhere you trust."
         confirmLabel="Export"
         onCancel={() => setConfirmingExport(false)}
         onConfirm={runExport}

@@ -5,6 +5,7 @@ import { journalMigrations } from '../journalMigrations';
 import { addMilestone, createGoal, listGoals } from '../goalsRepo';
 import { createHabit, listHabits, setHabitDone } from '../habitsRepo';
 import { migrate } from '../migrations';
+import { createNote, createNotebook, deleteNote, listNotebooks, listNotes } from '../notesRepo';
 import { createBlock, listBlocks, listFocus, replaceFocus } from '../plannerRepo';
 import { createTask, listTasks } from '../tasksRepo';
 import { createTestDatabase } from '../testing/testDatabase';
@@ -47,15 +48,34 @@ describe('wipeAppData', () => {
 });
 
 describe('wipeJournalData', () => {
-  it('removes every entry and tag, including already-deleted markers', () => {
+  it('removes every entry, tag, note and notebook, including already-deleted markers', () => {
     const db = createTestDatabase();
     migrate(db, journalMigrations);
     createEntry(db, 'e1', '2026-10-14', { title: 'x', body: 'y', mood: 3, tags: ['a'] }, now);
+    createNotebook(db, 'nb1', 'Scriptures', now);
+    createNote(
+      db,
+      'n1',
+      {
+        notebookId: 'nb1',
+        kind: 'verse',
+        title: '',
+        body: 'Be still.',
+        reference: 'Psalm 46:10',
+        pinned: true,
+      },
+      now,
+    );
+    deleteNote(db, 'n1', now);
 
     wipeJournalData(db);
 
     expect(listEntries(db)).toEqual([]);
     expect(db.all('SELECT * FROM journal_entries')).toEqual([]);
     expect(db.all('SELECT * FROM entry_tags')).toEqual([]);
+    expect(listNotes(db)).toEqual([]);
+    expect(listNotebooks(db)).toEqual([]);
+    expect(db.all('SELECT * FROM notes')).toEqual([]);
+    expect(db.all('SELECT * FROM notebooks')).toEqual([]);
   });
 });

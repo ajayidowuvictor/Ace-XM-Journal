@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 /**
  * ACE XM JOURNAL design tokens.
  * Brand colours are sampled from the owner's logo (see docs/BRAND.md); docs/DESIGN.md explains the look.
@@ -104,6 +106,9 @@ export const fonts = {
   semibold: 'Inter_600SemiBold',
   bold: 'Inter_700Bold',
 } as const;
+
+/** The phone's own serif font. Used only for the reading view of verses and long texts. */
+export const readingFont: string = Platform.select({ ios: 'Georgia', default: 'serif' });
 
 export const typography = {
   largeTitle: {
