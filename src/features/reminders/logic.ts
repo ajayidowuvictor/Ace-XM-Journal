@@ -25,3 +25,18 @@ export function reminderTime(choice: ReminderChoice): { hour: number; minute: nu
 /** The fixed text of the reminder. It never contains anything from the user's data. */
 export const REMINDER_TITLE = 'ACE XM JOURNAL';
 export const REMINDER_BODY = 'Take a minute to plan your day and check in with yourself.';
+
+/** The fixed text of the test reminder. */
+export const TEST_BODY = 'This is a test. Reminders can reach you on this phone.';
+
+/** What is waiting on the phone, in plain words. */
+export function describeScheduled(daily: boolean, taskReminders: number, test: boolean): string {
+  const parts = [
+    daily ? 'The daily reminder is set.' : 'No daily reminder is set.',
+    taskReminders === 0
+      ? 'No task reminders are waiting.'
+      : `${taskReminders} task ${taskReminders === 1 ? 'reminder is' : 'reminders are'} waiting.`,
+  ];
+  if (test) parts.push('A test reminder is on its way.');
+  return parts.join(' ');
+}
