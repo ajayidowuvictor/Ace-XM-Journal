@@ -251,11 +251,20 @@ export default function HomeScreen() {
         />
       ) : null}
 
-      <Button
-        label="Search everything"
-        variant="secondary"
-        onPress={() => router.push('/search')}
-      />
+      <View style={styles.shortcuts}>
+        <Button
+          label="Search"
+          variant="secondary"
+          onPress={() => router.push('/search')}
+          style={styles.shortcut}
+        />
+        <Button
+          label="Insights"
+          variant="secondary"
+          onPress={() => router.push('/insights')}
+          style={styles.shortcut}
+        />
+      </View>
 
       <View style={styles.shortcuts}>
         <Button
