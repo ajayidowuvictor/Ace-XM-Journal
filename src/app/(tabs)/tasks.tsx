@@ -84,9 +84,7 @@ export default function TasksScreen() {
       header={
         <AppHeader
           section="Tasks"
-          right={
-            <Button label="New task" size="compact" onPress={() => editor.open(null)} />
-          }
+          right={<Button label="New task" size="compact" onPress={() => editor.open(null)} />}
         />
       }
     >
@@ -177,5 +175,10 @@ export default function TasksScreen() {
 }
 
 const styles = StyleSheet.create({
-  pulseRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
+  pulseRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: spacing.sm,
+  },
 });

@@ -54,10 +54,7 @@ export function HabitRow({
           {lastDaysDone(habit.completedDates, today).map((done, index) => (
             <View
               key={index}
-              style={[
-                styles.dot,
-                { backgroundColor: done ? colors.success : colors.surfaceMuted },
-              ]}
+              style={[styles.dot, { backgroundColor: done ? colors.success : colors.surfaceMuted }]}
             />
           ))}
         </View>

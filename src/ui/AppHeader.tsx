@@ -20,13 +20,11 @@ export function AppHeader({ section, right }: Props) {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.bar, { backgroundColor: colors.background, borderBottomColor: colors.border }]}>
+    <View
+      style={[styles.bar, { backgroundColor: colors.background, borderBottomColor: colors.border }]}
+    >
       <View style={styles.brand}>
-        <Image
-          source={LOGO}
-          accessibilityLabel="ACE XM JOURNAL logo"
-          style={styles.logo}
-        />
+        <Image source={LOGO} accessibilityLabel="ACE XM JOURNAL logo" style={styles.logo} />
         <View>
           <Text variant="caption" muted style={styles.name}>
             ACE XM JOURNAL

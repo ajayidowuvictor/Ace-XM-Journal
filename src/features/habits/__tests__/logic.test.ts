@@ -147,6 +147,14 @@ describe('lastDaysDone', () => {
       false,
       true,
     ]);
-    expect(lastDaysDone([], '2026-10-14')).toEqual([false, false, false, false, false, false, false]);
+    expect(lastDaysDone([], '2026-10-14')).toEqual([
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+    ]);
   });
 });

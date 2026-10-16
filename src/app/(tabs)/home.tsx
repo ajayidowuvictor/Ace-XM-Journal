@@ -188,7 +188,9 @@ export default function HomeScreen() {
             router.push({
               pathname: '/entry',
               params: {
-                title: item.reference.trim() ? `Reflection: ${item.reference.trim()}` : 'Reflection',
+                title: item.reference.trim()
+                  ? `Reflection: ${item.reference.trim()}`
+                  : 'Reflection',
               },
             })
           }

@@ -79,9 +79,6 @@ export function relativeDayLabel(entryDate: string, today: string): string | nul
 }
 
 /** The entries written on one day, or all of them when no day is chosen. */
-export function entriesOnDay(
-  entries: readonly JournalEntry[],
-  day: string | null,
-): JournalEntry[] {
+export function entriesOnDay(entries: readonly JournalEntry[], day: string | null): JournalEntry[] {
   return day === null ? [...entries] : entries.filter((entry) => entry.entryDate === day);
 }

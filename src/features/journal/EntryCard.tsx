@@ -69,5 +69,9 @@ export function EntryCard({ entry, onOpen }: { entry: JournalEntry; onOpen: () =
 
 const styles = StyleSheet.create({
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs + 2 },
-  tag: { paddingHorizontal: spacing.sm + 2, paddingVertical: spacing.xs, borderRadius: radius.pill },
+  tag: {
+    paddingHorizontal: spacing.sm + 2,
+    paddingVertical: spacing.xs,
+    borderRadius: radius.pill,
+  },
 });

@@ -78,7 +78,11 @@ function HabitsPanel() {
               </Text>
               <Text variant="heading">Weekly consistency</Text>
             </View>
-            <Text variant="title" tone="success" accessibilityLabel={`${Math.round(week.rate * 100)} percent`}>
+            <Text
+              variant="title"
+              tone="success"
+              accessibilityLabel={`${Math.round(week.rate * 100)} percent`}
+            >
               {`${Math.round(week.rate * 100)}%`}
             </Text>
           </View>

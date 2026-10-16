@@ -78,7 +78,12 @@ describe('moodFor', () => {
 
 describe('recentDays', () => {
   it('lists the last days ending today, oldest first, across a month end', () => {
-    expect(recentDays('2026-11-02', 4)).toEqual(['2026-10-30', '2026-10-31', '2026-11-01', '2026-11-02']);
+    expect(recentDays('2026-11-02', 4)).toEqual([
+      '2026-10-30',
+      '2026-10-31',
+      '2026-11-01',
+      '2026-11-02',
+    ]);
     expect(recentDays('2026-10-16')).toHaveLength(7);
     expect(recentDays('2026-10-16')[6]).toBe('2026-10-16');
   });
