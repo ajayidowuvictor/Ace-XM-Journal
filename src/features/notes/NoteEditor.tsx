@@ -23,6 +23,8 @@ import {
   type SegmentOption,
 } from '../../ui';
 import { createAutosaver, type Autosaver } from '../journal/autosave';
+import { NOTE_TEMPLATES, canApplyTemplate } from '../templates/logic';
+import { TemplatePicker } from '../templates/TemplatePicker';
 import { KIND_LABELS, isEmptyNote, readingSummary } from './logic';
 import { useNotes } from './NotesContext';
 import type { Note, NoteInput, NoteKind } from './types';
@@ -172,6 +174,17 @@ export function NoteEditor({ note, initialKind, initialNotebookId }: Props) {
                 edit({ kind: next });
               }}
             />
+
+            {!note && !createdHere && kind === 'note' && canApplyTemplate(title, body) ? (
+              <TemplatePicker
+                templates={NOTE_TEMPLATES}
+                onPick={(template) => {
+                  setTitle(template.title);
+                  setBody(template.body);
+                  edit({ title: template.title, body: template.body });
+                }}
+              />
+            ) : null}
 
             <TextField
               label="Title (optional)"

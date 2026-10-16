@@ -4,7 +4,7 @@ Last updated: 2026-10-16
 
 ## Current phase
 
-Feature-complete for the first (local-only) release. The owner has now walked through every screen on a phone (Infinix Hot 30i, Android 12) and reported that each worked. Automated checks (type check, lint, format, 368 tests, Android bundle build) back everything else.
+Feature-complete for the first (local-only) release. The owner has now walked through every screen on a phone (Infinix Hot 30i, Android 12) and reported that each worked. Automated checks (type check, lint, format, 387 tests, Android bundle build) back everything else.
 
 ## Phase 1 (design and Today planner): merged
 
@@ -26,7 +26,7 @@ Tried on the owner's phone and reported working. Merged as pull request #3. What
 
 ## Phase 3 (app lock and encrypted backup): merged
 
-Tried on the owner's phone (app lock with PIN and fingerprint, backup and restore) and reported working. Merged as pull request #4. The backup duration on the phone was not reported. What it added:
+Tried on the owner's phone (app lock with PIN and fingerprint, backup and restore, including restoring a backup on the same phone) and reported working. Merged as pull request #4. Making a backup takes about 20 seconds on the owner's phone (Infinix Hot 30i), so the scrypt setting (N=16384) is kept; the screen's warning says up to a minute. What it added:
 
 - **App lock (Settings > App lock):** six-digit PIN kept only as a salted SHA-256 fingerprint in Android secure storage; optional fingerprint (needs a saved finger; the permission is no longer blocked in `app.json`); lock right away, after 1 minute or after 5 minutes away; waits of 30 s, 1 min, 5 min, 15 min after 5 or more wrong PINs in a row; "Forgot PIN?" uses the phone's own screen lock to turn the app lock off, or offers erase-everything with the typed DELETE confirmation. The lock is a full-screen modal, so it also covers open pop-ups. It stops people who pick up an unlocked phone. It does **not** protect the data cryptographically: the journal key does not depend on the PIN, and tasks, habits and goals are still not encrypted.
 - **Encrypted backup (Settings > Backup and restore):** one file, `.acexmbackup`, made from a password of at least 10 characters. Key: scrypt (noble-hashes, N=16384, r=8, p=1, random 16-byte salt) then AES-256-GCM (expo-crypto) with the file settings bound in as authenticated data. Restore asks for the file and password, shows what it contains, and only after a confirmation replaces everything on the phone (each database all-or-nothing). A wrong password and a damaged file look the same.
@@ -34,15 +34,28 @@ Tried on the owner's phone (app lock with PIN and fingerprint, backup and restor
 - **Tests:** PIN logic, PIN store (salted, never the PIN), PIN pad, byte helpers (base64, UTF-8, against Node), backup format (round trip, wrong password, tampering, changed settings, large data, with Node's scrypt and AES standing in), restore (round trip with real SQL, replaces existing data, all-or-nothing, older exports).
 - **Note on the GitHub link:** the session lost GitHub access in the middle of this phase (the owner had disconnected the repository for another project) and it was reconnected; nothing was lost.
 
-## In progress: Phase 4a (repeating tasks and task reminders)
+## Phase 4a (repeating tasks and task reminders): tried, in pull request #5
 
-Built on branch `feat/repeat-reminders`; CI passed on 81725e0 (type check, lint, format, 38 test groups, 368 tests). Not yet seen on a phone:
+Built on branch `feat/repeat-reminders`; CI passed (38 test groups, 368 tests). The owner installed the build and reported it works (repeats and the form); whether the reminder notification actually arrived was not specifically reported. What it added:
 
 - **Repeat:** a task can repeat every day, every weekday, every week or every month. Finishing it adds the next copy (same title, notes, priority, repeat rule and reminder), dated after both the old due date and today. Weekly keeps the weekday; monthly keeps the day of the month (the last day in short months). Un-ticking a task does not remove the copy already made.
 - **Reminder time:** each task can have a reminder at 8:00, 12:00, 17:00 or 20:00 on its due date (scheduled on the phone as one notification per task, nearest 50 only). By default the notification does not show the task (Settings > Task reminders > Hide names); the owner can choose to show names. Repeating and reminders need a due date, so choosing either gives a task with no date today's date.
 - **Daily reminder:** now replaces only its own notification, so it no longer cancels task reminders.
 - **Database:** migration 5 (`repeat`, `reminder_time` on tasks). Exports and backups carry both fields; older exports and backups restore as "does not repeat, no reminder".
-- **Not verified on a device:** that task reminder notifications actually appear at the chosen time (the daily reminder firing is also still unconfirmed), and that the form fits the screen.
+- **Not confirmed:** that task reminder notifications appear at the chosen time (the daily reminder firing is also still unconfirmed).
+
+## Phase 4b (search and templates)
+
+Built on branch `feat/search-templates` (on top of 4a); CI passed (40 test groups, 379 tests). Test build installed by the owner to try. What it added:
+
+- **Search everything** (button on Home, screen `/search`): looks through tasks, goals (and their steps), habits, journal entries and notes at once. Every word must match (any order, ignoring capitals), from 2 letters; up to 8 results per kind with a count; open tasks listed before done ones. Tapping a result opens it (task, goal and habit forms, the journal entry, the note's reading view). Nothing is saved or logged; text is shown on screen only.
+- **Templates:** a blank new journal entry offers Gratitude, Daily reflection, Prayer, Weekly check-in; a blank new note (kind Note) offers Sermon notes, Meeting notes, Book notes. A template fills the page only when nothing has been typed. A template left untouched is saved like any other entry (delete it if unwanted).
+
+## In progress: Phase 4c (insights)
+
+Built on branch `feat/insights` (on top of 4b); CI passed on 9e121cb (type check, lint, format, 41 test groups, 387 tests). Not yet seen on a phone:
+
+- **Insights** (button on Home, screen `/insights`), worked out on the phone from existing data, nothing new stored: tasks finished in each of the last 8 weeks (bars; each week is the 7 days ending on the date shown, like the Weekly review); each habit's days done out of the last 30 and its current streak; journal days written out of the last 30, writing streak, average mood by week; totals so far (tasks finished, goals achieved, journal entries).
 
 ## What the app does
 
@@ -86,7 +99,7 @@ Built on branch `feat/repeat-reminders`; CI passed on 81725e0 (type check, lint,
 
 ## Next actions
 
-0. Owner tests the Phase 4a build (repeating tasks, task reminders) on the phone and reports what to adjust; merge `feat/repeat-reminders`. Then the rest of Phase 4: search across the app, insights, templates. The owner has not yet reported how long a backup takes on the phone.
+0. Owner merges pull request #5 (4a) and tests the Phase 4b (search, templates) and 4c (insights) builds. Pull requests for 4b and 4c are opened after testing; each branch sits on the one before it.
 
 1. Owner confirms the reminder (next morning) and the journal after erase-all, and reports anything else to fix.
 2. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.

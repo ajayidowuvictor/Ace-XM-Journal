@@ -253,6 +253,21 @@ export default function HomeScreen() {
 
       <View style={styles.shortcuts}>
         <Button
+          label="Search"
+          variant="secondary"
+          onPress={() => router.push('/search')}
+          style={styles.shortcut}
+        />
+        <Button
+          label="Insights"
+          variant="secondary"
+          onPress={() => router.push('/insights')}
+          style={styles.shortcut}
+        />
+      </View>
+
+      <View style={styles.shortcuts}>
+        <Button
           label="Calendar"
           variant="secondary"
           onPress={() => router.push('/calendar')}

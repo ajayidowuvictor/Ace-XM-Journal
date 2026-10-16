@@ -58,6 +58,8 @@ function RootNavigator() {
           <Stack.Screen name="note" options={{ presentation: 'modal' }} />
           <Stack.Screen name="read" />
           <Stack.Screen name="calendar" />
+          <Stack.Screen name="search" />
+          <Stack.Screen name="insights" />
           <Stack.Screen name="review" />
           <Stack.Screen name="privacy" />
         </Stack.Protected>

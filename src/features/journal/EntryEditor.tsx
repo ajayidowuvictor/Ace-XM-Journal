@@ -10,6 +10,8 @@ import { Button, ConfirmDialog, Text, TextField, spacing } from '../../ui';
 import { createAutosaver, type Autosaver } from './autosave';
 import { useJournal } from './JournalContext';
 import { isEmptyEntry, parseTags, tagsToText } from './logic';
+import { ENTRY_TEMPLATES, canApplyTemplate } from '../templates/logic';
+import { TemplatePicker } from '../templates/TemplatePicker';
 import { MoodPicker } from './MoodPicker';
 import type { EntryInput, JournalEntry, Mood } from './types';
 
@@ -112,6 +114,17 @@ export function EntryEditor({ entry }: { entry: JournalEntry | null }) {
           <Button label="Done" variant="ghost" onPress={close} style={styles.done} />
           <Text variant="title">{entry ? 'Journal entry' : 'New entry'}</Text>
           {date ? <Text muted>{formatLongDate(date)}</Text> : null}
+
+          {!entry && !createdHere && canApplyTemplate(title, body) ? (
+            <TemplatePicker
+              templates={ENTRY_TEMPLATES}
+              onPick={(template) => {
+                setTitle(template.title);
+                setBody(template.body);
+                edit({ title: template.title, body: template.body });
+              }}
+            />
+          ) : null}
 
           <TextField
             label="Title (optional)"
