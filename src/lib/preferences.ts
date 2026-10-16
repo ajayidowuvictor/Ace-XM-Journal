@@ -7,6 +7,10 @@ export const PREF_KEYS = {
   displayName: 'display-name',
   reminder: 'daily-reminder',
   readerSize: 'reader-text-size',
+  lockEnabled: 'app-lock-enabled',
+  lockDelay: 'app-lock-delay',
+  lockBiometric: 'app-lock-biometric',
+  lockAttempts: 'app-lock-attempts',
 } as const;
 
 /** Reads a stored preference. Returns null if nothing is stored or storage is unavailable. */

@@ -2,13 +2,12 @@ import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
-import { openAppDatabase } from '@/db/expoDatabase';
-import { wipeAppData } from '@/db/wipeRepo';
 import { buildExport, exportFileName } from '@/features/export/buildExport';
 import { shareExport } from '@/features/export/shareExport';
 import { useGoals } from '@/features/goals/GoalsContext';
 import { useHabits } from '@/features/habits/HabitsContext';
 import { useJournal } from '@/features/journal/JournalContext';
+import { AppLockCard } from '@/features/lock/AppLockCard';
 import { useNotes } from '@/features/notes/NotesContext';
 import {
   REMINDER_OPTIONS,
@@ -17,6 +16,7 @@ import {
 } from '@/features/reminders/logic';
 import { applyReminder } from '@/features/reminders/service';
 import { WipeDialog } from '@/features/settings/WipeDialog';
+import { useEraseAll } from '@/features/settings/useEraseAll';
 import { usePlanner } from '@/features/planner/PlannerContext';
 import { useTasks } from '@/features/tasks/TasksContext';
 import { toLocalDateString } from '@/lib/dates';
@@ -33,12 +33,13 @@ const APPEARANCE_OPTIONS = THEME_PREFERENCES.map((value) => ({
 export default function SettingsScreen() {
   const router = useRouter();
   const { preference, setPreference } = useTheme();
-  const { tasks, reload: reloadTasks } = useTasks();
-  const { habits, reload: reloadHabits } = useHabits();
-  const { goals, reload: reloadGoals } = useGoals();
-  const { focus, blocks, reload: reloadPlanner } = usePlanner();
-  const { allEntries, wipe: wipeJournal, status: journalStatus } = useJournal();
-  const { notes, notebooks, reload: reloadNotes } = useNotes();
+  const { tasks } = useTasks();
+  const { habits } = useHabits();
+  const { goals } = useGoals();
+  const { focus, blocks } = usePlanner();
+  const { allEntries, status: journalStatus } = useJournal();
+  const { notes, notebooks } = useNotes();
+  const eraseAll = useEraseAll();
 
   const [reminder, setReminder] = useState<ReminderChoice>(() =>
     parseReminderChoice(readPreference(PREF_KEYS.reminder)),
@@ -101,22 +102,7 @@ export default function SettingsScreen() {
 
   function runWipe() {
     setConfirmingWipe(false);
-    try {
-      wipeAppData(openAppDatabase());
-      reloadTasks();
-      reloadHabits();
-      reloadGoals();
-      reloadPlanner();
-      const journalWiped = wipeJournal();
-      reloadNotes();
-      setWipeNote(
-        journalWiped
-          ? 'Everything has been erased.'
-          : 'Your tasks, habits and goals were erased, but the journal and notes could not be erased. Please try again.',
-      );
-    } catch {
-      setWipeNote('Nothing was erased because something went wrong. Please try again.');
-    }
+    setWipeNote(eraseAll().message);
   }
 
   return (
@@ -151,6 +137,8 @@ export default function SettingsScreen() {
           </Text>
         ) : null}
       </Card>
+
+      <AppLockCard />
 
       <Card>
         <Text variant="heading">Weekly review</Text>
