@@ -1,0 +1,89 @@
+
+===== OLD build 2f2a342c-3558-4155-a334-0fba4544ed79 =====
+-- eas stderr:
+- Fetching the build…
+✔ Found a matching build for the project @ajayidowu/ace-xm-journal
+-- eas json keys:
+id,status,platform,artifacts,fingerprint,initiatingActor,logFiles,app,distribution,buildProfile,appIdentifier,sdkVersion,appVersion,appBuildVersion,gitCommitHash,gitCommitMessage,priority,createdAt,updatedAt,completedAt,expirationDate,isForIosSimulator,metrics
+{"buildUrl":"https://expo.dev/artifacts/eas/2FGl-wfoL7hfwRO8uLOTdqbSvnQv88t6qcofHsrxcrU.apk","applicationArchiveUrl":"https://expo.dev/artifacts/eas/2FGl-wfoL7hfwRO8uLOTdqbSvnQv88t6qcofHsrxcrU.apk"}
+url: https://expo.dev/artifacts/eas/2FGl-wfoL7hfwRO8uLOTdqbSvnQv88t6qcofHsrxcrU.apk
+-rw-r--r-- 1 runner runner 54885262 Oct 16 12:55 OLD.apk
+-- zip test
+No errors detected in compressed data of OLD.apk.
+-- manifest summary
+package: name='com.ajayidowuvictor.acexmjournal' versionCode='1' versionName='1.0.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+targetSdkVersion:'36'
+application-label:'ACE XM JOURNAL'
+native-code: 'arm64-v8a'
+-- signature
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+V2 Signer: certificate SHA-256 digest: bfa50fcbdd32828f82e9a3eaafc5b38215a67251cb75cb9af86f8ffea6acb797
+-- minSdk: minSdkVersion:'24'
+-- permissions
+uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.POST_NOTIFICATIONS'
+uses-permission: name='android.permission.READ_EXTERNAL_STORAGE' maxSdkVersion='32'
+uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
+uses-permission: name='android.permission.SYSTEM_ALERT_WINDOW'
+uses-permission: name='android.permission.USE_BIOMETRIC'
+uses-permission: name='android.permission.USE_FINGERPRINT'
+uses-permission: name='android.permission.VIBRATE'
+uses-permission: name='android.permission.WAKE_LOCK'
+uses-permission: name='android.permission.WRITE_EXTERNAL_STORAGE' maxSdkVersion='32'
+uses-permission: name='com.ajayidowuvictor.acexmjournal.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+-- zipalign
+aligned 16k ok
+-- abis in apk
+lib/arm64-v8a/
+
+===== NEW build 76669ec3-ee39-4cd0-826c-ef07603c9878 =====
+-- eas stderr:
+- Fetching the build…
+✔ Found a matching build for the project @ajayidowu/ace-xm-journal
+-- eas json keys:
+id,status,platform,artifacts,fingerprint,initiatingActor,logFiles,app,distribution,buildProfile,appIdentifier,sdkVersion,appVersion,appBuildVersion,gitCommitHash,gitCommitMessage,priority,createdAt,updatedAt,completedAt,expirationDate,isForIosSimulator,metrics
+{"buildUrl":"https://expo.dev/artifacts/eas/vk5ee_0Y4xY0YjPd7eKwiLKPOCr5lzGEL_TKxHlhbS0.apk","applicationArchiveUrl":"https://expo.dev/artifacts/eas/vk5ee_0Y4xY0YjPd7eKwiLKPOCr5lzGEL_TKxHlhbS0.apk"}
+url: https://expo.dev/artifacts/eas/vk5ee_0Y4xY0YjPd7eKwiLKPOCr5lzGEL_TKxHlhbS0.apk
+-rw-r--r-- 1 runner runner 55170262 Oct 16 12:55 NEW.apk
+-- zip test
+No errors detected in compressed data of NEW.apk.
+-- manifest summary
+package: name='com.ajayidowuvictor.acexmjournal' versionCode='1' versionName='1.0.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+targetSdkVersion:'36'
+application-label:'ACE XM JOURNAL'
+native-code: 'arm64-v8a'
+-- signature
+Verifies
+Verified using v1 scheme (JAR signing): false
+Verified using v2 scheme (APK Signature Scheme v2): true
+Verified using v3 scheme (APK Signature Scheme v3): false
+Verified using v3.1 scheme (APK Signature Scheme v3.1): false
+Verified using v3.2 scheme (APK Signature Scheme v3.2): false
+Verified using v4 scheme (APK Signature Scheme v4): false
+V2 Signer: certificate SHA-256 digest: bfa50fcbdd32828f82e9a3eaafc5b38215a67251cb75cb9af86f8ffea6acb797
+-- minSdk: minSdkVersion:'24'
+-- permissions
+uses-permission: name='android.permission.ACCESS_NETWORK_STATE'
+uses-permission: name='android.permission.INTERNET'
+uses-permission: name='android.permission.POST_NOTIFICATIONS'
+uses-permission: name='android.permission.READ_EXTERNAL_STORAGE' maxSdkVersion='32'
+uses-permission: name='android.permission.RECEIVE_BOOT_COMPLETED'
+uses-permission: name='android.permission.SYSTEM_ALERT_WINDOW'
+uses-permission: name='android.permission.USE_BIOMETRIC'
+uses-permission: name='android.permission.USE_FINGERPRINT'
+uses-permission: name='android.permission.VIBRATE'
+uses-permission: name='android.permission.WAKE_LOCK'
+uses-permission: name='android.permission.WRITE_EXTERNAL_STORAGE' maxSdkVersion='32'
+uses-permission: name='com.ajayidowuvictor.acexmjournal.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'
+-- zipalign
+aligned 16k ok
+-- abis in apk
+lib/arm64-v8a/
+===== DIFF of badging (old vs new) =====
