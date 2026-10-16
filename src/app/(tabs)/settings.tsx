@@ -16,6 +16,7 @@ import {
   parseReminderChoice,
   type ReminderChoice,
 } from '@/features/reminders/logic';
+import { ReminderCheck } from '@/features/reminders/ReminderCheck';
 import { applyReminder, refreshTaskReminders } from '@/features/reminders/service';
 import {
   TASK_NAME_OPTIONS,
@@ -189,6 +190,8 @@ export default function SettingsScreen() {
           nothing private appears on a locked screen.
         </Text>
       </Card>
+
+      <ReminderCheck />
 
       <AppLockCard />
 

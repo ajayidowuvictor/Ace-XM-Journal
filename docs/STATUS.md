@@ -87,6 +87,10 @@ Branch `feat/backup-safety`. Not yet checked by CI or seen on a phone. The app k
 - **Warnings:** the erase dialog and the restore confirmation both state when the last backup was made and suggest backing up first.
 - **Tests:** day counting, wording, nudge and snooze rules.
 
+## In progress: Phase 6b (reminder check)
+
+Branch `feat/reminder-check`. Not yet checked by CI or seen on a phone. Daily and task reminders have never been confirmed to arrive. Settings now has a "Check reminders" card: "Send a test reminder in 1 minute" (fixed text, one notification, same channel as the daily reminder) and "See what is scheduled" (says whether the daily reminder is set and how many task reminders are waiting). Purpose: find out whether this phone (Infinix, Android 12) lets reminders through when the app is closed; some makers block background apps. Any problem found there is fixed afterwards.
+
 ## What the app does
 
 - **Shell and design:** brand theme (light, dark, system), first-run onboarding (optional name), five native tabs (Home, Tasks, Journal, Habits and goals, Settings), reusable accessible components. _Seen on a phone._

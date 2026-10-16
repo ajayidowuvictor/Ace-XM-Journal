@@ -3,7 +3,14 @@ import { Platform } from 'react-native';
 
 import { PREF_KEYS, readPreference } from '../../lib/preferences';
 import type { Task } from '../tasks/types';
-import { REMINDER_BODY, REMINDER_TITLE, reminderTime, type ReminderChoice } from './logic';
+import {
+  REMINDER_BODY,
+  REMINDER_TITLE,
+  TEST_BODY,
+  describeScheduled,
+  reminderTime,
+  type ReminderChoice,
+} from './logic';
 import {
   TASK_REMINDER_PREFIX,
   parseTaskNameChoice,
@@ -14,6 +21,7 @@ import {
 const CHANNEL_ID = 'daily-reminder';
 const TASK_CHANNEL_ID = 'task-reminders';
 const DAILY_ID = 'daily-reminder';
+const TEST_ID = 'test-reminder';
 
 export type ReminderResult = 'ok' | 'denied' | 'error';
 
@@ -111,5 +119,47 @@ export async function refreshTaskReminders(
     return 'ok';
   } catch {
     return 'error';
+  }
+}
+
+/** Sends one test notification to this phone about a minute from now. */
+export async function scheduleTestReminder(now: Date = new Date()): Promise<ReminderResult> {
+  try {
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
+        name: 'Daily reminder',
+        importance: Notifications.AndroidImportance.DEFAULT,
+      });
+    }
+    let permission = await Notifications.getPermissionsAsync();
+    if (!permission.granted) permission = await Notifications.requestPermissionsAsync();
+    if (!permission.granted) return 'denied';
+
+    await Notifications.scheduleNotificationAsync({
+      identifier: TEST_ID,
+      content: { title: REMINDER_TITLE, body: TEST_BODY },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.DATE,
+        date: new Date(now.getTime() + 60_000),
+        channelId: CHANNEL_ID,
+      },
+    });
+    return 'ok';
+  } catch {
+    return 'error';
+  }
+}
+
+/** A plain sentence about which reminders the phone is holding, or null if it cannot tell. */
+export async function scheduledSummary(): Promise<string | null> {
+  try {
+    const items = await Notifications.getAllScheduledNotificationsAsync();
+    return describeScheduled(
+      items.some((item) => item.identifier === DAILY_ID),
+      items.filter((item) => item.identifier.startsWith(TASK_REMINDER_PREFIX)).length,
+      items.some((item) => item.identifier === TEST_ID),
+    );
+  } catch {
+    return null;
   }
 }
