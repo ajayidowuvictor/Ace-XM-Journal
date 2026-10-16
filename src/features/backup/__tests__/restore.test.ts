@@ -21,7 +21,12 @@ function filledDatabases() {
   const journal = createTestDatabase();
   migrate(journal, journalMigrations);
 
-  createTask(app, 'task-1', { title: 'Pay rent', notes: 'Bank "A"', dueDate: '2026-10-14', priority: 3 }, t(1));
+  createTask(
+    app,
+    'task-1',
+    { title: 'Pay rent', notes: 'Bank "A"', dueDate: '2026-10-14', priority: 3 },
+    t(1),
+  );
   createTask(app, 'task-2', { title: 'Call mum', notes: '', dueDate: null, priority: 0 }, t(2));
   setTaskCompleted(app, 'task-2', true, t(3));
 
@@ -68,7 +73,10 @@ function filledDatabases() {
   return { app, journal };
 }
 
-function exportText(app: ReturnType<typeof createTestDatabase>, journal: ReturnType<typeof createTestDatabase>) {
+function exportText(
+  app: ReturnType<typeof createTestDatabase>,
+  journal: ReturnType<typeof createTestDatabase>,
+) {
   return buildExport(
     {
       tasks: listTasks(app),
@@ -153,14 +161,24 @@ describe('parseBackupData', () => {
     expect(parseBackupData(JSON.stringify({ ...base, tasks: 'oops' }))).toBeNull();
     expect(
       parseBackupData(
-        JSON.stringify({ ...base, habits: [{ id: 'h', name: 'x', completedDates: [1], createdAt: 'a' }] }),
+        JSON.stringify({
+          ...base,
+          habits: [{ id: 'h', name: 'x', completedDates: [1], createdAt: 'a' }],
+        }),
       ),
     ).toBeNull();
   });
 
   it('accepts an older export that has no notes or day plans', () => {
     const data = parseBackupData(
-      JSON.stringify({ app: 'ACE XM JOURNAL', exportVersion: 1, tasks: [], habits: [], goals: [], journalEntries: [] }),
+      JSON.stringify({
+        app: 'ACE XM JOURNAL',
+        exportVersion: 1,
+        tasks: [],
+        habits: [],
+        goals: [],
+        journalEntries: [],
+      }),
     );
     expect(data).not.toBeNull();
     expect(data!.notes).toEqual([]);
@@ -173,8 +191,8 @@ describe('summarizeBackup', () => {
     const { app, journal } = filledDatabases();
     const data = parseBackupData(exportText(app, journal))!;
     expect(summarizeBackup(data)).toBe('2 tasks, 1 habit, 1 goal, 1 journal entry, 1 note');
-    expect(summarizeBackup({ ...data, tasks: [], habits: [], goals: [], entries: [], notes: [] })).toBe(
-      'nothing yet',
-    );
+    expect(
+      summarizeBackup({ ...data, tasks: [], habits: [], goals: [], entries: [], notes: [] }),
+    ).toBe('nothing yet');
   });
 });

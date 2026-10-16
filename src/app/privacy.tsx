@@ -13,7 +13,7 @@ const SECTIONS: { title: string; body: string }[] = [
   },
   {
     title: 'App lock',
-    body: 'You can ask for a six-digit PIN (and optionally your fingerprint) when the app is opened. This stops other people who pick up your phone. Your PIN is kept only as a salted fingerprint in Android secure storage. If you forget it, your phone\'s own screen lock can reset it.',
+    body: "You can ask for a six-digit PIN (and optionally your fingerprint) when the app is opened. This stops other people who pick up your phone. Your PIN is kept only as a salted fingerprint in Android secure storage. If you forget it, your phone's own screen lock can reset it.",
   },
   {
     title: 'Backups',

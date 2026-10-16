@@ -48,7 +48,9 @@ export function passwordBytes(password: string): Uint8Array {
 
 function headerBytes(kdf: KdfParams, saltBase64: string): Uint8Array {
   return utf8Encode(
-    [BACKUP_FORMAT, BACKUP_VERSION, 'scrypt', kdf.N, kdf.r, kdf.p, saltBase64, 'AES-256-GCM'].join('|'),
+    [BACKUP_FORMAT, BACKUP_VERSION, 'scrypt', kdf.N, kdf.r, kdf.p, saltBase64, 'AES-256-GCM'].join(
+      '|',
+    ),
   );
 }
 
@@ -82,8 +84,7 @@ export type ParsedEnvelope = {
 };
 
 export type EnvelopeResult =
-  | { ok: true; envelope: ParsedEnvelope }
-  | { ok: false; reason: 'not-backup' | 'unsupported' };
+  { ok: true; envelope: ParsedEnvelope } | { ok: false; reason: 'not-backup' | 'unsupported' };
 
 function isPowerOfTwo(n: number): boolean {
   return Number.isInteger(n) && n > 0 && (n & (n - 1)) === 0;
@@ -105,7 +106,12 @@ export function readEnvelope(fileText: string): EnvelopeResult {
     return { ok: false, reason: 'unsupported' };
   }
   const kdf = file.kdf;
-  if (!kdf || kdf.name !== 'scrypt' || typeof kdf.salt !== 'string' || typeof file.data !== 'string') {
+  if (
+    !kdf ||
+    kdf.name !== 'scrypt' ||
+    typeof kdf.salt !== 'string' ||
+    typeof file.data !== 'string'
+  ) {
     return { ok: false, reason: 'not-backup' };
   }
   if (!isPowerOfTwo(kdf.N) || kdf.N < MIN_N || kdf.N > MAX_N || kdf.r !== 8 || kdf.p !== 1) {

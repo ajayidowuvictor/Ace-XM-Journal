@@ -3,7 +3,10 @@ import * as LocalAuthentication from 'expo-local-authentication';
 /** True when the phone has a fingerprint (or similar) sensor with at least one saved finger. */
 export async function biometricsReady(): Promise<boolean> {
   try {
-    return (await LocalAuthentication.hasHardwareAsync()) && (await LocalAuthentication.isEnrolledAsync());
+    return (
+      (await LocalAuthentication.hasHardwareAsync()) &&
+      (await LocalAuthentication.isEnrolledAsync())
+    );
   } catch {
     return false;
   }

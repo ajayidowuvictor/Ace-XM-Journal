@@ -31,7 +31,13 @@ function OpenDialog({ title, message, confirmLabel, askTwice, onCancel, onSubmit
   const ready = password.length > 0 && (!askTwice || (problem === null && again === password));
 
   return (
-    <Modal visible transparent animationType="fade" onRequestClose={onCancel} accessibilityViewIsModal>
+    <Modal
+      visible
+      transparent
+      animationType="fade"
+      onRequestClose={onCancel}
+      accessibilityViewIsModal
+    >
       <View style={styles.overlay}>
         <Card variant="hero" style={styles.dialog}>
           <Text variant="heading">{title}</Text>

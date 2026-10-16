@@ -133,8 +133,8 @@ export function LockScreen() {
             <Card variant="hero" style={styles.dialog}>
               <Text variant="heading">Forgot your PIN?</Text>
               <Text muted>
-                Your phone&apos;s own screen lock can confirm it is you. The app lock is then
-                turned off and nothing is erased. You can set a new PIN in Settings.
+                Your phone&apos;s own screen lock can confirm it is you. The app lock is then turned
+                off and nothing is erased. You can set a new PIN in Settings.
               </Text>
               {message ? (
                 <Text variant="caption" tone="danger">

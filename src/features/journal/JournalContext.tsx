@@ -166,7 +166,20 @@ export function JournalProvider({ children }: { children: ReactNode }) {
       wipe,
       reload,
     }),
-    [status, db, entries, allEntries, query, setQuery, findEntry, create, save, remove, wipe, reload],
+    [
+      status,
+      db,
+      entries,
+      allEntries,
+      query,
+      setQuery,
+      findEntry,
+      create,
+      save,
+      remove,
+      wipe,
+      reload,
+    ],
   );
 
   return <JournalContext.Provider value={value}>{children}</JournalContext.Provider>;
