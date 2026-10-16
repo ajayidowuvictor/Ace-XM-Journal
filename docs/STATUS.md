@@ -4,7 +4,7 @@ Last updated: 2026-10-16
 
 ## Current phase
 
-Feature-complete for the first (local-only) release. The owner has now walked through every screen on a phone (Infinix Hot 30i, Android 12) and reported that each worked. Automated checks (type check, lint, format, 387 tests, Android bundle build) back everything else.
+Feature-complete for the first (local-only) release. The owner has now walked through every screen on a phone (Infinix Hot 30i, Android 12) and reported that each worked. Automated checks (type check, lint, format, 403 tests, Android bundle build) back everything else.
 
 ## Phase 1 (design and Today planner): merged
 
@@ -51,11 +51,21 @@ Built on branch `feat/search-templates` (on top of 4a); CI passed (40 test group
 - **Search everything** (button on Home, screen `/search`): looks through tasks, goals (and their steps), habits, journal entries and notes at once. Every word must match (any order, ignoring capitals), from 2 letters; up to 8 results per kind with a count; open tasks listed before done ones. Tapping a result opens it (task, goal and habit forms, the journal entry, the note's reading view). Nothing is saved or logged; text is shown on screen only.
 - **Templates:** a blank new journal entry offers Gratitude, Daily reflection, Prayer, Weekly check-in; a blank new note (kind Note) offers Sermon notes, Meeting notes, Book notes. A template fills the page only when nothing has been typed. A template left untouched is saved like any other entry (delete it if unwanted).
 
-## In progress: Phase 4c (insights)
+## Phase 4c (insights)
 
-Built on branch `feat/insights` (on top of 4b); CI passed on 9e121cb (type check, lint, format, 41 test groups, 387 tests). Not yet seen on a phone:
+Built on branch `feat/insights` (on top of 4b); CI passed (41 test groups, 387 tests). The owner installed the build. Insights (button on Home, screen `/insights`) is worked out on the phone from existing data, nothing new stored: tasks finished in each of the last 8 weeks (bars; each week is the 7 days ending on the date shown, like the Weekly review); each habit's days done out of the last 30 and its current streak; journal days written out of the last 30, writing streak, average mood by week; totals so far. Pull requests: #5 (4a), #6 (4b and 4c); not yet merged when Phase 5 started.
 
-- **Insights** (button on Home, screen `/insights`), worked out on the phone from existing data, nothing new stored: tasks finished in each of the last 8 weeks (bars; each week is the 7 days ending on the date shown, like the Weekly review); each habit's days done out of the last 30 and its current streak; journal days written out of the last 30, writing streak, average mood by week; totals so far (tasks finished, goals achieved, journal entries).
+## In progress: Phase 5a (new look from the owner's Stitch designs)
+
+Built on branch `feat/redesign` (on top of 4c); CI passed on e5f719a (type check, lint, format, 42 test groups, 403 tests). Not yet seen on a phone. The owner supplied five Stitch screens (Home, Journal, Tasks, Settings, Habits and Goals). Copied: the look (header with logo, large titles, soft cards, chips, pill tab indicator, navy and green). Deliberately not copied because it would be untrue or does not exist: "Vault Encrypted / hardware keystore / Hardware Bound / AES-256 enclave" wording and an "Encrypted" badge on every screen (only the journal and notes are encrypted; the badge is on Journal only), "Sync Live", weather, voice memo and transcription, scripture translations, images in entries, hydration litres, AI habit suggestions and the Midday reset timer.
+
+- **Header** (`AppHeader`): logo, "ACE XM JOURNAL" and the screen name on Home, Tasks, Journal, Habits and Settings; Home has a Search button, Tasks a New task button, Journal an "Encrypted" pill. Tab bar indicator is a soft navy pill.
+- **Home:** Verse of the Day (picked by date from the owner's own saved verses; with none saved it invites adding one; "Reflect in your journal" opens a new entry titled "Reflection: <reference>"), "Today's flow" section name, a daily check-in card with a rotating question (shown as the faint hint in the new entry, never saved) that is replaced by the evening wrap-up from 17:00. Search moved to the header; shortcuts are Calendar, Insights and Weekly review.
+- **Tasks:** Today's focus progress card, quick add (adds to today), Today / Upcoming / Done switch with counts, New task in the header.
+- **Journal:** entry count with "encrypted on this device", day filter strip (All and the last 7 days), richer entry cards (day, time, read time, preview, tags), a floating "New entry" button.
+- **Habits:** "Daily habits | Goals" switch, Weekly consistency card (Monday to Sunday circles and a percentage), a 7-day dot row on each habit.
+- **Settings:** an honest "Your data stays here" card at the top.
+- **Not done in this step:** the other screens (editors, reading view, lock screen, dialogs) keep their current look; Stitch screens for them were not supplied.
 
 ## What the app does
 
@@ -99,7 +109,7 @@ Built on branch `feat/insights` (on top of 4b); CI passed on 9e121cb (type check
 
 ## Next actions
 
-0. Owner merges pull request #5 (4a) and tests the Phase 4b (search, templates) and 4c (insights) builds. Pull requests for 4b and 4c are opened after testing; each branch sits on the one before it.
+0. Owner merges pull requests #5 then #6, and tries the Phase 5a build (new look). Then: backup safety net (last backup date and weekly nudge), reminder check, polish pass, encrypting tasks, habits and goals.
 
 1. Owner confirms the reminder (next morning) and the journal after erase-all, and reports anything else to fix.
 2. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.

@@ -1,3 +1,4 @@
+import { shiftDateString } from '../../lib/dates';
 import type { EntryInput, JournalEntry, Mood } from './types';
 
 export const MAX_TAGS = 10;
@@ -58,4 +59,26 @@ export function entryHeadline(entry: Pick<JournalEntry, 'title' | 'body'>): stri
 
 export function moodFor(value: number | null): (typeof MOODS)[number] | null {
   return MOODS.find((mood) => mood.value === value) ?? null;
+}
+
+/** The last `count` local dates ending on `today`, oldest first. */
+export function recentDays(today: string, count = 7): string[] {
+  const days: string[] = [];
+  for (let back = count - 1; back >= 0; back -= 1) {
+    const day = shiftDateString(today, -back);
+    if (day) days.push(day);
+  }
+  return days;
+}
+
+/** "Today" or "Yesterday" for those days, otherwise null so the caller can show the date. */
+export function relativeDayLabel(entryDate: string, today: string): string | null {
+  if (entryDate === today) return 'Today';
+  if (entryDate === shiftDateString(today, -1)) return 'Yesterday';
+  return null;
+}
+
+/** The entries written on one day, or all of them when no day is chosen. */
+export function entriesOnDay(entries: readonly JournalEntry[], day: string | null): JournalEntry[] {
+  return day === null ? [...entries] : entries.filter((entry) => entry.entryDate === day);
 }

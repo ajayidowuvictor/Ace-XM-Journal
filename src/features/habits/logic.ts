@@ -1,4 +1,4 @@
-import { shiftDateString } from '../../lib/dates';
+import { parseLocalDate, shiftDateString } from '../../lib/dates';
 
 export const MAX_NAME_LENGTH = 60;
 
@@ -61,4 +61,64 @@ export function todaySummary(
   const total = habits.length;
   const done = habits.filter((habit) => habit.completedDates.includes(today)).length;
   return { done, total, progress: total === 0 ? 0 : done / total } satisfies TodaySummary;
+}
+
+export type WeekDay = {
+  date: string;
+  /** One letter for the weekday, such as "M". */
+  label: string;
+  /** all: every habit done. some: at least one. none: missed. future: not here yet. */
+  status: 'all' | 'some' | 'none' | 'future';
+  isToday: boolean;
+};
+
+export type WeekConsistency = {
+  days: WeekDay[];
+  /** Habit check-ins so far this week, and how many there could have been up to today. */
+  done: number;
+  possible: number;
+  /** From 0 to 1; 0 when there are no habits. */
+  rate: number;
+};
+
+const WEEKDAY_LETTERS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'] as const;
+
+/** The week from Monday to Sunday that contains `today`, with how well the habits were kept. */
+export function weekConsistency(
+  habits: readonly { completedDates: readonly string[] }[],
+  today: string,
+): WeekConsistency {
+  const todayDate = parseLocalDate(today);
+  const sinceMonday = todayDate ? (todayDate.getDay() + 6) % 7 : 0;
+  const monday = shiftDateString(today, -sinceMonday) ?? today;
+
+  const days: WeekDay[] = [];
+  let done = 0;
+  let possible = 0;
+  for (let index = 0; index < 7; index += 1) {
+    const date = shiftDateString(monday, index) ?? monday;
+    const isToday = date === today;
+    if (date > today) {
+      days.push({ date, label: WEEKDAY_LETTERS[index], status: 'future', isToday });
+      continue;
+    }
+    const count = habits.filter((habit) => habit.completedDates.includes(date)).length;
+    done += count;
+    possible += habits.length;
+    const status =
+      habits.length > 0 && count === habits.length ? 'all' : count > 0 ? 'some' : 'none';
+    days.push({ date, label: WEEKDAY_LETTERS[index], status, isToday });
+  }
+  return { days, done, possible, rate: possible === 0 ? 0 : done / possible };
+}
+
+/** Whether the habit was done on each of the last `count` days ending today, oldest first. */
+export function lastDaysDone(dates: readonly string[], today: string, count = 7): boolean[] {
+  const done = new Set(dates);
+  const result: boolean[] = [];
+  for (let back = count - 1; back >= 0; back -= 1) {
+    const day = shiftDateString(today, -back);
+    result.push(day !== null && done.has(day));
+  }
+  return result;
 }

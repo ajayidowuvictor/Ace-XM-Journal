@@ -8,7 +8,7 @@ export default function TabsLayout() {
   return (
     <NativeTabs
       backgroundColor={colors.surface}
-      indicatorColor={colors.border}
+      indicatorColor={colors.primaryTint}
       tintColor={colors.primary}
       iconColor={{ default: colors.textMuted, selected: colors.primary }}
       labelStyle={{ selected: { color: colors.primary } }}

@@ -30,7 +30,16 @@ import { toLocalDateString } from '@/lib/dates';
 import { PREF_KEYS, readPreference, writePreference } from '@/lib/preferences';
 import { THEME_PREFERENCES, type ThemePreference } from '@/theme/schemes';
 import { useTheme } from '@/theme/context';
-import { Button, Card, ConfirmDialog, Screen, SegmentedControl, Text } from '@/ui';
+import {
+  AppHeader,
+  Button,
+  Card,
+  ConfirmDialog,
+  Screen,
+  SegmentedControl,
+  StatusPill,
+  Text,
+} from '@/ui';
 
 const APPEARANCE_OPTIONS = THEME_PREFERENCES.map((value) => ({
   value,
@@ -125,7 +134,17 @@ export default function SettingsScreen() {
   }
 
   return (
-    <Screen title="Settings">
+    <Screen title="Settings" header={<AppHeader section="Settings" />}>
+      <Card variant="hero">
+        <StatusPill label="On this phone only" />
+        <Text variant="heading">Your data stays here</Text>
+        <Text muted>
+          There are no accounts and nothing is sent to the cloud. Your journal and notes are
+          encrypted on this device. Tasks, habits and goals are kept on this phone too, but the app
+          does not encrypt them yet.
+        </Text>
+      </Card>
+
       <Card>
         <Text variant="heading">Appearance</Text>
         <SegmentedControl<ThemePreference>

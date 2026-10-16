@@ -1,5 +1,7 @@
 import { describe, expect, it } from '@jest/globals';
 
+import type { JournalEntry } from '../types';
+
 import {
   MAX_TAGS,
   MAX_TAG_LENGTH,
@@ -9,6 +11,9 @@ import {
   moodFor,
   normalizeTag,
   parseTags,
+  recentDays,
+  relativeDayLabel,
+  entriesOnDay,
   tagsToText,
 } from '../logic';
 
@@ -68,5 +73,47 @@ describe('moodFor', () => {
     expect(moodFor(5)?.label).toBe('Great');
     expect(moodFor(null)).toBeNull();
     expect(moodFor(9)).toBeNull();
+  });
+});
+
+describe('recentDays', () => {
+  it('lists the last days ending today, oldest first, across a month end', () => {
+    expect(recentDays('2026-11-02', 4)).toEqual([
+      '2026-10-30',
+      '2026-10-31',
+      '2026-11-01',
+      '2026-11-02',
+    ]);
+    expect(recentDays('2026-10-16')).toHaveLength(7);
+    expect(recentDays('2026-10-16')[6]).toBe('2026-10-16');
+  });
+});
+
+describe('relativeDayLabel', () => {
+  it('names today and yesterday only', () => {
+    expect(relativeDayLabel('2026-10-16', '2026-10-16')).toBe('Today');
+    expect(relativeDayLabel('2026-10-15', '2026-10-16')).toBe('Yesterday');
+    expect(relativeDayLabel('2026-10-14', '2026-10-16')).toBeNull();
+    expect(relativeDayLabel('2026-10-31', '2026-11-01')).toBe('Yesterday');
+  });
+});
+
+describe('entriesOnDay', () => {
+  const make = (id: string, entryDate: string): JournalEntry => ({
+    id,
+    entryDate,
+    title: '',
+    body: '',
+    mood: null,
+    tags: [],
+    createdAt: 'x',
+    updatedAt: 'x',
+  });
+  const entries = [make('a', '2026-10-16'), make('b', '2026-10-15'), make('c', '2026-10-16')];
+
+  it('keeps all entries when no day is chosen, or only that day', () => {
+    expect(entriesOnDay(entries, null).map((e) => e.id)).toEqual(['a', 'b', 'c']);
+    expect(entriesOnDay(entries, '2026-10-16').map((e) => e.id)).toEqual(['a', 'c']);
+    expect(entriesOnDay(entries, '2026-10-01')).toEqual([]);
   });
 });
