@@ -3,7 +3,7 @@ import { Modal, StyleSheet, View } from 'react-native';
 import { Button } from './Button';
 import { Card } from './Card';
 import { Text } from './Text';
-import { spacing } from './tokens';
+import { scrim, spacing } from './tokens';
 
 type Props = {
   visible: boolean;
@@ -62,7 +62,7 @@ export function ConfirmDialog({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: scrim,
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing.lg,

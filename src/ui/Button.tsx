@@ -9,7 +9,7 @@ import {
 import { tapLight } from '../lib/haptics';
 import { useTheme } from '../theme/context';
 import { PressableScale } from './PressableScale';
-import { fonts, minTouchTarget, radius, spacing, typography } from './tokens';
+import { fonts, maxFontScale, minTouchTarget, radius, spacing, typography } from './tokens';
 
 type Props = {
   label: string;
@@ -73,6 +73,7 @@ export function Button({
         <ActivityIndicator color={palette.text} />
       ) : (
         <RNText
+          maxFontSizeMultiplier={maxFontScale.normal}
           style={[
             size === 'compact' ? styles.compactText : typography.subheading,
             { color: palette.text },

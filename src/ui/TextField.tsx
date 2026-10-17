@@ -3,7 +3,7 @@ import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
 import { useTheme } from '../theme/context';
 import { Text } from './Text';
-import { radius, spacing, typography } from './tokens';
+import { maxFontScale, radius, spacing, typography } from './tokens';
 
 type Props = Omit<TextInputProps, 'style'> & {
   label: string;
@@ -26,6 +26,7 @@ export function TextField({ label, hint, error, minInputHeight, onFocus, onBlur,
       </Text>
       <TextInput
         accessibilityLabel={label}
+        maxFontSizeMultiplier={maxFontScale.normal}
         placeholderTextColor={colors.textMuted}
         selectionColor={colors.primary}
         {...rest}

@@ -3,7 +3,7 @@ import { StyleSheet, Text as RNText } from 'react-native';
 import { selectionTick } from '../lib/haptics';
 import { useTheme } from '../theme/context';
 import { PressableScale } from './PressableScale';
-import { minTouchTarget, radius, spacing, typography } from './tokens';
+import { maxFontScale, minTouchTarget, radius, spacing, typography } from './tokens';
 
 type Props = {
   label: string;
@@ -28,7 +28,10 @@ export function Chip({ label, selected = false, onPress, accessibilityLabel }: P
       }}
       style={[styles.chip, { backgroundColor: selected ? colors.primary : colors.surfaceMuted }]}
     >
-      <RNText style={[typography.secondary, { color: selected ? colors.onPrimary : colors.text }]}>
+      <RNText
+        maxFontSizeMultiplier={maxFontScale.normal}
+        style={[typography.secondary, { color: selected ? colors.onPrimary : colors.text }]}
+      >
         {label}
       </RNText>
     </PressableScale>
