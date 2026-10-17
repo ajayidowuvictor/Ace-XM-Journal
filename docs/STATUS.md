@@ -1,10 +1,10 @@
 # Project Status
 
-Last updated: 2026-10-17
+Last updated: 2026-10-17 (after pull request #12 was merged)
 
 ## Current phase
 
-Feature-complete for the first (local-only) release, all in pull request #12 (which includes the polish pass, so pull request #11 closes with it). Everything is built and passes the automatic checks (type check, lint, format, tests). What remains is the owner's check of the final build on the phone, listed under "Not yet verified". Test builds are made free on GitHub (`.github/workflows/android-local.yml`) because Expo's free build allowance ran out until 1 Nov 2026.
+Feature-complete for the first (local-only) release. Pull requests #5 to #12 are merged (repeating tasks and reminders, search, templates, insights, the new look, backup safety net, reminder check, polish pass, encryption of tasks, habits, goals and day plans). The owner installed the final build (a96e187), reported "completed" for the checklist (data survived the move, dark mode, large text, splash) and merged it; no problems were reported. Individual results were not itemised by the owner. Test builds are made free on GitHub (`.github/workflows/android-local.yml`) because Expo's free build allowance ran out until 1 Nov 2026.
 
 ## Phase 1 (design and Today planner): merged
 
@@ -124,7 +124,7 @@ Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading
 
 ## Not yet verified
 
-- Phase 8: that existing tasks, habits, goals, day plans and journal survive the move into the encrypted file on the phone, and that new items survive closing and reopening. The real SQLCipher open, SecureStore and deletion of the old file are device-only. The owner should make an encrypted backup first.
+- Phase 8 (owner reported the checklist "completed", not itemised): that existing tasks, habits, goals, day plans and journal survive the move into the encrypted file on the phone, and that new items survive closing and reopening. The real SQLCipher open, SecureStore and deletion of the old file are device-only. The owner should make an encrypted backup first.
 - Phase 7: dark mode on every screen, largest text size, the splash screen.
 - That the daily 20:00 reminder and a task reminder arrive at their times (the 1-minute test notification did arrive).
 - That the journal still works after "Erase all my data" (new entry, close the app, reopen).
