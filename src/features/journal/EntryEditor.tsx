@@ -24,6 +24,7 @@ import {
   TextField,
   fonts,
   layout,
+  maxFontScale,
   spacing,
   typography,
 } from '../../ui';
@@ -178,6 +179,7 @@ export function EntryEditor({
             placeholderTextColor={colors.textMuted}
             selectionColor={colors.primary}
             multiline
+            maxFontSizeMultiplier={maxFontScale.normal}
             style={[styles.title, { color: colors.text }]}
           />
           <TextInput
@@ -193,6 +195,7 @@ export function EntryEditor({
             placeholderTextColor={colors.textMuted}
             selectionColor={colors.primary}
             autoFocus={!entry}
+            maxFontSizeMultiplier={maxFontScale.normal}
             style={[styles.body, { color: colors.text }]}
           />
 

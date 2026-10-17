@@ -151,3 +151,13 @@ export const motion = {
 
 /** Minimum touch target size in points (accessibility). */
 export const minTouchTarget = 44;
+
+/** The dim layer behind dialogs and sheets. */
+export const scrim = 'rgba(0, 0, 0, 0.5)';
+
+/**
+ * How far the phone's "text size" setting may enlarge text. Normal text grows up to 1.8 times so
+ * large text stays readable without breaking the layout. Symbols inside small fixed circles and
+ * boxes grow only a little so they stay inside.
+ */
+export const maxFontScale = { normal: 1.8, glyph: 1.2 } as const;

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Modal, StyleSheet, View } from 'react-native';
 
-import { Button, Card, Chip, Text, TextField, spacing } from '../../ui';
+import { Button, Card, Chip, Text, TextField, spacing, scrim } from '../../ui';
 import { passwordProblem } from './backupFormat';
 
 type Props = {
@@ -89,7 +89,7 @@ function OpenDialog({ title, message, confirmLabel, askTwice, onCancel, onSubmit
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: scrim,
     alignItems: 'center',
     justifyContent: 'center',
     padding: spacing.lg,

@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
-import { Button, Text, minTouchTarget, radius, spacing } from '../../ui';
+import { Button, Text, maxFontScale, minTouchTarget, radius, spacing } from '../../ui';
 import type { Milestone } from './types';
 
 type Props = {
@@ -29,7 +29,11 @@ export function StepRow({ step, onToggle, onRemove }: Props) {
             { borderColor: colors.primary, backgroundColor: done ? colors.primary : 'transparent' },
           ]}
         >
-          {done ? <Text style={{ color: colors.onPrimary }}>✓</Text> : null}
+          {done ? (
+            <Text maxFontSizeMultiplier={maxFontScale.glyph} style={{ color: colors.onPrimary }}>
+              ✓
+            </Text>
+          ) : null}
         </View>
       </Pressable>
       <View style={styles.title}>

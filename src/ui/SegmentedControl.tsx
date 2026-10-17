@@ -2,7 +2,7 @@ import { Pressable, Text as RNText, StyleSheet, View } from 'react-native';
 
 import { selectionTick } from '../lib/haptics';
 import { useTheme } from '../theme/context';
-import { minTouchTarget, radius, shadows, spacing, typography } from './tokens';
+import { maxFontScale, minTouchTarget, radius, shadows, spacing, typography } from './tokens';
 
 export type SegmentOption<T extends string> = { value: T; label: string };
 
@@ -46,6 +46,7 @@ export function SegmentedControl<T extends string>({
             ]}
           >
             <RNText
+              maxFontSizeMultiplier={maxFontScale.normal}
               style={[
                 selected ? typography.subheading : typography.secondary,
                 { color: selected ? colors.text : colors.textMuted },

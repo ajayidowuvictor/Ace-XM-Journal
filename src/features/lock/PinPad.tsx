@@ -2,7 +2,15 @@ import { StyleSheet, Text as RNText, View } from 'react-native';
 
 import { selectionTick } from '../../lib/haptics';
 import { useTheme } from '../../theme/context';
-import { PressableScale, fonts, minTouchTarget, radius, shadows, spacing } from '../../ui';
+import {
+  PressableScale,
+  fonts,
+  maxFontScale,
+  minTouchTarget,
+  radius,
+  shadows,
+  spacing,
+} from '../../ui';
 import { PIN_LENGTH } from './logic';
 
 const ROWS = [
@@ -76,9 +84,15 @@ export function PinPad({ value, onChange, onComplete, disabled = false, extraKey
           shadow,
         ]}
       >
-        <RNText style={[styles.keyText, { color: colors.text }]}>{label}</RNText>
+        <RNText
+          maxFontSizeMultiplier={maxFontScale.glyph}
+          style={[styles.keyText, { color: colors.text }]}
+        >
+          {label}
+        </RNText>
         {letters ? (
           <RNText
+            maxFontSizeMultiplier={maxFontScale.glyph}
             accessible={false}
             importantForAccessibility="no"
             style={[styles.letters, { color: colors.textMuted }]}

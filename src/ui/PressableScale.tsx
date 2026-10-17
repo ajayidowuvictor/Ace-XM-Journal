@@ -7,6 +7,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
+import { useReduceMotion } from '../lib/reduceMotion';
 import { motion } from './tokens';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -26,8 +27,11 @@ export function PressableScale({
   ...rest
 }: Props) {
   const [scale] = useState(() => new Animated.Value(1));
+  const reduceMotion = useReduceMotion();
 
   const animateTo = (toValue: number) => {
+    // With "remove animations" on, the button does not squeeze.
+    if (reduceMotion) return;
     Animated.spring(scale, { toValue, useNativeDriver: true, ...motion.spring }).start();
   };
 

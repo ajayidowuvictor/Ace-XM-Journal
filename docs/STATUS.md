@@ -1,10 +1,10 @@
 # Project Status
 
-Last updated: 2026-10-16
+Last updated: 2026-10-17
 
 ## Current phase
 
-Feature-complete for the first (local-only) release. The owner has now walked through every screen on a phone (Infinix Hot 30i, Android 12) and reported that each worked. Automated checks (type check, lint, format, 403 tests, Android bundle build) back everything else.
+Feature-complete for the first (local-only) release, all in pull request #12 (which includes the polish pass, so pull request #11 closes with it). Everything is built and passes the automatic checks (type check, lint, format, tests). What remains is the owner's check of the final build on the phone, listed under "Not yet verified". Test builds are made free on GitHub (`.github/workflows/android-local.yml`) because Expo's free build allowance ran out until 1 Nov 2026.
 
 ## Phase 1 (design and Today planner): merged
 
@@ -91,6 +91,17 @@ Branch `feat/backup-safety`. Not yet checked by CI or seen on a phone. The app k
 
 Branch `feat/reminder-check`. Not yet checked by CI or seen on a phone. Daily and task reminders have never been confirmed to arrive. Settings now has a "Check reminders" card: "Send a test reminder in 1 minute" (fixed text, one notification, same channel as the daily reminder) and "See what is scheduled" (says whether the daily reminder is set and how many task reminders are waiting). Purpose: find out whether this phone (Infinix, Android 12) lets reminders through when the app is closed; some makers block background apps. Any problem found there is fixed afterwards.
 
+## In progress: Phase 8 (encrypt tasks, habits, goals and day plans)
+
+Branch `feat/encrypt-all`. Not yet checked by CI or seen on a phone. Until now only the journal and notes were encrypted. Now `openAppDatabase()` opens a new SQLCipher file `appdata.db` (own key `app-encryption-key` in secure storage, read synchronously with `SecureStore.getItem`), runs the same migrations 1 to 6, and on first start copies every row from the old `acexm.db` (`copyAppData`: all tables, row counts checked, all-or-nothing), records `app-data-encrypted = 1`, closes and deletes the old file. One shared connection for all screens. If the encrypted file cannot be opened before the move, the app keeps using the old file and retries next start (Settings then says tasks, habits and goals are not encrypted). After the move there is no fallback (it would show an empty app); an error is shown instead. Backup, restore and erase-all use the same shared connection. Privacy page, Settings card and `docs/SECURITY.md` updated.
+
+- **Tests:** key creation and refusal to replace a bad key; copying all seven tables (including deleted rows), twice in a row, failure leaving the target untouched, empty source. Not tested automatically: the real phone SQLCipher open, the SecureStore calls and file deletion (device check needed).
+- **Owner check:** open the new build and confirm the existing tasks, habits, goals, day plans and the journal are all still there; add one of each; close and reopen.
+
+## In progress: Phase 7 (polish pass)
+
+Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading the code (not by looking at a phone): empty screens were already covered on every list screen, and the colour contrast tests already cover both themes. Changed: (1) text size: all text may grow to 1.8 times the phone's "text size" setting and then stops, symbols inside small fixed circles and boxes (tick marks, weekly dots, PIN keys) grow at most 1.2 times so they stay inside; (2) the dim layer behind dialogs is one token (`scrim`) instead of eight copies; (3) bar labels on Insights can widen instead of being a fixed width; (4) the button squeeze animation is skipped when the phone's "remove animations" setting is on. Still to look at on a phone: dark mode on every screen, the largest text size, the splash screen.
+
 ## What the app does
 
 - **Shell and design:** brand theme (light, dark, system), first-run onboarding (optional name), five native tabs (Home, Tasks, Journal, Habits and goals, Settings), reusable accessible components. _Seen on a phone._
@@ -108,14 +119,17 @@ Branch `feat/reminder-check`. Not yet checked by CI or seen on a phone. Daily an
 - Phase 2 build: first launch showed "Unmatched Route"; fixed with an entry route; retest passed.
 - Phase 3 build: Tasks and Home priorities confirmed working by the owner.
 - Final-feature builds (130 MB, all processor types): the phone reported "App not installed as package appears to be invalid", twice. The files passed every check we could run (zip test, signature, package name, version, minimum Android version, alignment) and matched the earlier build that installed. The cause on the phone was not identified.
+- Builds since Phase 5b (GitHub-built, 55 MB, arm64 only, same signing certificate): owner reported the Phase 5b build "works"; the Phase 6b test reminder arrived with the app closed ("it works"); the Phase 6a build was used without problems being reported, but not explicitly confirmed. Phases 7 (polish) and 8 (encryption) have not been reported on yet.
 - 64-bit-only build (`preview-arm64` profile, about 49 MB): installed on the phone. The owner then tested icon, tasks, journal, habits, goals, calendar, weekly review, reminder choice, export, privacy page and erase-all; all were reported working.
 
 ## Not yet verified
 
-- That the reminder notification arrives at the chosen time.
+- Phase 8: that existing tasks, habits, goals, day plans and journal survive the move into the encrypted file on the phone, and that new items survive closing and reopening. The real SQLCipher open, SecureStore and deletion of the old file are device-only. The owner should make an encrypted backup first.
+- Phase 7: dark mode on every screen, largest text size, the splash screen.
+- That the daily 20:00 reminder and a task reminder arrive at their times (the 1-minute test notification did arrive).
 - That the journal still works after "Erase all my data" (new entry, close the app, reopen).
-- That the encryption itself is effective on the device (only the app's behaviour was seen).
-- The splash screen, and the 32-bit or very old phones that the 64-bit-only test build does not support (the default `preview` profile still builds for all processor types).
+- That the encryption of the journal is effective on the device (only the app's behaviour was seen).
+- 32-bit or very old phones (the arm64 test build does not support them).
 - SQL is tested on plain SQLite (`better-sqlite3`), not SQLCipher.
 - No Play Store step has been done. See `docs/RELEASE.md`.
 
@@ -124,7 +138,7 @@ Branch `feat/reminder-check`. Not yet checked by CI or seen on a phone. Daily an
 - Losing the phone, uninstalling the app or clearing its data loses all data (cloud backup is off by design); export is the only copy.
 - Habits are daily only; due dates use quick choices (Today, Tomorrow, In a week); tasks are not linked to goals; the journal list is not paged.
 - Screens work out "today" when they draw, so an app left open past midnight updates on the next interaction.
-- Tasks, habits and goals are stored on the phone but not encrypted by the app (only the journal is).
+- Tasks, habits, goals and day plans are encrypted since Phase 8 (see below); the move of existing data from the old file is untested on a real phone until the owner checks it.
 - Android only has been built. iOS later from the same code.
 - Cloud accounts and sync (roadmap Phase 7) are intentionally not built for this release.
 - Dependency audit: triaged in `docs/SECURITY.md`; five underlying advisories accepted with reasons.
@@ -133,8 +147,8 @@ Branch `feat/reminder-check`. Not yet checked by CI or seen on a phone. Daily an
 
 ## Next actions
 
-0. Owner tries the Phase 5a build (new look) and the Phase 5b build, merges the pull request for 5b. Then: backup safety net (last backup date and weekly nudge), reminder check, polish pass, encrypting tasks, habits and goals.
-
-1. Owner confirms the reminder (next morning) and the journal after erase-all, and reports anything else to fix.
-2. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.
-3. Follow `docs/RELEASE.md` for the Play internal testing track.
+1. Owner installs the final build from pull request #12 and runs the checks in "Not yet verified", then merges pull request #12 in the browser.
+2. If anything is off, fix it on a new branch; do not add features before the checks pass.
+3. Optional later: home-screen widget, cloud sync (only if the app is shared), iOS from the same code, Play Store (`docs/RELEASE.md`).
+4. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.
+5. Housekeeping on GitHub: delete the temporary branches `bootstrap-logs` and `build-local`.

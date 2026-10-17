@@ -18,6 +18,7 @@ import {
   Screen,
   SegmentedControl,
   Text,
+  maxFontScale,
   radius,
   spacing,
   type SegmentOption,
@@ -125,6 +126,7 @@ function HabitsPanel() {
                 >
                   <Text
                     variant="caption"
+                    maxFontSizeMultiplier={maxFontScale.glyph}
                     style={{ color: day.status === 'all' ? colors.onPrimary : colors.textMuted }}
                   >
                     {day.status === 'all' ? '✓' : day.status === 'some' ? '•' : ''}
