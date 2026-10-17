@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "ACE XM JOURNAL",
+    "name": "Ace Notes",
     "slug": "ace-xm-journal",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -68,7 +68,7 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "Allow ACE XM JOURNAL to unlock the app with Face ID."
+          "faceIDPermission": "Allow Ace Notes to unlock the app with Face ID."
         }
       ]
     ],

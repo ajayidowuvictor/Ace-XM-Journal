@@ -84,7 +84,7 @@ export function BackupCard() {
       setNote(
         envelope.reason === 'unsupported'
           ? 'This backup was made in a way this version of the app cannot open.'
-          : 'That file is not an ACE XM JOURNAL backup.',
+          : 'That file is not an Ace Notes backup.',
       );
       return;
     }
@@ -101,7 +101,7 @@ export function BackupCard() {
         setNote(
           opened.reason === 'wrong-password'
             ? 'The password is wrong, or the file is damaged. Nothing was changed.'
-            : 'That file is not an ACE XM JOURNAL backup.',
+            : 'That file is not an Ace Notes backup.',
         );
         return;
       }

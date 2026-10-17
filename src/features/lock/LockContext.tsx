@@ -175,7 +175,7 @@ export function LockProvider({ children }: { children: ReactNode }) {
 
   const unlockWithFingerprint = useCallback(async () => {
     if (!biometric) return false;
-    const ok = await authenticateBiometric('Unlock ACE XM JOURNAL');
+    const ok = await authenticateBiometric('Unlock Ace Notes');
     if (ok) setLocked(false);
     return ok;
   }, [biometric]);

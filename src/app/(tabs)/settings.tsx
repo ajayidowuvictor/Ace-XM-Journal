@@ -250,7 +250,7 @@ export default function SettingsScreen() {
 
       <Card>
         <Text variant="heading">About</Text>
-        <Text>ACE XM JOURNAL</Text>
+        <Text>Ace Notes</Text>
         <Text muted>Version {Constants.expoConfig?.version ?? '1.0.0'}</Text>
       </Card>
 

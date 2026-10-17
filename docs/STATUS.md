@@ -4,6 +4,8 @@ Last updated: 2026-10-17
 
 ## Current phase
 
+Renamed to **Ace Notes** on 2026-10-17 (visible name, headers, lock screen, notifications, privacy page). Unchanged on purpose: app ID, `.acexmbackup`, the `ACE XM JOURNAL` marker inside export and backup files, repository and package names. Older documents in `docs/` still use the old name.
+
 Feature-complete for the first (local-only) release, all in pull request #12 (which includes the polish pass, so pull request #11 closes with it). Everything is built and passes the automatic checks (type check, lint, format, tests). What remains is the owner's check of the final build on the phone, listed under "Not yet verified". Test builds are made free on GitHub (`.github/workflows/android-local.yml`) because Expo's free build allowance ran out until 1 Nov 2026.
 
 ## Phase 1 (design and Today planner): merged
