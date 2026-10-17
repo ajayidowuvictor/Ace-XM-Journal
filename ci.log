@@ -1,0 +1,861 @@
+branch: feat/rename-ace-notes
+commit: da5745c506b39f612a8aa88aefcbb9fa97762cdc
+
+npm warn ERESOLVE overriding peer dependency
+npm warn While resolving: react-reconciler@0.34.0
+npm warn Found: react@19.2.3
+npm warn node_modules/react
+npm warn   react@"19.2.3" from the root project
+npm warn   66 more (@expo/devtools, @expo/dom-webview, @expo/log-box, ...)
+npm warn
+npm warn Could not resolve dependency:
+npm warn peer react@"^19.3.0" from react-reconciler@0.34.0
+npm warn node_modules/test-renderer/node_modules/react-reconciler
+npm warn   react-reconciler@"~0.34.0" from test-renderer@1.3.1
+npm warn   node_modules/test-renderer
+npm warn
+npm warn Conflicting peer dependency: react@19.3.1
+npm warn node_modules/react
+npm warn   peer react@"^19.3.0" from react-reconciler@0.34.0
+npm warn   node_modules/test-renderer/node_modules/react-reconciler
+npm warn     react-reconciler@"~0.34.0" from test-renderer@1.3.1
+npm warn     node_modules/test-renderer
+npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+npm warn deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+npm warn deprecated whatwg-encoding@2.0.0: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+npm warn deprecated domexception@4.0.0: Use your platform's native DOMException instead
+npm warn deprecated uuid@7.0.3: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated eslint@9.39.5: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+
+added 1116 packages, and audited 1117 packages in 19s
+
+187 packages are looking for funding
+  run `npm fund` for details
+
+67 vulnerabilities (17 moderate, 50 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> ace-xm-journal@1.0.0 typecheck
+> tsc --noEmit
+
+
+> ace-xm-journal@1.0.0 lint
+> expo lint
+
+
+> ace-xm-journal@1.0.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> ace-xm-journal@1.0.0 test
+> jest --ci
+
+PASS src/features/notes/__tests__/logic.test.ts
+PASS src/features/planner/__tests__/logic.test.ts
+PASS src/features/backup/__tests__/restore.test.ts
+PASS src/db/__tests__/tasksRepo.test.ts
+PASS src/features/review/__tests__/logic.test.ts
+PASS src/db/__tests__/notesRepo.test.ts
+PASS src/features/backup/__tests__/backupFormat.test.ts
+PASS src/features/search/__tests__/logic.test.ts
+PASS src/features/habits/__tests__/logic.test.ts
+PASS src/features/tasks/__tests__/repeat.test.ts
+PASS src/features/journal/__tests__/logic.test.ts
+PASS src/features/tasks/__tests__/logic.test.ts
+PASS src/features/insights/__tests__/logic.test.ts
+PASS src/db/__tests__/journalRepo.test.ts
+PASS src/features/export/__tests__/buildExport.test.ts
+PASS src/features/lock/__tests__/logic.test.ts
+PASS src/db/__tests__/plannerRepo.test.ts
+PASS src/db/__tests__/goalsRepo.test.ts
+PASS src/features/reminders/__tests__/taskReminders.test.ts
+PASS src/db/__tests__/wipeRepo.test.ts
+PASS src/db/__tests__/moveAppData.test.ts
+PASS src/features/home/__tests__/logic.test.ts
+PASS src/features/goals/__tests__/logic.test.ts
+PASS src/db/__tests__/habitsRepo.test.ts
+PASS src/ui/__tests__/tokens.test.ts
+PASS src/db/__tests__/migrations.test.ts
+PASS src/features/calendar/__tests__/logic.test.ts
+PASS src/features/lock/__tests__/pinStore.test.ts
+PASS src/features/backup/__tests__/bytes.test.ts
+PASS src/features/notes/__tests__/NoteCard.test.tsx
+PASS src/features/backup/__tests__/status.test.ts
+PASS src/features/lock/__tests__/PinPad.test.tsx
+PASS src/lib/__tests__/dates.test.ts
+PASS src/lib/__tests__/journalKey.test.ts
+PASS src/db/__tests__/journalMigrations.test.ts
+PASS src/features/journal/__tests__/autosave.test.ts
+PASS src/features/reminders/__tests__/logic.test.ts
+PASS src/lib/__tests__/appKey.test.ts
+PASS src/theme/__tests__/schemes.test.ts
+PASS src/features/templates/__tests__/logic.test.ts
+PASS src/ui/__tests__/fontScale.test.tsx
+PASS src/lib/__tests__/greeting.test.ts
+PASS src/features/onboarding/__tests__/startRoute.test.ts
+PASS src/lib/__tests__/id.test.ts
+PASS src/ui/__tests__/components.test.tsx (5.917 s)
+PASS src/features/settings/__tests__/WipeDialog.test.tsx
+
+Test Suites: 46 passed, 46 total
+Tests:       423 passed, 423 total
+Snapshots:   0 total
+Time:        9.314 s
+Ran all test suites.
+Using src/app as the root directory for Expo Router.
+React Compiler enabled
+Starting Metro Bundler
+
+Android Bundled 21276ms node_modules/expo-router/entry.js (1560 modules)
+
+› Assets (46):
+assets/images/icon.png (271KB)
+node_modules/@expo-google-fonts/inter/100Thin_Italic/Inter_100Thin_Italic.ttf (347KB)
+node_modules/@expo-google-fonts/inter/100Thin/Inter_100Thin.ttf (343KB)
+node_modules/@expo-google-fonts/inter/200ExtraLight_Italic/Inter_200ExtraLight_Italic.ttf (347KB)
+node_modules/@expo-google-fonts/inter/200ExtraLight/Inter_200ExtraLight.ttf (343KB)
+node_modules/@expo-google-fonts/inter/300Light_Italic/Inter_300Light_Italic.ttf (347KB)
+node_modules/@expo-google-fonts/inter/300Light/Inter_300Light.ttf (343KB)
+node_modules/@expo-google-fonts/inter/400Regular_Italic/Inter_400Regular_Italic.ttf (346KB)
+node_modules/@expo-google-fonts/inter/400Regular/Inter_400Regular.ttf (342KB)
+node_modules/@expo-google-fonts/inter/500Medium_Italic/Inter_500Medium_Italic.ttf (346KB)
+node_modules/@expo-google-fonts/inter/500Medium/Inter_500Medium.ttf (343KB)
+node_modules/@expo-google-fonts/inter/600SemiBold_Italic/Inter_600SemiBold_Italic.ttf (347KB)
+node_modules/@expo-google-fonts/inter/600SemiBold/Inter_600SemiBold.ttf (344KB)
+node_modules/@expo-google-fonts/inter/700Bold_Italic/Inter_700Bold_Italic.ttf (348KB)
+node_modules/@expo-google-fonts/inter/700Bold/Inter_700Bold.ttf (344KB)
+node_modules/@expo-google-fonts/inter/800ExtraBold_Italic/Inter_800ExtraBold_Italic.ttf (349KB)
+node_modules/@expo-google-fonts/inter/800ExtraBold/Inter_800ExtraBold.ttf (345KB)
+node_modules/@expo-google-fonts/inter/900Black_Italic/Inter_900Black_Italic.ttf (349KB)
+node_modules/@expo-google-fonts/inter/900Black/Inter_900Black.ttf (345KB)
+node_modules/@expo-google-fonts/material-symbols/400Regular/MaterialSymbols_400Regular.ttf (971KB)
+node_modules/expo-router/assets/arrow_down.png (9.5KB)
+node_modules/expo-router/assets/arrow_right.xml (307B)
+node_modules/expo-router/assets/checkmark.xml (312B)
+node_modules/expo-router/assets/error.png (469B)
+node_modules/expo-router/assets/file.png (138B)
+node_modules/expo-router/assets/forward.png (188B)
+node_modules/expo-router/assets/pkg.png (364B)
+node_modules/expo-router/assets/react-navigation/elements/back-icon-mask.png (653B)
+node_modules/expo-router/assets/react-navigation/elements/back-icon.png (4 variations | 152B)
+node_modules/expo-router/assets/react-navigation/elements/clear-icon.png (4 variations | 425B)
+node_modules/expo-router/assets/react-navigation/elements/close-icon.png (4 variations | 235B)
+node_modules/expo-router/assets/react-navigation/elements/search-icon.png (4 variations | 599B)
+node_modules/expo-router/assets/sitemap.png (465B)
+node_modules/expo-router/assets/unmatched.png (4.8KB)
+
+› android bundles (1):
+_expo/static/js/android/entry-5585b9602e669bf690b3bacff8a3cef0.hbc (3.5MB)
+
+› Files (1):
+metadata.json (3KB)
+
+Exported: dist
+# npm audit report
+
+braces  *
+Severity: high
+braces vulnerable to stack-exhaustion denial of service through deeply nested patterns - https://github.com/advisories/GHSA-vfj7-8cjw-p6xm
+fix available via `npm audit fix --force`
+Will install jest@30.5.2, which is a breaking change
+node_modules/braces
+  micromatch  >=0.2.0
+  Depends on vulnerable versions of braces
+  node_modules/micromatch
+    @jest/core  <=30.2.0
+    Depends on vulnerable versions of @jest/console
+    Depends on vulnerable versions of @jest/reporters
+    Depends on vulnerable versions of @jest/test-result
+    Depends on vulnerable versions of @jest/transform
+    Depends on vulnerable versions of jest-config
+    Depends on vulnerable versions of jest-haste-map
+    Depends on vulnerable versions of jest-message-util
+    Depends on vulnerable versions of jest-resolve
+    Depends on vulnerable versions of jest-resolve-dependencies
+    Depends on vulnerable versions of jest-runner
+    Depends on vulnerable versions of jest-runtime
+    Depends on vulnerable versions of jest-snapshot
+    Depends on vulnerable versions of jest-watcher
+    Depends on vulnerable versions of micromatch
+    node_modules/@jest/core
+      jest  24.2.0-alpha.0 - 30.2.0
+      Depends on vulnerable versions of @jest/core
+      Depends on vulnerable versions of jest-cli
+      node_modules/jest
+        jest-watch-typeahead  0.6.0 - 2.2.2
+        Depends on vulnerable versions of jest
+        Depends on vulnerable versions of jest-watcher
+        node_modules/jest-watch-typeahead
+          jest-expo  18.0.0-rc.0 - 18.0.0-rc.1 || >=33.0.0-rc.0
+          Depends on vulnerable versions of @jest/globals
+          Depends on vulnerable versions of @react-native/jest-preset
+          Depends on vulnerable versions of babel-jest
+          Depends on vulnerable versions of jest-environment-jsdom
+          Depends on vulnerable versions of jest-snapshot
+          Depends on vulnerable versions of jest-watch-typeahead
+          node_modules/jest-expo
+      jest-cli  23.5.0 - 30.2.0
+      Depends on vulnerable versions of @jest/core
+      Depends on vulnerable versions of @jest/test-result
+      Depends on vulnerable versions of create-jest
+      Depends on vulnerable versions of jest-config
+      node_modules/jest-cli
+    @jest/transform  *
+    Depends on vulnerable versions of babel-plugin-istanbul
+    Depends on vulnerable versions of jest-haste-map
+    Depends on vulnerable versions of micromatch
+    node_modules/@jest/transform
+      @jest/reporters  <=30.2.0
+      Depends on vulnerable versions of @jest/console
+      Depends on vulnerable versions of @jest/test-result
+      Depends on vulnerable versions of @jest/transform
+      Depends on vulnerable versions of jest-message-util
+      node_modules/@jest/reporters
+      babel-jest  >=24.2.0-alpha.0
+      Depends on vulnerable versions of @jest/transform
+      Depends on vulnerable versions of babel-plugin-istanbul
+      node_modules/babel-jest
+        @react-native/jest-preset  *
+        Depends on vulnerable versions of babel-jest
+        Depends on vulnerable versions of jest-environment-node
+        node_modules/@react-native/jest-preset
+          react-native  >=0.73.0-nightly-20230506-1af868c52
+          Depends on vulnerable versions of @react-native/community-cli-plugin
+          Depends on vulnerable versions of @react-native/jest-preset
+          Depends on vulnerable versions of @react-native/virtualized-lists
+          node_modules/react-native
+            @react-native/virtualized-lists  0.85.0-nightly-20260108-1236b6be4 - 0.87.0-rc.4
+            Depends on vulnerable versions of react-native
+            node_modules/@react-native/virtualized-lists
+        jest-config  18.1.0 - 19.0.4 || 23.5.0 - 30.2.0
+        Depends on vulnerable versions of @jest/test-sequencer
+        Depends on vulnerable versions of babel-jest
+        Depends on vulnerable versions of jest-circus
+        Depends on vulnerable versions of jest-environment-node
+        Depends on vulnerable versions of jest-resolve
+        Depends on vulnerable versions of jest-runner
+        Depends on vulnerable versions of micromatch
+        node_modules/jest-config
+          create-jest  29.7.0 - 30.2.0
+          Depends on vulnerable versions of jest-config
+          node_modules/create-jest
+      jest-runner  21.0.0-alpha.1 - 30.2.0
+      Depends on vulnerable versions of @jest/console
+      Depends on vulnerable versions of @jest/environment
+      Depends on vulnerable versions of @jest/test-result
+      Depends on vulnerable versions of @jest/transform
+      Depends on vulnerable versions of jest-environment-node
+      Depends on vulnerable versions of jest-haste-map
+      Depends on vulnerable versions of jest-message-util
+      Depends on vulnerable versions of jest-resolve
+      Depends on vulnerable versions of jest-runtime
+      Depends on vulnerable versions of jest-watcher
+      node_modules/jest-runner
+      jest-runtime  18.1.0 - 30.2.0
+      Depends on vulnerable versions of @jest/environment
+      Depends on vulnerable versions of @jest/fake-timers
+      Depends on vulnerable versions of @jest/globals
+      Depends on vulnerable versions of @jest/test-result
+      Depends on vulnerable versions of @jest/transform
+      Depends on vulnerable versions of jest-haste-map
+      Depends on vulnerable versions of jest-message-util
+      Depends on vulnerable versions of jest-resolve
+      Depends on vulnerable versions of jest-snapshot
+      node_modules/jest-runtime
+        jest-circus  20.1.0-alpha.1 - 30.2.0
+        Depends on vulnerable versions of @jest/environment
+        Depends on vulnerable versions of @jest/expect
+        Depends on vulnerable versions of @jest/test-result
+        Depends on vulnerable versions of jest-message-util
+        Depends on vulnerable versions of jest-runtime
+        Depends on vulnerable versions of jest-snapshot
+        node_modules/jest-circus
+      jest-snapshot  23.3.0 - 30.2.0
+      Depends on vulnerable versions of @jest/transform
+      Depends on vulnerable versions of expect
+      Depends on vulnerable versions of jest-message-util
+      node_modules/jest-snapshot
+        jest-resolve-dependencies  23.3.0 - 30.2.0
+        Depends on vulnerable versions of jest-snapshot
+        node_modules/jest-resolve-dependencies
+    jest-haste-map  18.1.0 - 30.2.0
+    Depends on vulnerable versions of micromatch
+    node_modules/jest-haste-map
+      @jest/test-sequencer  <=30.2.0
+      Depends on vulnerable versions of @jest/test-result
+      Depends on vulnerable versions of jest-haste-map
+      node_modules/@jest/test-sequencer
+      jest-resolve  18.1.0 - 19.0.2 || 24.2.0-alpha.0 - 24.5.0 || 27.1.0 - 30.2.0
+      Depends on vulnerable versions of jest-haste-map
+      node_modules/jest-resolve
+    jest-message-util  18.5.0-alpha.7da3df39 - 30.2.0
+    Depends on vulnerable versions of micromatch
+    node_modules/jest-message-util
+      @jest/console  25.4.0 - 30.2.0
+      Depends on vulnerable versions of jest-message-util
+      node_modules/@jest/console
+        @jest/test-result  25.4.0 - 30.2.0
+        Depends on vulnerable versions of @jest/console
+        node_modules/@jest/test-result
+          jest-watcher  25.4.0 - 30.2.0
+          Depends on vulnerable versions of @jest/test-result
+          node_modules/jest-watcher
+      @jest/fake-timers  <=30.2.0
+      Depends on vulnerable versions of jest-message-util
+      node_modules/@jest/fake-timers
+        @jest/environment  <=30.2.0
+        Depends on vulnerable versions of @jest/fake-timers
+        node_modules/@jest/environment
+          @jest/globals  <=30.2.0
+          Depends on vulnerable versions of @jest/environment
+          Depends on vulnerable versions of @jest/expect
+          node_modules/@jest/globals
+          jest-environment-jsdom  24.2.0-alpha.0 - 30.2.0
+          Depends on vulnerable versions of @jest/environment
+          Depends on vulnerable versions of @jest/fake-timers
+          node_modules/jest-environment-jsdom
+        jest-environment-node  24.2.0-alpha.0 - 30.2.0
+        Depends on vulnerable versions of @jest/environment
+        Depends on vulnerable versions of @jest/fake-timers
+        node_modules/jest-environment-node
+      expect  21.0.0-beta.1 - 30.2.0
+      Depends on vulnerable versions of jest-message-util
+      node_modules/expect
+        @jest/expect  <=30.2.0
+        Depends on vulnerable versions of expect
+        Depends on vulnerable versions of jest-snapshot
+        node_modules/@jest/expect
+        @types/jest  28.1.7 - 29.5.14
+        Depends on vulnerable versions of expect
+        node_modules/@types/jest
+    metro-file-map  *
+    Depends on vulnerable versions of micromatch
+    node_modules/metro-config/node_modules/metro-file-map
+    node_modules/metro-file-map
+      @expo/metro  *
+      Depends on vulnerable versions of metro
+      Depends on vulnerable versions of metro-config
+      Depends on vulnerable versions of metro-file-map
+      Depends on vulnerable versions of metro-transform-worker
+      node_modules/@expo/metro
+        @expo/cli  <=0.0.0-canary-20231123-1b19f96-4 || >=0.0.1-canary-20231125-d600e44
+        Depends on vulnerable versions of @expo/code-signing-certificates
+        Depends on vulnerable versions of @expo/config
+        Depends on vulnerable versions of @expo/config-plugins
+        Depends on vulnerable versions of @expo/inline-modules
+        Depends on vulnerable versions of @expo/metro
+        Depends on vulnerable versions of @expo/metro-config
+        Depends on vulnerable versions of @expo/prebuild-config
+        Depends on vulnerable versions of node-forge
+        node_modules/expo/node_modules/@expo/cli
+          expo  >=45.0.0-beta.1
+          Depends on vulnerable versions of @expo/cli
+          Depends on vulnerable versions of @expo/config
+          Depends on vulnerable versions of @expo/config-plugins
+          Depends on vulnerable versions of @expo/local-build-cache-provider
+          Depends on vulnerable versions of @expo/metro
+          Depends on vulnerable versions of @expo/metro-config
+          node_modules/expo
+        @expo/metro-config  <=0.0.1-canary-20240418-8d74597 || >=0.1.49-alpha.0
+        Depends on vulnerable versions of @expo/config
+        Depends on vulnerable versions of @expo/metro
+        node_modules/@expo/metro-config
+      metro  >=0.71.0
+      Depends on vulnerable versions of metro-config
+      Depends on vulnerable versions of metro-file-map
+      Depends on vulnerable versions of metro-transform-worker
+      node_modules/metro
+      node_modules/metro-config/node_modules/metro
+        @react-native/community-cli-plugin  *
+        Depends on vulnerable versions of @react-native/metro-config
+        Depends on vulnerable versions of metro
+        Depends on vulnerable versions of metro-config
+        node_modules/@react-native/community-cli-plugin
+        metro-config  >=0.71.0
+        Depends on vulnerable versions of metro
+        node_modules/@expo/metro/node_modules/metro-config
+        node_modules/metro-config
+        node_modules/metro/node_modules/metro-config
+          @react-native/metro-config  *
+          Depends on vulnerable versions of metro-config
+          node_modules/@react-native/metro-config
+            react-native-worklets  >=0.8.0-bundle-mode-preview-1
+            Depends on vulnerable versions of @react-native/metro-config
+            node_modules/react-native-worklets
+              react-native-reanimated  3.20.0-nightly-20250722-b6c8b9a3c - 4.0.0-nightly-20250309-9ce9085cb || 4.2.0-nightly-20250829-e8916d7ed - 4.2.0-nightly-20251017-235c127fd || 4.3.0-nightly-20251204-222f54bb9 - 4.7.1
+              Depends on vulnerable versions of react-native-worklets
+              node_modules/react-native-reanimated
+        metro-transform-worker  >=0.71.0
+        Depends on vulnerable versions of metro
+        node_modules/metro-config/node_modules/metro-transform-worker
+        node_modules/metro-transform-worker
+
+decode-uri-component  <=0.4.2
+Severity: moderate
+decode-uri-component: Denial of service via exponential decoding of malformed percent-encoded input - https://github.com/advisories/GHSA-vcc3-ghjq-m6fr
+fix available via `npm audit fix --force`
+Will install expo-router@58.0.23, which is a breaking change
+node_modules/decode-uri-component
+  query-string  5.0.0 - 9.4.1
+  Depends on vulnerable versions of decode-uri-component
+  node_modules/query-string
+    expo-router  1.2.2 - 3.1.2 || 5.2.0-canary-20250611-f0afe80 - 58.0.12
+    Depends on vulnerable versions of query-string
+    node_modules/expo-router
+
+node-forge  *
+Severity: high
+node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements - https://github.com/advisories/GHSA-86w9-cpqp-85rv
+fix available via `npm audit fix --force`
+Will install expo@44.0.6, which is a breaking change
+node_modules/node-forge
+  @expo/code-signing-certificates  *
+  Depends on vulnerable versions of node-forge
+  node_modules/@expo/code-signing-certificates
+
+sprintf-js  *
+Severity: moderate
+sprintf-js vulnerable to denial of service through unbounded precision specifiers - https://github.com/advisories/GHSA-hp3w-g68c-fv3c
+fix available via `npm audit fix --force`
+Will install jest@30.5.2, which is a breaking change
+node_modules/sprintf-js
+  argparse  1.0.0 - 1.0.10
+  Depends on vulnerable versions of sprintf-js
+  node_modules/@istanbuljs/load-nyc-config/node_modules/argparse
+    js-yaml  3.2.7 - 3.15.2
+    Depends on vulnerable versions of argparse
+    node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml
+      @istanbuljs/load-nyc-config  *
+      Depends on vulnerable versions of js-yaml
+      node_modules/@istanbuljs/load-nyc-config
+        babel-plugin-istanbul  >=6.0.0-beta.0
+        Depends on vulnerable versions of @istanbuljs/load-nyc-config
+        node_modules/babel-plugin-istanbul
+
+uuid  <11.1.1
+Severity: moderate
+uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq
+fix available via `npm audit fix --force`
+Will install expo-sharing@14.0.8, which is a breaking change
+node_modules/uuid
+  xcode  >=0.9.2
+  Depends on vulnerable versions of uuid
+  node_modules/xcode
+    @expo/config-plugins  *
+    Depends on vulnerable versions of xcode
+    node_modules/@expo/config-plugins
+      @expo/config  <=0.0.1-canary-20240418-8d74597 || >=3.3.23-alpha.0
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/@expo/config
+        @expo/local-build-cache-provider  *
+        Depends on vulnerable versions of @expo/config
+        node_modules/@expo/local-build-cache-provider
+      @expo/inline-modules  >=0.0.2-canary-20260409-6fc2991
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/@expo/inline-modules
+      @expo/prebuild-config  *
+      Depends on vulnerable versions of @expo/config
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/@expo/prebuild-config
+      expo-sharing  >=14.0.9-canary-20251205-756eb7a
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/expo-sharing
+      expo-splash-screen  55.0.10-canary-20260424-7bedc9d - 55.0.10-canary-20260429-a5e59cf || >=56.0.0-canary-20260212-4f61309
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/expo-splash-screen
+
+66 vulnerabilities (17 moderate, 49 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+=== AUDIT RUNTIME ONLY ===
+# npm audit report
+
+braces  *
+Severity: high
+braces vulnerable to stack-exhaustion denial of service through deeply nested patterns - https://github.com/advisories/GHSA-vfj7-8cjw-p6xm
+fix available via `npm audit fix --force`
+Will install jest@30.5.2, which is a breaking change
+node_modules/braces
+  micromatch  >=0.2.0
+  Depends on vulnerable versions of braces
+  node_modules/micromatch
+    @jest/core  <=30.2.0
+    Depends on vulnerable versions of @jest/console
+    Depends on vulnerable versions of @jest/reporters
+    Depends on vulnerable versions of @jest/test-result
+    Depends on vulnerable versions of @jest/transform
+    Depends on vulnerable versions of jest-config
+    Depends on vulnerable versions of jest-haste-map
+    Depends on vulnerable versions of jest-message-util
+    Depends on vulnerable versions of jest-resolve
+    Depends on vulnerable versions of jest-resolve-dependencies
+    Depends on vulnerable versions of jest-runner
+    Depends on vulnerable versions of jest-runtime
+    Depends on vulnerable versions of jest-snapshot
+    Depends on vulnerable versions of jest-watcher
+    Depends on vulnerable versions of micromatch
+    node_modules/@jest/core
+      jest  23.5.0 - 30.2.0
+      Depends on vulnerable versions of @jest/core
+      Depends on vulnerable versions of jest-cli
+      node_modules/jest
+      jest-cli  23.5.0 - 30.2.0
+      Depends on vulnerable versions of @jest/core
+      Depends on vulnerable versions of @jest/test-result
+      Depends on vulnerable versions of create-jest
+      Depends on vulnerable versions of jest-config
+      node_modules/jest-cli
+    @jest/transform  *
+    Depends on vulnerable versions of babel-plugin-istanbul
+    Depends on vulnerable versions of jest-haste-map
+    Depends on vulnerable versions of micromatch
+    node_modules/@jest/transform
+      @jest/reporters  <=30.2.0
+      Depends on vulnerable versions of @jest/console
+      Depends on vulnerable versions of @jest/test-result
+      Depends on vulnerable versions of @jest/transform
+      Depends on vulnerable versions of jest-message-util
+      node_modules/@jest/reporters
+      babel-jest  >=24.2.0-alpha.0
+      Depends on vulnerable versions of @jest/transform
+      Depends on vulnerable versions of babel-plugin-istanbul
+      node_modules/babel-jest
+        @react-native/jest-preset  *
+        Depends on vulnerable versions of babel-jest
+        Depends on vulnerable versions of jest-environment-node
+        node_modules/@react-native/jest-preset
+          react-native  >=0.73.0-nightly-20230506-1af868c52
+          Depends on vulnerable versions of @react-native/community-cli-plugin
+          Depends on vulnerable versions of @react-native/jest-preset
+          Depends on vulnerable versions of @react-native/virtualized-lists
+          node_modules/react-native
+            @react-native/virtualized-lists  0.85.0-nightly-20260108-1236b6be4 - 0.87.0-rc.4
+            Depends on vulnerable versions of react-native
+            node_modules/@react-native/virtualized-lists
+        jest-config  18.1.0 - 19.0.4 || 23.5.0 - 30.2.0
+        Depends on vulnerable versions of @jest/test-sequencer
+        Depends on vulnerable versions of babel-jest
+        Depends on vulnerable versions of jest-circus
+        Depends on vulnerable versions of jest-environment-node
+        Depends on vulnerable versions of jest-resolve
+        Depends on vulnerable versions of jest-runner
+        Depends on vulnerable versions of micromatch
+        node_modules/jest-config
+          create-jest  29.7.0 - 30.2.0
+          Depends on vulnerable versions of jest-config
+          node_modules/create-jest
+      jest-runner  21.0.0-alpha.1 - 30.2.0
+      Depends on vulnerable versions of @jest/console
+      Depends on vulnerable versions of @jest/environment
+      Depends on vulnerable versions of @jest/test-result
+      Depends on vulnerable versions of @jest/transform
+      Depends on vulnerable versions of jest-environment-node
+      Depends on vulnerable versions of jest-haste-map
+      Depends on vulnerable versions of jest-message-util
+      Depends on vulnerable versions of jest-resolve
+      Depends on vulnerable versions of jest-runtime
+      Depends on vulnerable versions of jest-watcher
+      node_modules/jest-runner
+      jest-runtime  18.1.0 - 30.2.0
+      Depends on vulnerable versions of @jest/environment
+      Depends on vulnerable versions of @jest/fake-timers
+      Depends on vulnerable versions of @jest/globals
+      Depends on vulnerable versions of @jest/test-result
+      Depends on vulnerable versions of @jest/transform
+      Depends on vulnerable versions of jest-haste-map
+      Depends on vulnerable versions of jest-message-util
+      Depends on vulnerable versions of jest-resolve
+      Depends on vulnerable versions of jest-snapshot
+      node_modules/jest-runtime
+        jest-circus  20.1.0-alpha.1 - 30.2.0
+        Depends on vulnerable versions of @jest/environment
+        Depends on vulnerable versions of @jest/expect
+        Depends on vulnerable versions of @jest/test-result
+        Depends on vulnerable versions of jest-message-util
+        Depends on vulnerable versions of jest-runtime
+        Depends on vulnerable versions of jest-snapshot
+        node_modules/jest-circus
+      jest-snapshot  23.3.0 - 30.2.0
+      Depends on vulnerable versions of @jest/transform
+      Depends on vulnerable versions of expect
+      Depends on vulnerable versions of jest-message-util
+      node_modules/jest-snapshot
+        @jest/expect  <=30.2.0
+        Depends on vulnerable versions of expect
+        Depends on vulnerable versions of jest-snapshot
+        node_modules/@jest/expect
+          @jest/globals  <=30.2.0
+          Depends on vulnerable versions of @jest/environment
+          Depends on vulnerable versions of @jest/expect
+          node_modules/@jest/globals
+        jest-resolve-dependencies  23.3.0 - 30.2.0
+        Depends on vulnerable versions of jest-snapshot
+        node_modules/jest-resolve-dependencies
+    jest-haste-map  18.1.0 - 30.2.0
+    Depends on vulnerable versions of micromatch
+    node_modules/jest-haste-map
+      @jest/test-sequencer  <=30.2.0
+      Depends on vulnerable versions of @jest/test-result
+      Depends on vulnerable versions of jest-haste-map
+      node_modules/@jest/test-sequencer
+      jest-resolve  18.1.0 - 19.0.2 || 24.2.0-alpha.0 - 24.5.0 || 27.1.0 - 30.2.0
+      Depends on vulnerable versions of jest-haste-map
+      node_modules/jest-resolve
+    jest-message-util  18.5.0-alpha.7da3df39 - 30.2.0
+    Depends on vulnerable versions of micromatch
+    node_modules/jest-message-util
+      @jest/console  25.4.0 - 30.2.0
+      Depends on vulnerable versions of jest-message-util
+      node_modules/@jest/console
+        @jest/test-result  25.4.0 - 30.2.0
+        Depends on vulnerable versions of @jest/console
+        node_modules/@jest/test-result
+          jest-watcher  25.4.0 - 30.2.0
+          Depends on vulnerable versions of @jest/test-result
+          node_modules/jest-watcher
+      @jest/fake-timers  <=30.2.0
+      Depends on vulnerable versions of jest-message-util
+      node_modules/@jest/fake-timers
+        @jest/environment  <=30.2.0
+        Depends on vulnerable versions of @jest/fake-timers
+        node_modules/@jest/environment
+        jest-environment-node  24.2.0-alpha.0 - 30.2.0
+        Depends on vulnerable versions of @jest/environment
+        Depends on vulnerable versions of @jest/fake-timers
+        node_modules/jest-environment-node
+      expect  21.0.0-beta.1 - 30.2.0
+      Depends on vulnerable versions of jest-message-util
+      node_modules/expect
+    metro-file-map  *
+    Depends on vulnerable versions of micromatch
+    node_modules/metro-config/node_modules/metro-file-map
+    node_modules/metro-file-map
+      @expo/metro  *
+      Depends on vulnerable versions of metro
+      Depends on vulnerable versions of metro-config
+      Depends on vulnerable versions of metro-file-map
+      Depends on vulnerable versions of metro-transform-worker
+      node_modules/@expo/metro
+        @expo/cli  <=0.0.0-canary-20231123-1b19f96-4 || >=0.0.1-canary-20231125-d600e44
+        Depends on vulnerable versions of @expo/code-signing-certificates
+        Depends on vulnerable versions of @expo/config
+        Depends on vulnerable versions of @expo/config-plugins
+        Depends on vulnerable versions of @expo/inline-modules
+        Depends on vulnerable versions of @expo/metro
+        Depends on vulnerable versions of @expo/metro-config
+        Depends on vulnerable versions of @expo/prebuild-config
+        Depends on vulnerable versions of node-forge
+        node_modules/expo/node_modules/@expo/cli
+          expo  >=45.0.0-beta.1
+          Depends on vulnerable versions of @expo/cli
+          Depends on vulnerable versions of @expo/config
+          Depends on vulnerable versions of @expo/config-plugins
+          Depends on vulnerable versions of @expo/local-build-cache-provider
+          Depends on vulnerable versions of @expo/metro
+          Depends on vulnerable versions of @expo/metro-config
+          node_modules/expo
+        @expo/metro-config  <=0.0.1-canary-20240418-8d74597 || >=0.1.49-alpha.0
+        Depends on vulnerable versions of @expo/config
+        Depends on vulnerable versions of @expo/metro
+        node_modules/@expo/metro-config
+      metro  >=0.71.0
+      Depends on vulnerable versions of metro-config
+      Depends on vulnerable versions of metro-file-map
+      Depends on vulnerable versions of metro-transform-worker
+      node_modules/metro
+      node_modules/metro-config/node_modules/metro
+        @react-native/community-cli-plugin  *
+        Depends on vulnerable versions of @react-native/metro-config
+        Depends on vulnerable versions of metro
+        Depends on vulnerable versions of metro-config
+        node_modules/@react-native/community-cli-plugin
+        metro-config  >=0.71.0
+        Depends on vulnerable versions of metro
+        node_modules/@expo/metro/node_modules/metro-config
+        node_modules/metro-config
+        node_modules/metro/node_modules/metro-config
+          @react-native/metro-config  *
+          Depends on vulnerable versions of metro-config
+          node_modules/@react-native/metro-config
+            react-native-worklets  >=0.8.0-bundle-mode-preview-1
+            Depends on vulnerable versions of @react-native/metro-config
+            node_modules/react-native-worklets
+              react-native-reanimated  3.20.0-nightly-20250722-b6c8b9a3c - 4.0.0-nightly-20250309-9ce9085cb || 4.2.0-nightly-20250829-e8916d7ed - 4.2.0-nightly-20251017-235c127fd || 4.3.0-nightly-20251204-222f54bb9 - 4.7.1
+              Depends on vulnerable versions of react-native-worklets
+              node_modules/react-native-reanimated
+        metro-transform-worker  >=0.71.0
+        Depends on vulnerable versions of metro
+        node_modules/metro-config/node_modules/metro-transform-worker
+        node_modules/metro-transform-worker
+
+decode-uri-component  <=0.4.2
+Severity: moderate
+decode-uri-component: Denial of service via exponential decoding of malformed percent-encoded input - https://github.com/advisories/GHSA-vcc3-ghjq-m6fr
+fix available via `npm audit fix --force`
+Will install expo-router@58.0.23, which is a breaking change
+node_modules/decode-uri-component
+  query-string  5.0.0 - 9.4.1
+  Depends on vulnerable versions of decode-uri-component
+  node_modules/query-string
+    expo-router  1.2.2 - 3.1.2 || 5.2.0-canary-20250611-f0afe80 - 58.0.12
+    Depends on vulnerable versions of query-string
+    node_modules/expo-router
+
+node-forge  *
+Severity: high
+node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements - https://github.com/advisories/GHSA-86w9-cpqp-85rv
+fix available via `npm audit fix --force`
+Will install expo@44.0.6, which is a breaking change
+node_modules/node-forge
+  @expo/code-signing-certificates  *
+  Depends on vulnerable versions of node-forge
+  node_modules/@expo/code-signing-certificates
+
+sprintf-js  *
+Severity: moderate
+sprintf-js vulnerable to denial of service through unbounded precision specifiers - https://github.com/advisories/GHSA-hp3w-g68c-fv3c
+fix available via `npm audit fix --force`
+Will install jest@30.5.2, which is a breaking change
+node_modules/sprintf-js
+  argparse  1.0.0 - 1.0.10
+  Depends on vulnerable versions of sprintf-js
+  node_modules/@istanbuljs/load-nyc-config/node_modules/argparse
+    js-yaml  3.2.7 - 3.15.2
+    Depends on vulnerable versions of argparse
+    node_modules/@istanbuljs/load-nyc-config/node_modules/js-yaml
+      @istanbuljs/load-nyc-config  *
+      Depends on vulnerable versions of js-yaml
+      node_modules/@istanbuljs/load-nyc-config
+        babel-plugin-istanbul  >=6.0.0-beta.0
+        Depends on vulnerable versions of @istanbuljs/load-nyc-config
+        node_modules/babel-plugin-istanbul
+
+uuid  <11.1.1
+Severity: moderate
+uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq
+fix available via `npm audit fix --force`
+Will install expo@44.0.6, which is a breaking change
+node_modules/uuid
+  xcode  >=0.9.2
+  Depends on vulnerable versions of uuid
+  node_modules/xcode
+    @expo/config-plugins  *
+    Depends on vulnerable versions of xcode
+    node_modules/@expo/config-plugins
+      @expo/config  <=0.0.1-canary-20240418-8d74597 || >=3.3.23-alpha.0
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/@expo/config
+        @expo/local-build-cache-provider  *
+        Depends on vulnerable versions of @expo/config
+        node_modules/@expo/local-build-cache-provider
+      @expo/inline-modules  >=0.0.2-canary-20260409-6fc2991
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/@expo/inline-modules
+      @expo/prebuild-config  *
+      Depends on vulnerable versions of @expo/config
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/@expo/prebuild-config
+      expo-sharing  >=14.0.9-canary-20251205-756eb7a
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/expo-sharing
+      expo-splash-screen  55.0.10-canary-20260424-7bedc9d - 55.0.10-canary-20260429-a5e59cf || >=56.0.0-canary-20260212-4f61309
+      Depends on vulnerable versions of @expo/config-plugins
+      node_modules/expo-splash-screen
+
+62 vulnerabilities (17 moderate, 45 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+=== AUDIT SUMMARY ===
+@expo/cli | high | indirect | fix:expo@44.0.6(major)
+@expo/code-signing-certificates | high | indirect | fix
+@expo/config | moderate | indirect | fix:expo@44.0.6(major)
+@expo/config-plugins | moderate | indirect | fix:expo@44.0.6(major)
+@expo/inline-modules | moderate | indirect | fix:expo@44.0.6(major)
+@expo/local-build-cache-provider | moderate | indirect | fix:expo@44.0.6(major)
+@expo/metro | high | indirect | fix:expo@44.0.6(major)
+@expo/metro-config | high | indirect | fix:expo@44.0.6(major)
+@expo/prebuild-config | moderate | indirect | fix
+@istanbuljs/load-nyc-config | moderate | indirect | fix:jest@30.5.2(major)
+@jest/console | high | indirect | fix:jest@30.5.2(major)
+@jest/core | high | indirect | fix:jest@30.5.2(major)
+@jest/environment | high | indirect | fix:jest@30.5.2(major)
+@jest/expect | high | indirect | fix:jest@30.5.2(major)
+@jest/fake-timers | high | indirect | fix:jest@30.5.2(major)
+@jest/globals | high | indirect | fix:jest@30.5.2(major)
+@jest/reporters | high | indirect | fix:jest@30.5.2(major)
+@jest/test-result | high | indirect | fix:jest@30.5.2(major)
+@jest/test-sequencer | high | indirect | fix:jest@30.5.2(major)
+@jest/transform | high | indirect | fix:jest@30.5.2(major)
+@react-native/community-cli-plugin | high | indirect | fix:react-native@0.72.17(major)
+@react-native/jest-preset | high | indirect | fix:jest-expo@58.0.11(major)
+@react-native/metro-config | high | indirect | fix:react-native@0.72.17(major)
+@react-native/virtualized-lists | high | indirect | fix:react-native@0.72.17(major)
+@testing-library/react-native | high | direct | fix:@testing-library/react-native@13.3.3(major)
+@types/jest | high | direct | fix:@types/jest@30.0.0(major)
+argparse | moderate | indirect | fix:jest@30.5.2(major)
+babel-jest | high | indirect | fix:jest@30.5.2(major)
+babel-plugin-istanbul | moderate | indirect | fix:jest@30.5.2(major)
+ROOT | braces | high | braces vulnerable to stack-exhaustion denial of service through deeply nested patterns | https://github.com/advisories/GHSA-vfj7-8cjw-p6xm
+braces | high | indirect | fix:jest@30.5.2(major)
+create-jest | high | indirect | fix:jest@30.5.2(major)
+ROOT | decode-uri-component | moderate | decode-uri-component: Denial of service via exponential decoding of malformed percent-encoded input | https://github.com/advisories/GHSA-vcc3-ghjq-m6fr
+decode-uri-component | moderate | indirect | fix:expo-router@58.0.23(major)
+expect | high | indirect | fix:@types/jest@30.0.0(major)
+expo | high | direct | fix:expo@44.0.6(major)
+expo-router | moderate | direct | fix:expo-router@58.0.23(major)
+expo-sharing | moderate | direct | fix:expo-sharing@14.0.8(major)
+expo-splash-screen | moderate | direct | fix:expo-splash-screen@55.0.25(major)
+jest | high | direct | fix:jest@30.5.2(major)
+jest-circus | high | indirect | fix:jest@30.5.2(major)
+jest-cli | high | indirect | fix:jest@30.5.2(major)
+jest-config | high | indirect | fix:jest@30.5.2(major)
+jest-environment-jsdom | high | indirect | fix:jest-expo@58.0.11(major)
+jest-environment-node | high | indirect | fix:jest@30.5.2(major)
+jest-expo | high | direct | fix:jest-expo@58.0.11(major)
+jest-haste-map | high | indirect | fix:jest@30.5.2(major)
+jest-message-util | high | indirect | fix:jest@30.5.2(major)
+jest-resolve | high | indirect | fix:jest@30.5.2(major)
+jest-resolve-dependencies | high | indirect | fix
+jest-runner | high | indirect | fix:jest@30.5.2(major)
+jest-runtime | high | indirect | fix:jest@30.5.2(major)
+jest-snapshot | high | indirect | fix:jest-expo@58.0.11(major)
+jest-watch-typeahead | high | indirect | fix:jest-expo@58.0.11(major)
+jest-watcher | high | indirect | fix:jest@30.5.2(major)
+js-yaml | moderate | indirect | fix:jest@30.5.2(major)
+metro | high | indirect | fix:react-native@0.72.17(major)
+metro-config | high | indirect | fix:react-native@0.72.17(major)
+metro-file-map | high | indirect | fix:expo@44.0.6(major)
+metro-transform-worker | high | indirect | fix
+micromatch | high | indirect | fix:jest@30.5.2(major)
+ROOT | node-forge | high | node-forge RSA PKCS#1 v1.5 signature verification accepts extra nested DigestAlgorithm elements | https://github.com/advisories/GHSA-86w9-cpqp-85rv
+node-forge | high | indirect | fix:expo@44.0.6(major)
+query-string | moderate | indirect | fix:expo-router@58.0.23(major)
+react-native | high | direct | fix:react-native@0.72.17(major)
+react-native-reanimated | high | direct | fix:react-native-reanimated@4.2.2(major)
+react-native-worklets | high | direct | fix:react-native-worklets@0.7.4(major)
+ROOT | sprintf-js | moderate | sprintf-js vulnerable to denial of service through unbounded precision specifiers | https://github.com/advisories/GHSA-hp3w-g68c-fv3c
+sprintf-js | moderate | indirect | fix:jest@30.5.2(major)
+ROOT | uuid | moderate | uuid: Missing buffer bounds check in v3/v5/v6 when buf is provided | https://github.com/advisories/GHSA-w5hq-g745-h8pq
+uuid | moderate | indirect | fix:expo@44.0.6(major)
+xcode | moderate | indirect | fix:expo@44.0.6(major)
