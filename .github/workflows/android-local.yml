@@ -80,7 +80,7 @@ jobs:
         run: |
           SHORT="${GITHUB_SHA::7}"
           TAG="test-${SHORT}"
-          gh release create "$TAG" "ace-xm-journal.apk#ACE-XM-JOURNAL-${SHORT}.apk" --prerelease --title "Test build ${SHORT}" --notes "Test build of commit ${GITHUB_SHA}. Not for the Play Store." 2>&1 | tee /tmp/local-release.log
+          gh release create "$TAG" "ace-xm-journal.apk#Ace-Notes-${SHORT}.apk" --prerelease --title "Test build ${SHORT}" --notes "Test build of commit ${GITHUB_SHA}. Not for the Play Store." 2>&1 | tee /tmp/local-release.log
       - name: Save results to the local-build-logs branch
         if: always()
         run: |

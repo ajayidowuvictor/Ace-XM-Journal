@@ -68,7 +68,7 @@ export function planTaskReminders(
   return planned.slice(0, limit);
 }
 
-export const TASK_REMINDER_TITLE = 'ACE XM JOURNAL';
+export const TASK_REMINDER_TITLE = 'Ace Notes';
 export const TASK_REMINDER_HIDDEN_BODY = 'You have a task to do now.';
 export const TASK_REMINDER_SHOWN_BODY = 'Task reminder';
 

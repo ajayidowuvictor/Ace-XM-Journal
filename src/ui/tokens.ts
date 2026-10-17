@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 
 /**
- * ACE XM JOURNAL design tokens.
+ * Ace Notes design tokens.
  * Brand colours are sampled from the owner's logo (see docs/BRAND.md); docs/DESIGN.md explains the look.
  * Text pairs below are checked for WCAG AA contrast (4.5:1) in tokens.test.ts.
  */

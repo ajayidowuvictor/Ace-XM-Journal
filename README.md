@@ -1,4 +1,6 @@
-# ACE XM JOURNAL
+# Ace Notes
+
+(Formerly ACE XM JOURNAL. The app ID `com.ajayidowuvictor.acexmjournal`, the `.acexmbackup` file type and the repository name are unchanged on purpose, so existing installs update in place and old backups still restore.)
 
 A premium daily planner, private journal, habit tracker and goal system for Android (iOS later), built with React Native, Expo and TypeScript.
 

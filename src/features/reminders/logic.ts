@@ -23,7 +23,7 @@ export function reminderTime(choice: ReminderChoice): { hour: number; minute: nu
 }
 
 /** The fixed text of the reminder. It never contains anything from the user's data. */
-export const REMINDER_TITLE = 'ACE XM JOURNAL';
+export const REMINDER_TITLE = 'Ace Notes';
 export const REMINDER_BODY = 'Take a minute to plan your day and check in with yourself.';
 
 /** The fixed text of the test reminder. */
