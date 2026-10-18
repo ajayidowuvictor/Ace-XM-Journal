@@ -23,11 +23,21 @@ export type ReminderTimeChoice = 'off' | '08:00' | '12:00' | '17:00' | '20:00';
 
 export const REMINDER_TIME_CHOICES: readonly { value: ReminderTimeChoice; label: string }[] = [
   { value: 'off', label: 'None' },
-  { value: '08:00', label: '8:00' },
-  { value: '12:00', label: '12:00' },
-  { value: '17:00', label: '17:00' },
-  { value: '20:00', label: '20:00' },
+  { value: '08:00', label: '8 AM' },
+  { value: '12:00', label: '12 PM' },
+  { value: '17:00', label: '5 PM' },
+  { value: '20:00', label: '8 PM' },
 ];
+
+/** A stored "HH:MM" time as people say it: "8 AM", "5 PM", "2:30 PM". Anything else is returned as is. */
+export function formatClock(time: string): string {
+  const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(time);
+  if (!match) return time;
+  const hour = Number(match[1]);
+  const suffix = hour < 12 ? 'AM' : 'PM';
+  const twelve = hour % 12 === 0 ? 12 : hour % 12;
+  return match[2] === '00' ? `${twelve} ${suffix}` : `${twelve}:${match[2]} ${suffix}`;
+}
 
 /** The form choice for a stored time. A time the form cannot offer is shown as it is. */
 export function reminderChoiceFor(time: string | null): string {

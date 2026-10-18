@@ -2,9 +2,9 @@ export type ReminderChoice = 'off' | 'morning' | 'afternoon' | 'evening';
 
 export const REMINDER_OPTIONS: readonly { value: ReminderChoice; label: string }[] = [
   { value: 'off', label: 'Off' },
-  { value: 'morning', label: '8:00' },
-  { value: 'afternoon', label: '13:00' },
-  { value: 'evening', label: '20:00' },
+  { value: 'morning', label: '8 AM' },
+  { value: 'afternoon', label: '1 PM' },
+  { value: 'evening', label: '8 PM' },
 ];
 
 const TIMES: Record<Exclude<ReminderChoice, 'off'>, { hour: number; minute: number }> = {

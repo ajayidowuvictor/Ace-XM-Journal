@@ -2,7 +2,11 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
-import { REMINDER_TIME_CHOICES, reminderChoiceFor } from '../reminders/taskReminders';
+import {
+  REMINDER_TIME_CHOICES,
+  formatClock,
+  reminderChoiceFor,
+} from '../reminders/taskReminders';
 import {
   Button,
   Card,
@@ -95,7 +99,7 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
       label: choice.label,
     })),
     ...(task?.reminderTime && !REMINDER_TIME_CHOICES.some((c) => c.value === task.reminderTime)
-      ? [{ value: task.reminderTime, label: task.reminderTime }]
+      ? [{ value: task.reminderTime, label: formatClock(task.reminderTime) }]
       : []),
   ];
 
