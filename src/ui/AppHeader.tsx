@@ -24,10 +24,10 @@ export function AppHeader({ section, right }: Props) {
       style={[styles.bar, { backgroundColor: colors.background, borderBottomColor: colors.border }]}
     >
       <View style={styles.brand}>
-        <Image source={LOGO} accessibilityLabel="ACE XM JOURNAL logo" style={styles.logo} />
+        <Image source={LOGO} accessibilityLabel="Ace Notes logo" style={styles.logo} />
         <View>
           <Text variant="caption" muted style={styles.name}>
-            ACE XM JOURNAL
+            Ace Notes
           </Text>
           <Text variant="subheading" accessibilityRole="header">
             {section}

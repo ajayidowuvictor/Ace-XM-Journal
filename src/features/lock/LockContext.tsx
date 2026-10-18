@@ -17,6 +17,7 @@ import {
   biometricsReady,
 } from '../../lib/biometrics';
 import { PREF_KEYS, readPreference, writePreference } from '../../lib/preferences';
+import { playSound } from '../../lib/sounds';
 import {
   NO_ATTEMPTS,
   parseAttemptState,
@@ -175,8 +176,11 @@ export function LockProvider({ children }: { children: ReactNode }) {
 
   const unlockWithFingerprint = useCallback(async () => {
     if (!biometric) return false;
-    const ok = await authenticateBiometric('Unlock ACE XM JOURNAL');
-    if (ok) setLocked(false);
+    const ok = await authenticateBiometric('Unlock Ace Notes');
+    if (ok) {
+      setLocked(false);
+      playSound('unlock');
+    }
     return ok;
   }, [biometric]);
 

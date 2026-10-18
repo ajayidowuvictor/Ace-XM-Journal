@@ -3,6 +3,7 @@ import { Image, Modal, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { failure, success } from '../../lib/haptics';
+import { playSound } from '../../lib/sounds';
 import { useTheme } from '../../theme/context';
 import { Button, Card, Text, layout, radius, shadows, spacing, scrim } from '../../ui';
 import { useEraseAll } from '../settings/useEraseAll';
@@ -47,6 +48,7 @@ export function LockScreen() {
     if (result === 'ok') {
       setMessage(null);
       success();
+      playSound('unlock');
       return;
     }
     failure();
@@ -95,7 +97,7 @@ export function LockScreen() {
         <View style={styles.inner}>
           <View style={styles.header}>
             <View style={[styles.logoWrap, scheme === 'dark' ? null : shadows.card]}>
-              <Image source={LOGO} accessibilityLabel="ACE XM JOURNAL logo" style={styles.logo} />
+              <Image source={LOGO} accessibilityLabel="Ace Notes logo" style={styles.logo} />
               <View
                 accessible={false}
                 importantForAccessibility="no-hide-descendants"
@@ -110,7 +112,7 @@ export function LockScreen() {
               </View>
             </View>
             <Text variant="title" style={styles.centered}>
-              Unlock ACE XM JOURNAL
+              Unlock Ace Notes
             </Text>
             <Text
               variant="secondary"

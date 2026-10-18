@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
 import { success } from '../lib/haptics';
+import { playSound } from '../lib/sounds';
 import { useTheme } from '../theme/context';
 import { PressableScale } from './PressableScale';
 import { Text } from './Text';
@@ -26,7 +27,10 @@ export function Checkbox({ checked, onChange, accessibilityLabel }: Props) {
       accessibilityState={{ checked }}
       scaleTo={0.9}
       onPress={() => {
-        if (!checked) success();
+        if (!checked) {
+          success();
+          playSound('complete');
+        }
         onChange(!checked);
       }}
       style={styles.area}

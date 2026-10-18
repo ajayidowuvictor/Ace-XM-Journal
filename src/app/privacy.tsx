@@ -5,7 +5,7 @@ import { Button, Card, Screen, Text } from '@/ui';
 const SECTIONS: { title: string; body: string }[] = [
   {
     title: 'Where your information lives',
-    body: 'Everything you write stays on this phone. ACE XM JOURNAL has no accounts, no cloud storage, no advertising and no analytics. Nothing you enter is sent to anyone.',
+    body: 'Everything you write stays on this phone. Ace Notes has no accounts, no cloud storage, no advertising and no analytics. Nothing you enter is sent to anyone.',
   },
   {
     title: 'How your data is protected',

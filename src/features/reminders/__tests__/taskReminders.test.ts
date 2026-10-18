@@ -3,6 +3,7 @@ import { describe, expect, it } from '@jest/globals';
 import type { Task } from '../../tasks/types';
 import {
   MAX_TASK_REMINDERS,
+  formatClock,
   TASK_REMINDER_HIDDEN_BODY,
   TASK_REMINDER_TITLE,
   parseTaskNameChoice,
@@ -101,5 +102,21 @@ describe('reminder wording', () => {
   it('maps a stored time to a form choice', () => {
     expect(reminderChoiceFor(null)).toBe('off');
     expect(reminderChoiceFor('17:00')).toBe('17:00');
+  });
+});
+
+describe('formatClock', () => {
+  it('writes times the way people say them', () => {
+    expect(formatClock('08:00')).toBe('8 AM');
+    expect(formatClock('12:00')).toBe('12 PM');
+    expect(formatClock('00:00')).toBe('12 AM');
+    expect(formatClock('17:00')).toBe('5 PM');
+    expect(formatClock('20:00')).toBe('8 PM');
+    expect(formatClock('14:30')).toBe('2:30 PM');
+  });
+
+  it('leaves anything else as it is', () => {
+    expect(formatClock('late')).toBe('late');
+    expect(formatClock('25:00')).toBe('25:00');
   });
 });
