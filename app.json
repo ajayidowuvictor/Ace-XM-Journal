@@ -64,6 +64,13 @@
         }
       ],
       "expo-secure-store",
+      [
+        "expo-notifications",
+        {
+          "color": "#2D3684",
+          "sounds": ["./assets/sounds/chime.wav"]
+        }
+      ],
       "expo-sharing",
       [
         "expo-local-authentication",

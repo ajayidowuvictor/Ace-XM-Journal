@@ -30,6 +30,7 @@ import { usePlanner } from '@/features/planner/PlannerContext';
 import { useTasks } from '@/features/tasks/TasksContext';
 import { toLocalDateString } from '@/lib/dates';
 import { PREF_KEYS, readPreference, writePreference } from '@/lib/preferences';
+import { playSound, setSoundsEnabled, soundsEnabled } from '@/lib/sounds';
 import { THEME_PREFERENCES, type ThemePreference } from '@/theme/schemes';
 import { useTheme } from '@/theme/context';
 import {
@@ -68,11 +69,18 @@ export default function SettingsScreen() {
   const [taskNames, setTaskNames] = useState<TaskNameChoice>(() =>
     parseTaskNameChoice(readPreference(PREF_KEYS.taskNames)),
   );
+  const [sounds, setSounds] = useState<'on' | 'off'>(() => (soundsEnabled() ? 'on' : 'off'));
   const [exportNote, setExportNote] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [confirmingExport, setConfirmingExport] = useState(false);
   const [confirmingWipe, setConfirmingWipe] = useState(false);
   const [wipeNote, setWipeNote] = useState<string | null>(null);
+
+  function chooseSounds(choice: 'on' | 'off') {
+    setSounds(choice);
+    setSoundsEnabled(choice === 'on');
+    if (choice === 'on') playSound('complete');
+  }
 
   function chooseTaskNames(choice: TaskNameChoice) {
     setTaskNames(choice);
@@ -158,6 +166,22 @@ export default function SettingsScreen() {
         />
         <Text variant="caption" muted>
           System follows your phone&apos;s light or dark setting.
+        </Text>
+      </Card>
+
+      <Card>
+        <Text variant="heading">Sounds</Text>
+        <SegmentedControl<'on' | 'off'>
+          accessibilityLabel="Sounds"
+          options={[
+            { value: 'on', label: 'On' },
+            { value: 'off', label: 'Off' },
+          ]}
+          value={sounds}
+          onChange={chooseSounds}
+        />
+        <Text variant="caption" muted>
+          A soft tick when you finish a task or unlock the app. Silent when your phone is on silent.
         </Text>
       </Card>
 

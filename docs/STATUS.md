@@ -116,6 +116,12 @@ Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading
 - **Settings:** appearance, optional daily reminder (fixed text, never your words), export to a plain JSON file (with warning), erase all data (two confirmations), privacy page. _Seen on a phone: reminder time can be chosen, export opened the share sheet, privacy page reads correctly, erase asked for DELETE and reported that everything was erased. Not yet confirmed: that the reminder notification actually arrives._
 - **Branding:** app icon, adaptive icon and splash derived from the owner's logo emblem. _Icon seen on the phone's home screen; splash not yet confirmed._
 
+## Phase 9: pop-up reminders and sounds
+
+- **Reminders pop up:** the daily, task and test reminders now use new Android channels (`daily-reminder-v2`, `task-reminders-v2`) with high importance, a soft chime and a short double vibration. Android fixes a channel's importance when it is first made, so the old quiet channels are deleted and the daily reminder is set again once per app start so it moves to the new channel. A handler also shows a reminder that arrives while the app is open.
+- **Sounds:** three short, quiet sounds were synthesised by `scripts/make_sounds.py` (no outside audio): `complete` (soft two-note tick when a task or habit is ticked), `unlock` (single note after a correct PIN or fingerprint) and `chime` (three-note rising chime for reminders). They respect the phone's silent mode and volume, mix with other audio, and have a Settings > Sounds On/Off switch (default On). Uses `expo-audio`.
+- _Tested by code only:_ channel settings, handler and sound logic are unit-tested with the phone libraries mocked. _Not yet verified:_ that the sounds are pleasant by ear (the author has not heard them), that a reminder shows as a banner on the Infinix phone (it may also have its own per-app "pop up" switch under Settings > Apps > Ace Notes > Notifications), and that the test reminder uses the chime.
+
 ## Device testing history
 
 - Phase 2 build: first launch showed "Unmatched Route"; fixed with an entry route; retest passed.
@@ -128,6 +134,7 @@ Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading
 
 - Phase 8: that existing tasks, habits, goals, day plans and journal survive the move into the encrypted file on the phone, and that new items survive closing and reopening. The real SQLCipher open, SecureStore and deletion of the old file are device-only. The owner should make an encrypted backup first.
 - Phase 7: dark mode on every screen, largest text size, the splash screen.
+- Phase 9: sounds by ear, pop-up banner and chime on the phone (see Phase 9).
 - That the daily 20:00 reminder and a task reminder arrive at their times (the 1-minute test notification did arrive).
 - That the journal still works after "Erase all my data" (new entry, close the app, reopen).
 - That the encryption of the journal is effective on the device (only the app's behaviour was seen).

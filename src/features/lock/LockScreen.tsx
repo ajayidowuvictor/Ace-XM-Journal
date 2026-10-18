@@ -3,6 +3,7 @@ import { Image, Modal, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { failure, success } from '../../lib/haptics';
+import { playSound } from '../../lib/sounds';
 import { useTheme } from '../../theme/context';
 import { Button, Card, Text, layout, radius, shadows, spacing, scrim } from '../../ui';
 import { useEraseAll } from '../settings/useEraseAll';
@@ -47,6 +48,7 @@ export function LockScreen() {
     if (result === 'ok') {
       setMessage(null);
       success();
+      playSound('unlock');
       return;
     }
     failure();
