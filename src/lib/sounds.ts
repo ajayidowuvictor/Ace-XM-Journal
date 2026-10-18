@@ -47,7 +47,9 @@ export function playSound(name: SoundName): void {
   if (!soundsEnabled()) return;
   void (async () => {
     try {
-      const audio = await import('expo-audio');
+      // Loaded on first use, so screens (and their tests) do not need the audio library.
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const audio = require('expo-audio') as typeof import('expo-audio');
       if (!modeSet) {
         modeSet = true;
         await audio.setAudioModeAsync({
