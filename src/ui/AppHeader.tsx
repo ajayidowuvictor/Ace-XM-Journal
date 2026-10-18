@@ -20,9 +20,7 @@ export function AppHeader({ section, right }: Props) {
   const { colors } = useTheme();
 
   return (
-    <View
-      style={[styles.bar, { backgroundColor: colors.background }]}
-    >
+    <View style={[styles.bar, { backgroundColor: colors.background }]}>
       <View style={styles.brand}>
         <Image source={LOGO} accessibilityLabel="Ace Notes logo" style={styles.logo} />
         <View>
