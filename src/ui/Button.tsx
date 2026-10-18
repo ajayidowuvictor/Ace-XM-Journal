@@ -92,11 +92,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  regular: { minHeight: 52, borderRadius: radius.control },
+  regular: { minHeight: 52, borderRadius: radius.pill },
   compact: {
     minHeight: minTouchTarget,
-    borderRadius: radius.md,
-    paddingHorizontal: spacing.md - 4,
+    borderRadius: radius.pill,
+    paddingHorizontal: spacing.md,
   },
   compactText: { fontFamily: fonts.semibold, fontSize: 15, lineHeight: 20 },
 });

@@ -21,7 +21,7 @@ export function AppHeader({ section, right }: Props) {
 
   return (
     <View
-      style={[styles.bar, { backgroundColor: colors.background, borderBottomColor: colors.border }]}
+      style={[styles.bar, { backgroundColor: colors.background }]}
     >
       <View style={styles.brand}>
         <Image source={LOGO} accessibilityLabel="Ace Notes logo" style={styles.logo} />
@@ -46,10 +46,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: layout.gutter,
     paddingVertical: spacing.sm,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   brand: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm + 2 },
   logo: { width: LOGO_SIZE, height: LOGO_SIZE, borderRadius: radius.sm + 2 },
-  name: { letterSpacing: 1.2 },
+  name: { letterSpacing: 0 },
   right: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
 });

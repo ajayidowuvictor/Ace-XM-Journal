@@ -125,6 +125,11 @@ Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading
 - **Owner check (2026-10-18):** after installing the build with the 5-second test, the owner reported "it works" (the pop-up now appears). The first Phase 9 build had shown nothing; the cause was not identified, so it is unknown whether a phone setting or the build was responsible. Sounds were not itemised in that report.
 - _Tested by code only:_ channel settings, handler and sound logic are unit-tested with the phone libraries mocked. _Not yet verified:_ that the sounds are pleasant by ear (the author has not heard them), that a reminder shows as a banner on the Infinix phone (it may also have its own per-app "pop up" switch under Settings > Apps > Ace Notes > Notifications), and that the test reminder uses the chime.
 
+## Phase 10: Apple-style look
+
+- Restyled through the shared tokens and components so every screen follows: soft grey page and flat tiles in light mode, true black and charcoal tiles in dark mode, no card shadows or borders, pill buttons, bigger semibold titles with tight spacing, 24 pt margins and more space between blocks, Home greeting as a large title, no divider under the top bar. See `docs/DESIGN.md`.
+- _Tested by code only:_ colour contrast (WCAG AA) and text-size tests pass. _Not yet verified:_ how it looks on the phone. Nothing here could be previewed in the build environment, so spacing and wrapping of long titles need the owner's eye (largest text size especially).
+
 ## Device testing history
 
 - Phase 2 build: first launch showed "Unmatched Route"; fixed with an entry route; retest passed.
