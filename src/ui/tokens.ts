@@ -37,39 +37,39 @@ export type ColorTokens = {
 };
 
 export const lightColors: ColorTokens = {
-  background: '#F4F5FA',
+  background: '#F5F5F7',
   surface: '#FFFFFF',
-  surfaceMuted: '#ECEEF6',
+  surfaceMuted: '#EBEBEF',
   thumb: '#FFFFFF',
-  text: '#12152B',
-  textMuted: '#565B75',
+  text: '#1D1D1F',
+  textMuted: '#5F6168',
   primary: brand.navy,
   onPrimary: '#FFFFFF',
-  primaryTint: '#E6E9F8',
+  primaryTint: '#E8EAF6',
   success: '#1B6E25',
   successTint: '#E2F2E3',
   danger: '#C41A20',
   dangerTint: '#FBE6E7',
   onDanger: '#FFFFFF',
-  border: '#E1E3EE',
+  border: '#E3E3E8',
 };
 
 export const darkColors: ColorTokens = {
-  background: '#0B0D17',
-  surface: '#151829',
-  surfaceMuted: '#1E2238',
-  thumb: '#303656',
-  text: '#F2F3F9',
-  textMuted: '#A9ADC4',
-  primary: '#8E98E6',
-  onPrimary: '#0B0D17',
-  primaryTint: '#242A52',
+  background: '#000000',
+  surface: '#1C1C1E',
+  surfaceMuted: '#2C2C2E',
+  thumb: '#48484A',
+  text: '#F5F5F7',
+  textMuted: '#A1A1A6',
+  primary: '#9AA4F0',
+  onPrimary: '#000000',
+  primaryTint: '#262B52',
   success: brand.green,
   successTint: '#173222',
   danger: '#FF6B70',
   dangerTint: '#3A1A20',
-  onDanger: '#0B0D17',
-  border: '#262B45',
+  onDanger: '#000000',
+  border: '#38383A',
 };
 
 export const spacing = {
@@ -84,18 +84,19 @@ export const spacing = {
 export const radius = {
   sm: 10,
   md: 14,
-  /** Buttons and text fields. */
+  /** Text fields and the segmented control. Buttons are pills. */
   control: 16,
-  lg: 20,
+  /** Cards. */
+  lg: 24,
   /** Hero cards and sheets. */
-  xl: 28,
+  xl: 32,
   pill: 999,
 } as const;
 
 /** Screen-level layout numbers. */
 export const layout = {
-  gutter: 20,
-  cardPadding: 20,
+  gutter: 24,
+  cardPadding: 24,
   maxWidth: 720,
 } as const;
 
@@ -112,41 +113,44 @@ export const readingFont: string = Platform.select({ ios: 'Georgia', default: 's
 
 export const typography = {
   largeTitle: {
-    fontFamily: fonts.bold,
-    fontSize: 34,
-    lineHeight: 41,
-    letterSpacing: -0.7,
+    fontFamily: fonts.semibold,
+    fontSize: 40,
+    lineHeight: 46,
+    letterSpacing: -1.1,
   },
-  title: { fontFamily: fonts.bold, fontSize: 28, lineHeight: 34, letterSpacing: -0.5 },
-  heading: { fontFamily: fonts.semibold, fontSize: 20, lineHeight: 26, letterSpacing: -0.2 },
-  subheading: { fontFamily: fonts.semibold, fontSize: 17, lineHeight: 24, letterSpacing: -0.1 },
-  body: { fontFamily: fonts.regular, fontSize: 17, lineHeight: 25 },
-  secondary: { fontFamily: fonts.regular, fontSize: 15, lineHeight: 21 },
+  title: { fontFamily: fonts.semibold, fontSize: 30, lineHeight: 36, letterSpacing: -0.8 },
+  heading: { fontFamily: fonts.semibold, fontSize: 22, lineHeight: 28, letterSpacing: -0.5 },
+  subheading: { fontFamily: fonts.semibold, fontSize: 17, lineHeight: 24, letterSpacing: -0.2 },
+  body: { fontFamily: fonts.regular, fontSize: 17, lineHeight: 25, letterSpacing: -0.1 },
+  secondary: { fontFamily: fonts.regular, fontSize: 15, lineHeight: 21, letterSpacing: -0.1 },
   caption: { fontFamily: fonts.regular, fontSize: 13, lineHeight: 18 },
 } as const;
 
-/** Soft, navy-tinted shadows. Dark mode uses hairline borders instead (see Card). */
+/**
+ * Cards are flat tiles: the white (or lifted black) surface against the page colour does the
+ * work, as on apple.com. Only the raised "thumb" of a selected segment keeps a small shadow.
+ */
 export const shadows = {
   card: {
-    shadowColor: '#1B2150',
-    shadowOpacity: 0.07,
-    shadowRadius: 18,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 3,
+    shadowColor: '#000000',
+    shadowOpacity: 0,
+    shadowRadius: 0,
+    shadowOffset: { width: 0, height: 0 },
+    elevation: 0,
   },
   thumb: {
-    shadowColor: '#1B2150',
+    shadowColor: '#000000',
     shadowOpacity: 0.12,
-    shadowRadius: 4,
+    shadowRadius: 3,
     shadowOffset: { width: 0, height: 1 },
-    elevation: 2,
+    elevation: 1,
   },
 } as const;
 
 /** Press feedback: a quick, small squeeze (never a fade). */
 export const motion = {
-  pressScale: 0.97,
-  spring: { speed: 40, bounciness: 6 },
+  pressScale: 0.98,
+  spring: { speed: 36, bounciness: 4 },
 } as const;
 
 /** Minimum touch target size in points (accessibility). */

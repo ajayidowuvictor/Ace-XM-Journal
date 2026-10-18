@@ -64,13 +64,13 @@ export function SegmentedControl<T extends string>({
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    borderRadius: radius.md,
+    borderRadius: radius.control,
     padding: 3,
   },
   segment: {
     flex: 1,
     minHeight: minTouchTarget - spacing.xs,
-    borderRadius: radius.md - 3,
+    borderRadius: radius.control - 3,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: spacing.sm,

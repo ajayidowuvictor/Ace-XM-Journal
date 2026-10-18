@@ -43,8 +43,8 @@ export function Screen({ title, header, floating, children }: Props) {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  content: { padding: layout.gutter, paddingBottom: spacing.xxl + spacing.lg },
-  inner: { width: '100%', maxWidth: layout.maxWidth, alignSelf: 'center', gap: spacing.md },
-  title: { paddingTop: spacing.sm },
+  content: { padding: layout.gutter, paddingBottom: spacing.xxl * 2 },
+  inner: { width: '100%', maxWidth: layout.maxWidth, alignSelf: 'center', gap: spacing.lg - 4 },
+  title: { paddingTop: spacing.md },
   floating: { position: 'absolute', bottom: spacing.md, left: 0, right: 0, alignItems: 'center' },
 });
