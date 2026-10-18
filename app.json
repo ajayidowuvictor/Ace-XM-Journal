@@ -77,7 +77,8 @@
         {
           "faceIDPermission": "Allow Ace Notes to unlock the app with Face ID."
         }
-      ]
+      ],
+      "expo-audio"
     ],
     "experiments": {
       "typedRoutes": true,

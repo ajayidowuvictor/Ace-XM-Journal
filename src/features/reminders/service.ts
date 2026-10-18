@@ -31,7 +31,9 @@ const TEST_ID = 'test-reminder';
 
 /** Makes (or updates the name of) a reminder channel and removes the old quiet ones. */
 async function prepareChannel(id: string, name: string): Promise<void> {
-  await Promise.all(OLD_CHANNEL_IDS.map((old) => Notifications.deleteNotificationChannelAsync(old)));
+  await Promise.all(
+    OLD_CHANNEL_IDS.map((old) => Notifications.deleteNotificationChannelAsync(old)),
+  );
   await Notifications.setNotificationChannelAsync(id, {
     name,
     importance: Notifications.AndroidImportance.HIGH,

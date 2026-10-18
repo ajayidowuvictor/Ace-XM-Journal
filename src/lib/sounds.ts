@@ -50,7 +50,10 @@ export function playSound(name: SoundName): void {
       const audio = await import('expo-audio');
       if (!modeSet) {
         modeSet = true;
-        await audio.setAudioModeAsync({ playsInSilentMode: false, interruptionMode: 'mixWithOthers' });
+        await audio.setAudioModeAsync({
+          playsInSilentMode: false,
+          interruptionMode: 'mixWithOthers',
+        });
       }
       let player = players.get(name);
       if (!player) {
