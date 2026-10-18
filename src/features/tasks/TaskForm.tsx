@@ -2,11 +2,7 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
-import {
-  REMINDER_TIME_CHOICES,
-  formatClock,
-  reminderChoiceFor,
-} from '../reminders/taskReminders';
+import { REMINDER_TIME_CHOICES, formatClock, reminderChoiceFor } from '../reminders/taskReminders';
 import {
   Button,
   Card,
