@@ -16,7 +16,7 @@ export function ReminderCheck() {
     if (result === 'ok') {
       const when =
         seconds < 60
-          ? 'A test reminder will arrive in a few seconds. Press the phone\'s Home button now to leave the app.'
+          ? "A test reminder will arrive in a few seconds. Press the phone's Home button now to leave the app."
           : 'A test reminder will arrive in about a minute. Close the app now and wait, to see whether it reaches you.';
       setNote(phone ? `${when} ${phone}` : when);
     } else if (result === 'denied') {
