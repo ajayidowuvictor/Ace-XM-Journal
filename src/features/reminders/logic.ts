@@ -40,3 +40,12 @@ export function describeScheduled(daily: boolean, taskReminders: number, test: b
   if (test) parts.push('A test reminder is on its way.');
   return parts.join(' ');
 }
+
+/** What an Android channel importance number means for the person, in plain words. */
+export function describeImportance(importance: number): string {
+  if (importance === 0) return 'turned off (it will never show)';
+  if (importance <= 2) return 'quiet (no pop-up and no sound)';
+  if (importance === 3) return 'sound only (no pop-up)';
+  if (importance >= 4) return 'pop-up with sound';
+  return 'unknown';
+}

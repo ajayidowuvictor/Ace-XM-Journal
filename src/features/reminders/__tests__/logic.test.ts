@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { describeScheduled, parseReminderChoice, reminderTime } from '../logic';
+import { describeImportance, describeScheduled, parseReminderChoice, reminderTime } from '../logic';
 
 describe('reminders', () => {
   it('reads a saved choice and falls back to off for anything else', () => {
@@ -28,5 +28,16 @@ describe('describeScheduled', () => {
     expect(describeScheduled(true, 3, true)).toBe(
       'The daily reminder is set. 3 task reminders are waiting. A test reminder is on its way.',
     );
+  });
+});
+
+describe('describeImportance', () => {
+  it('says in plain words whether a reminder pops up', () => {
+    expect(describeImportance(0)).toContain('turned off');
+    expect(describeImportance(2)).toContain('no pop-up');
+    expect(describeImportance(3)).toContain('no pop-up');
+    expect(describeImportance(4)).toBe('pop-up with sound');
+    expect(describeImportance(5)).toBe('pop-up with sound');
+    expect(describeImportance(-1000)).toBe('unknown');
   });
 });

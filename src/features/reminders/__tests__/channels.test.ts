@@ -1,12 +1,18 @@
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 
-import { applyReminder, installNotificationHandler, scheduleTestReminder } from '../service';
+import {
+  applyReminder,
+  installNotificationHandler,
+  reminderDiagnosis,
+  scheduleTestReminder,
+} from '../service';
 
 type Args = unknown[];
 const mockSetChannel = jest.fn((..._args: Args) => Promise.resolve(null));
 const mockDeleteChannel = jest.fn((..._args: Args) => Promise.resolve(undefined));
 const mockSchedule = jest.fn((..._args: Args) => Promise.resolve('id'));
 const mockSetHandler = jest.fn((..._args: Args) => undefined);
+let mockChannelImportance: number | null = 4;
 
 jest.mock('expo-notifications', () => ({
   AndroidImportance: { DEFAULT: 3, HIGH: 4 },
@@ -14,6 +20,8 @@ jest.mock('expo-notifications', () => ({
   getAllScheduledNotificationsAsync: async () => [],
   cancelScheduledNotificationAsync: async () => undefined,
   getPermissionsAsync: async () => ({ granted: true }),
+  getNotificationChannelAsync: async () =>
+    mockChannelImportance === null ? null : { importance: mockChannelImportance },
   requestPermissionsAsync: async () => ({ granted: true }),
   setNotificationChannelAsync: (...args: Args) => mockSetChannel(...args),
   deleteNotificationChannelAsync: (...args: Args) => mockDeleteChannel(...args),
@@ -75,5 +83,22 @@ describe('reminder channels', () => {
       shouldPlaySound: true,
       shouldSetBadge: false,
     });
+  });
+
+  it('sends a quick test a few seconds ahead when asked', async () => {
+    const now = new Date(2026, 9, 18, 9, 0, 0);
+    await scheduleTestReminder(now, 5);
+    const call = mockSchedule.mock.calls[0] as unknown as [{ trigger: { date: Date } }];
+    expect(call[0].trigger.date.getTime()).toBe(now.getTime() + 5000);
+  });
+
+  it('tells the person what the phone has set for reminders', async () => {
+    mockChannelImportance = 4;
+    expect(await reminderDiagnosis()).toContain('pop-up with sound');
+    mockChannelImportance = 2;
+    expect(await reminderDiagnosis()).toContain('quiet');
+    mockChannelImportance = null;
+    expect(await reminderDiagnosis()).toContain('not been made yet');
+    mockChannelImportance = 4;
   });
 });

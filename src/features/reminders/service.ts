@@ -7,6 +7,7 @@ import {
   REMINDER_BODY,
   REMINDER_TITLE,
   TEST_BODY,
+  describeImportance,
   describeScheduled,
   parseReminderChoice,
   reminderTime,
@@ -136,8 +137,11 @@ export async function refreshTaskReminders(
   }
 }
 
-/** Sends one test notification to this phone about a minute from now. */
-export async function scheduleTestReminder(now: Date = new Date()): Promise<ReminderResult> {
+/** Sends one test notification to this phone, by default about a minute from now. */
+export async function scheduleTestReminder(
+  now: Date = new Date(),
+  delaySeconds = 60,
+): Promise<ReminderResult> {
   try {
     if (Platform.OS === 'android') {
       await prepareChannel(CHANNEL_ID, 'Daily reminder');
@@ -151,13 +155,36 @@ export async function scheduleTestReminder(now: Date = new Date()): Promise<Remi
       content: { title: REMINDER_TITLE, body: TEST_BODY },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.DATE,
-        date: new Date(now.getTime() + 60_000),
+        date: new Date(now.getTime() + delaySeconds * 1000),
         channelId: CHANNEL_ID,
       },
     });
     return 'ok';
   } catch {
     return 'error';
+  }
+}
+
+/** What the phone currently allows for reminders: permission and the pop-up setting. */
+export async function reminderDiagnosis(): Promise<string | null> {
+  try {
+    const permission = await Notifications.getPermissionsAsync();
+    const parts = [
+      permission.granted
+        ? 'Notifications are allowed for this app.'
+        : 'Notifications are NOT allowed for this app.',
+    ];
+    if (Platform.OS === 'android') {
+      const channel = await Notifications.getNotificationChannelAsync(CHANNEL_ID);
+      parts.push(
+        channel
+          ? `Your phone has set reminders to: ${describeImportance(channel.importance)}.`
+          : 'The reminder channel has not been made yet; send a test first.',
+      );
+    }
+    return parts.join(' ');
+  } catch {
+    return null;
   }
 }
 
