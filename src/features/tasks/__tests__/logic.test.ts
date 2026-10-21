@@ -129,6 +129,8 @@ describe('due date choices', () => {
     expect(dueDateFor('none', '2026-10-20', now)).toBeNull();
     expect(dueDateFor('today', null, now)).toBe('2026-10-14');
     expect(dueDateFor('tomorrow', null, now)).toBe('2026-10-15');
+    expect(dueDateFor('custom', '2026-10-20', now, '2027-03-02')).toBe('2027-03-02');
+    expect(dueDateFor('custom', '2026-10-20', now)).toBeNull();
     expect(dueDateFor('week', null, now)).toBe('2026-10-21');
     expect(dueDateFor('keep', '2026-10-20', now)).toBe('2026-10-20');
   });

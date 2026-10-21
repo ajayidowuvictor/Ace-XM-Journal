@@ -1,8 +1,17 @@
 import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
+import { formatFullDate, toLocalDateString } from '../../lib/dates';
 import { useTheme } from '../../theme/context';
-import { REMINDER_TIME_CHOICES, formatClock, reminderChoiceFor } from '../reminders/taskReminders';
+import { DatePickerSheet } from '../calendar/DatePickerSheet';
+import { ClockInput } from '../planner/ClockInput';
+import {
+  REMINDER_TIME_CHOICES,
+  isPresetReminder,
+  reminderChoiceFor,
+  reminderFromMinutes,
+  reminderMinutes,
+} from '../reminders/taskReminders';
 import {
   Button,
   Card,
@@ -59,6 +68,11 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
   const [repeat, setRepeat] = useState<RepeatRule>(task?.repeat ?? 'none');
   const [reminder, setReminder] = useState<string>(reminderChoiceFor(task?.reminderTime ?? null));
   const [category, setCategory] = useState<TaskCategory>(task?.category ?? 'none');
+  const [customDate, setCustomDate] = useState<string | null>(null);
+  const [pickingDate, setPickingDate] = useState(false);
+  const [otherTime, setOtherTime] = useState(
+    () => !!task?.reminderTime && !isPresetReminder(task.reminderTime),
+  );
   const [error, setError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
@@ -86,21 +100,24 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
 
   function chooseReminder(time: string) {
     setReminder(time);
+    setOtherTime(false);
     if (time !== 'off' && dueChoice === 'none') setDueChoice('today');
   }
 
-  const reminderChoices = [
-    ...REMINDER_TIME_CHOICES.map((choice) => ({
-      value: choice.value as string,
-      label: choice.label,
-    })),
-    ...(task?.reminderTime && !REMINDER_TIME_CHOICES.some((c) => c.value === task.reminderTime)
-      ? [{ value: task.reminderTime, label: formatClock(task.reminderTime) }]
-      : []),
-  ];
+  function chooseOtherTime() {
+    setOtherTime(true);
+    // Starts from the time already chosen, or 9:00 AM, and can be typed over.
+    if (reminderMinutes(reminder) === null) setReminder('09:00');
+    if (dueChoice === 'none') setDueChoice('today');
+  }
+
+  const reminderChoices = REMINDER_TIME_CHOICES.map((choice) => ({
+    value: choice.value as string,
+    label: choice.label,
+  }));
 
   function save() {
-    const dueDate = dueDateFor(dueChoice, task?.dueDate ?? null, new Date());
+    const dueDate = dueDateFor(dueChoice, task?.dueDate ?? null, new Date(), customDate);
     const problem = onSave({
       title,
       notes,
@@ -163,6 +180,20 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
                 value={dueChoice}
                 onChange={chooseDue}
               />
+              <Button
+                label={
+                  dueChoice === 'custom' && customDate
+                    ? `Due: ${formatFullDate(customDate)}`
+                    : 'Pick a date on the calendar'
+                }
+                accessibilityLabel={
+                  dueChoice === 'custom' && customDate
+                    ? `Due date ${formatFullDate(customDate)}. Change it`
+                    : 'Pick a due date on the calendar'
+                }
+                variant={dueChoice === 'custom' ? 'primary' : 'secondary'}
+                onPress={() => setPickingDate(true)}
+              />
             </View>
 
             <View style={styles.group}>
@@ -177,11 +208,24 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
                     accessibilityLabel={
                       choice.value === 'off' ? 'No reminder' : `Remind me at ${choice.label}`
                     }
-                    selected={reminder === choice.value}
+                    selected={!otherTime && reminder === choice.value}
                     onPress={() => chooseReminder(choice.value)}
                   />
                 ))}
+                <Chip
+                  label="Other time"
+                  accessibilityLabel="Choose another reminder time"
+                  selected={otherTime}
+                  onPress={chooseOtherTime}
+                />
               </View>
+              {otherTime ? (
+                <ClockInput
+                  label="Reminder time"
+                  value={reminderMinutes(reminder) ?? 9 * 60}
+                  onChange={(minutes) => setReminder(reminderFromMinutes(minutes))}
+                />
+              ) : null}
             </View>
 
             <View style={styles.group}>
@@ -244,6 +288,20 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
             />
           ) : null}
         </ScrollView>
+
+        {pickingDate ? (
+          <DatePickerSheet
+            title="Due date"
+            value={customDate ?? task?.dueDate ?? null}
+            minDate={toLocalDateString(new Date())}
+            onPick={(date) => {
+              setCustomDate(date);
+              setDueChoice('custom');
+              setPickingDate(false);
+            }}
+            onClose={() => setPickingDate(false)}
+          />
+        ) : null}
 
         <ConfirmDialog
           visible={confirmingDelete}

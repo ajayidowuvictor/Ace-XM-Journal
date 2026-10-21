@@ -6,6 +6,7 @@ import {
   parseLocalDate,
   shiftDateString,
   toLocalDateString,
+  formatFullDate,
 } from '../dates';
 
 describe('toLocalDateString', () => {
@@ -50,5 +51,19 @@ describe('shiftDateString', () => {
     expect(shiftDateString('2026-10-31', 1)).toBe('2026-11-01');
     expect(shiftDateString('2027-01-01', -1)).toBe('2026-12-31');
     expect(shiftDateString('nope', 1)).toBeNull();
+  });
+});
+
+describe('formatFullDate', () => {
+  it('writes the weekday, day, month and year', () => {
+    const text = formatFullDate('2026-11-06', 'en-GB');
+    expect(text).toContain('Friday');
+    expect(text).toContain('6');
+    expect(text).toContain('November');
+    expect(text).toContain('2026');
+  });
+
+  it('returns text that is not a date unchanged', () => {
+    expect(formatFullDate('soon')).toBe('soon');
   });
 });

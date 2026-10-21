@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
-import { formatShortDate, parseLocalDate, toLocalDateString } from '../../lib/dates';
+import { formatFullDate, formatShortDate, toLocalDateString } from '../../lib/dates';
 import { useTheme } from '../../theme/context';
 import {
   Button,
@@ -130,12 +130,12 @@ export function GoalForm({ visible, goalId, onClose }: Props) {
             <Button
               label={
                 choice === 'custom' && customDate
-                  ? `Target: ${longDate(customDate)}`
+                  ? `Target: ${formatFullDate(customDate)}`
                   : 'Pick a date on the calendar'
               }
               accessibilityLabel={
                 choice === 'custom' && customDate
-                  ? `Target date ${longDate(customDate)}. Change it`
+                  ? `Target date ${formatFullDate(customDate)}. Change it`
                   : 'Pick a target date on the calendar'
               }
               variant={choice === 'custom' ? 'primary' : 'secondary'}
@@ -234,19 +234,6 @@ export function GoalForm({ visible, goalId, onClose }: Props) {
       </KeyboardAvoidingView>
     </Modal>
   );
-}
-
-/** "Friday 6 November 2026". */
-function longDate(value: string): string {
-  const date = parseLocalDate(value);
-  return date
-    ? date.toLocaleDateString(undefined, {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-      })
-    : value;
 }
 
 const styles = StyleSheet.create({
