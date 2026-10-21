@@ -138,6 +138,13 @@ Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading
 - Tasks still use the quick due-date choices only; the same calendar could be added there.
 - _Tested by code only:_ the time and date logic. _Not yet verified:_ the forms on the phone (keyboard behaviour when typing times, calendar layout at large text sizes).
 
+## Phase 12: flexible schedules
+
+- **Task due dates:** besides the quick choices there is a calendar ("Pick a date on the calendar"). Past dates cannot be chosen.
+- **Task reminder times:** an "Other time" choice opens typed hour, minute and AM/PM, so a task can remind at any time.
+- **Habit days:** a habit repeats on the weekdays you choose (chips Mon to Sun, plus Every day and Weekdays; at least one day). Streaks count only those days, so rest days never break them; the Today list and weekly consistency count only habits planned for that day, and rest days show as empty in the week. Stored in a new `days` column (database version 7, default every day, so existing habits are unchanged). Backups and exports now carry `days`; older backups restore as every day.
+- _Tested by code only:_ schedule and streak logic, saving, restoring. _Not yet verified:_ the forms on the phone and the database upgrade on the real phone's data (an encrypted backup first is wise).
+
 ## Device testing history
 
 - Phase 2 build: first launch showed "Unmatched Route"; fixed with an entry route; retest passed.
