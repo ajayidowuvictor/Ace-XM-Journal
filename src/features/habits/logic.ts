@@ -188,9 +188,9 @@ export function weekConsistency(habits: readonly HabitLike[], today: string): We
     done += count;
     possible += planned.length;
     const status =
-      planned.length === 0
+      habits.length > 0 && planned.length === 0
         ? 'rest'
-        : count === planned.length
+        : habits.length > 0 && count === planned.length
           ? 'all'
           : count > 0
             ? 'some'
