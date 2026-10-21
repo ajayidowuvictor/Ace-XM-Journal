@@ -30,7 +30,13 @@ type Props = {
  * A month calendar for choosing any date. Show it only while it is needed (render it when the
  * person asks for it) so it opens on the right month each time.
  */
-export function DatePickerSheet({ value, minDate, title = 'Choose a date', onPick, onClose }: Props) {
+export function DatePickerSheet({
+  value,
+  minDate,
+  title = 'Choose a date',
+  onPick,
+  onClose,
+}: Props) {
   const { colors } = useTheme();
   const today = toLocalDateString(new Date());
   const start = value ?? today;

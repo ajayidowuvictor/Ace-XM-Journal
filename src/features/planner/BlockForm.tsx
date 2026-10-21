@@ -2,15 +2,7 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
-import {
-  Button,
-  Chip,
-  ConfirmDialog,
-  SegmentedControl,
-  Text,
-  TextField,
-  spacing,
-} from '../../ui';
+import { Button, Chip, ConfirmDialog, SegmentedControl, Text, TextField, spacing } from '../../ui';
 import type { Task } from '../tasks/types';
 import {
   DURATION_CHOICES,
