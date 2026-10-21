@@ -1,12 +1,5 @@
 import { useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
 import { Button, Chip, ConfirmDialog, Text, TextField, spacing } from '../../ui';
@@ -104,8 +97,8 @@ export function HabitForm({ visible, habit, onClose }: Props) {
             ) : null}
           </View>
           <Text variant="caption" muted>
-            You can tick a habit once a day. Streaks count the days it repeats on, so rest days never
-            break them.
+            You can tick a habit once a day. Streaks count the days it repeats on, so rest days
+            never break them.
           </Text>
           <Button label="Save habit" onPress={save} />
           <Button label="Cancel" variant="ghost" onPress={onClose} />

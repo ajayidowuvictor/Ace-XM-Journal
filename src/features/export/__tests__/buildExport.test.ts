@@ -20,13 +20,15 @@ describe('buildExport', () => {
           updatedAt: 'x',
         },
       ],
-      habits: [{
+      habits: [
+        {
           id: 'h1',
           name: 'Read',
           completedDates: ['2026-10-14'],
           days: [0, 2, 4],
           createdAt: 'x',
-        }],
+        },
+      ],
       goals: [],
       entries: [
         {

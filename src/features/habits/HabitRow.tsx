@@ -2,13 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
 import { Checkbox, Text, minTouchTarget, radius, spacing } from '../../ui';
-import {
-  currentStreak,
-  isScheduledOn,
-  lastDaysDone,
-  longestStreak,
-  scheduleLabel,
-} from './logic';
+import { currentStreak, isScheduledOn, lastDaysDone, longestStreak, scheduleLabel } from './logic';
 import type { Habit } from './types';
 
 type Props = {
@@ -45,7 +39,11 @@ export function HabitRow({
         ? `No streak right now  ·  best ${best}`
         : 'Not started yet'
     : null;
-  const detail = [streakText, everyDay ? null : scheduleLabel(habit.days), restDay ? 'Rest day today' : null]
+  const detail = [
+    streakText,
+    everyDay ? null : scheduleLabel(habit.days),
+    restDay ? 'Rest day today' : null,
+  ]
     .filter((part): part is string => part !== null)
     .join('  ·  ');
 

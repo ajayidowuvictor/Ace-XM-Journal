@@ -19,7 +19,9 @@ type HabitLike = { completedDates: readonly string[]; days?: readonly number[] }
 
 /** A list of weekdays cleaned up: whole numbers 0 to 6, no repeats, in order. */
 export function cleanDays(days: readonly unknown[]): number[] {
-  const valid = days.filter((d): d is number => Number.isInteger(d) && (d as number) >= 0 && (d as number) <= 6);
+  const valid = days.filter(
+    (d): d is number => Number.isInteger(d) && (d as number) >= 0 && (d as number) <= 6,
+  );
   return [...new Set(valid)].sort((a, b) => a - b);
 }
 
@@ -79,7 +81,10 @@ export function currentStreak(
 }
 
 /** The longest run of planned days done in a row, ever recorded. */
-export function longestStreak(dates: readonly string[], days: readonly number[] = ALL_DAYS): number {
+export function longestStreak(
+  dates: readonly string[],
+  days: readonly number[] = ALL_DAYS,
+): number {
   const sorted = [...new Set(dates)].sort();
   if (sorted.length === 0) return 0;
   const last = sorted[sorted.length - 1];
