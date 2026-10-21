@@ -1,12 +1,13 @@
+import { ALL_DAYS, cleanDays, daysFromText, daysToText } from '../features/habits/logic';
 import type { Habit } from '../features/habits/types';
 import type { SqlDatabase } from './types';
 
-type HabitRow = { id: string; name: string; created_at: string };
+type HabitRow = { id: string; name: string; days: string; created_at: string };
 
 /** Habits that have not been deleted, oldest first, each with the dates it was done. */
 export function listHabits(db: SqlDatabase): Habit[] {
   const rows = db.all<HabitRow>(
-    'SELECT id, name, created_at FROM habits WHERE deleted_at IS NULL ORDER BY created_at, id',
+    'SELECT id, name, days, created_at FROM habits WHERE deleted_at IS NULL ORDER BY created_at, id',
   );
   const completions = db.all<{ habit_id: string; completed_date: string }>(
     `SELECT c.habit_id, c.completed_date FROM habit_completions c
@@ -23,25 +24,39 @@ export function listHabits(db: SqlDatabase): Habit[] {
     id: row.id,
     name: row.name,
     completedDates: byHabit.get(row.id) ?? [],
+    days: daysFromText(row.days),
     createdAt: row.created_at,
   }));
 }
 
-export function createHabit(db: SqlDatabase, id: string, name: string, nowIso: string): void {
-  db.run('INSERT INTO habits (id, name, created_at, updated_at) VALUES (?, ?, ?, ?)', [
+export function createHabit(
+  db: SqlDatabase,
+  id: string,
+  name: string,
+  nowIso: string,
+  days: readonly number[] = ALL_DAYS,
+): void {
+  db.run('INSERT INTO habits (id, name, days, created_at, updated_at) VALUES (?, ?, ?, ?, ?)', [
     id,
     name,
+    daysToText(cleanDays(days).length > 0 ? days : ALL_DAYS),
     nowIso,
     nowIso,
   ]);
 }
 
-export function renameHabit(db: SqlDatabase, id: string, name: string, nowIso: string): void {
-  db.run('UPDATE habits SET name = ?, updated_at = ? WHERE id = ? AND deleted_at IS NULL', [
-    name,
-    nowIso,
-    id,
-  ]);
+/** Changes a habit's name and the weekdays it repeats on. */
+export function updateHabit(
+  db: SqlDatabase,
+  id: string,
+  name: string,
+  days: readonly number[],
+  nowIso: string,
+): void {
+  db.run(
+    'UPDATE habits SET name = ?, days = ?, updated_at = ? WHERE id = ? AND deleted_at IS NULL',
+    [name, daysToText(cleanDays(days).length > 0 ? days : ALL_DAYS), nowIso, id],
+  );
 }
 
 /** Marks a habit done (or not done) for a local date. Safe to repeat. */

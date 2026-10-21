@@ -41,7 +41,13 @@ const goal: Goal = {
   milestones: [{ id: 'm1', goalId: 'g1', title: 'Buy new shoes', completedAt: null }],
 };
 
-const habit: Habit = { id: 'h1', name: 'Read the Bible', completedDates: [], createdAt: 'x' };
+const habit: Habit = {
+  id: 'h1',
+  name: 'Read the Bible',
+  completedDates: [],
+  days: [0, 1, 2, 3, 4, 5, 6],
+  createdAt: 'x',
+};
 
 const entry: JournalEntry = {
   id: 'e1',

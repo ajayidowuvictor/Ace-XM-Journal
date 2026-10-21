@@ -1,9 +1,17 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet } from 'react-native';
+import {
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { useTheme } from '../../theme/context';
-import { Button, ConfirmDialog, Text, TextField, spacing } from '../../ui';
+import { Button, Chip, ConfirmDialog, Text, TextField, spacing } from '../../ui';
 import { useHabits } from './HabitsContext';
+import { ALL_DAYS, DAY_NAMES, WEEKDAYS_ONLY, cleanDays, scheduleLabel } from './logic';
 import type { Habit } from './types';
 
 type Props = {
@@ -16,15 +24,30 @@ type Props = {
 /** The form opens with fresh state each time because the screen gives it a new `key`. */
 export function HabitForm({ visible, habit, onClose }: Props) {
   const { colors } = useTheme();
-  const { add, rename, remove } = useHabits();
+  const { add, edit, remove } = useHabits();
   const [name, setName] = useState(habit?.name ?? '');
+  const [days, setDays] = useState<number[]>(habit?.days ?? [...ALL_DAYS]);
   const [error, setError] = useState<string | null>(null);
+  const [daysError, setDaysError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   function save() {
-    const problem = habit ? rename(habit.id, name) : add(name);
+    if (days.length === 0) {
+      setDaysError('Choose at least one day.');
+      return;
+    }
+    const problem = habit ? edit(habit.id, name, days) : add(name, days);
     if (problem) setError(problem);
     else onClose();
+  }
+
+  function chooseDays(next: readonly number[]) {
+    setDays(cleanDays(next));
+    setDaysError(null);
+  }
+
+  function toggleDay(day: number) {
+    chooseDays(days.includes(day) ? days.filter((d) => d !== day) : [...days, day]);
   }
 
   return (
@@ -47,8 +70,42 @@ export function HabitForm({ visible, habit, onClose }: Props) {
             autoFocus={!habit}
             returnKeyType="done"
           />
+          <View style={styles.group}>
+            <Text variant="caption" muted>
+              Repeats on
+            </Text>
+            <View style={styles.chips}>
+              {DAY_NAMES.map((label, day) => (
+                <Chip
+                  key={label}
+                  label={label}
+                  accessibilityLabel={`${label}${days.includes(day) ? ', on' : ', off'}`}
+                  selected={days.includes(day)}
+                  onPress={() => toggleDay(day)}
+                />
+              ))}
+            </View>
+            <View style={styles.chips}>
+              <Chip
+                label="Every day"
+                selected={scheduleLabel(days) === 'Every day'}
+                onPress={() => chooseDays(ALL_DAYS)}
+              />
+              <Chip
+                label="Weekdays"
+                selected={scheduleLabel(days) === 'Weekdays'}
+                onPress={() => chooseDays(WEEKDAYS_ONLY)}
+              />
+            </View>
+            {daysError ? (
+              <Text variant="caption" tone="danger" accessibilityLiveRegion="polite">
+                {daysError}
+              </Text>
+            ) : null}
+          </View>
           <Text variant="caption" muted>
-            You can tick a habit once a day. Streaks count days in a row.
+            You can tick a habit once a day. Streaks count the days it repeats on, so rest days never
+            break them.
           </Text>
           <Button label="Save habit" onPress={save} />
           <Button label="Cancel" variant="ghost" onPress={onClose} />
@@ -82,4 +139,6 @@ export function HabitForm({ visible, habit, onClose }: Props) {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   content: { padding: spacing.lg, paddingTop: spacing.xxl, gap: spacing.md },
+  group: { gap: spacing.sm },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
 });
