@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="today_widget_name">Ace Notes: Today</string>
+  <string name="today_widget_description">Your tasks and next time block for today.</string>
+  <string name="today_widget_empty">Open Ace Notes to set up your day</string>
+  <string name="today_widget_stale">Open Ace Notes to update today</string>
+</resources>

@@ -1,6 +1,7 @@
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { Platform } from 'react-native';
 
 import { buildExport, exportFileName } from '@/features/export/buildExport';
 import { shareExport } from '@/features/export/shareExport';
@@ -25,6 +26,8 @@ import {
   type TaskNameChoice,
 } from '@/features/reminders/taskReminders';
 import { WipeDialog } from '@/features/settings/WipeDialog';
+import { WIDGET_NAME_OPTIONS, type WidgetNames } from '@/features/widget/logic';
+import { setWidgetNames, useWidgetNames } from '@/features/widget/widgetNames';
 import { useEraseAll } from '@/features/settings/useEraseAll';
 import { usePlanner } from '@/features/planner/PlannerContext';
 import { useTasks } from '@/features/tasks/TasksContext';
@@ -70,6 +73,7 @@ export default function SettingsScreen() {
     parseTaskNameChoice(readPreference(PREF_KEYS.taskNames)),
   );
   const [sounds, setSounds] = useState<'on' | 'off'>(() => (soundsEnabled() ? 'on' : 'off'));
+  const widgetNames = useWidgetNames();
   const [exportNote, setExportNote] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [confirmingExport, setConfirmingExport] = useState(false);
@@ -184,6 +188,24 @@ export default function SettingsScreen() {
           A soft tick when you finish a task or unlock the app. Silent when your phone is on silent.
         </Text>
       </Card>
+
+      {Platform.OS === 'android' ? (
+        <Card>
+          <Text variant="heading">Home-screen widget</Text>
+          <SegmentedControl<WidgetNames>
+            accessibilityLabel="Names on the home-screen widget"
+            options={WIDGET_NAME_OPTIONS}
+            value={widgetNames}
+            onChange={setWidgetNames}
+          />
+          <Text variant="caption" muted>
+            To add it, press and hold an empty spot on your home screen, tap Widgets, then choose
+            Ace Notes: Today. It shows how many tasks are done, your focus tasks and your next time
+            block. Names are hidden by default. If you show them, anyone who sees your home screen
+            can read them, even when Ace Notes is locked.
+          </Text>
+        </Card>
+      ) : null}
 
       <Card>
         <Text variant="heading">Daily reminder</Text>

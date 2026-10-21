@@ -22,3 +22,6 @@ ios/
 
 # Test output
 coverage/
+
+# Hand-written native module sources (the rule above is for generated folders)
+!/modules/**/android/

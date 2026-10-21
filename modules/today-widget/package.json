@@ -1,0 +1,8 @@
+{
+  "name": "today-widget",
+  "version": "0.1.0",
+  "description": "Ace Notes home-screen widget (Android)",
+  "private": true,
+  "scripts": {},
+  "license": "UNLICENSED"
+}
