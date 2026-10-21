@@ -70,6 +70,8 @@ describe('target dates', () => {
     expect(targetDateFor('month', null, now)).toBe('2026-11-13');
     expect(targetDateFor('quarter', null, now)).toBe('2027-01-12');
     expect(targetDateFor('keep', '2027-01-01', now)).toBe('2027-01-01');
+    expect(targetDateFor('custom', '2027-01-01', now, '2027-06-30')).toBe('2027-06-30');
+    expect(targetDateFor('custom', null, now)).toBeNull();
   });
 
   it('keeps an existing date and shows none otherwise', () => {

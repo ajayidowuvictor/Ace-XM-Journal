@@ -12,11 +12,53 @@ export const DURATION_CHOICES = [15, 30, 45, 60, 90, 120] as const;
 /** Start times move in steps of this many minutes. */
 export const START_STEP = 15;
 
-/** Minutes after midnight shown as a clock time, such as 9:05 or 13:30. */
+/** A clock time on a 12-hour clock: hour 1 to 12, minute 0 to 59, and whether it is PM. */
+export type ClockParts = { hour12: number; minute: number; pm: boolean };
+
+/** Minutes after midnight as 12-hour clock parts: 0 is 12:00 AM, 780 is 1:00 PM. */
+export function to12Hour(minutes: number): ClockParts {
+  const day = ((Math.round(minutes) % MINUTES_PER_DAY) + MINUTES_PER_DAY) % MINUTES_PER_DAY;
+  const hour24 = Math.floor(day / 60);
+  return { hour12: hour24 % 12 === 0 ? 12 : hour24 % 12, minute: day % 60, pm: hour24 >= 12 };
+}
+
+/** The other way round: 12 AM is 0 and 12 PM is 720. */
+export function from12Hour(hour12: number, minute: number, pm: boolean): number {
+  return ((hour12 % 12) + (pm ? 12 : 0)) * 60 + minute;
+}
+
+/** Minutes after midnight shown as a 12-hour clock time, such as 9:05 AM or 1:30 PM. */
 export function formatTime(minutes: number): string {
-  const hours = Math.floor(minutes / 60);
-  const rest = minutes % 60;
-  return `${hours}:${String(rest).padStart(2, '0')}`;
+  const { hour12, minute, pm } = to12Hour(minutes);
+  return `${hour12}:${String(minute).padStart(2, '0')} ${pm ? 'PM' : 'AM'}`;
+}
+
+/** The same clock time moved into the morning or the afternoon. */
+export function withMeridiem(minutes: number, pm: boolean): number {
+  const { hour12, minute } = to12Hour(minutes);
+  return from12Hour(hour12, minute, pm);
+}
+
+function wholeNumber(text: string): number | null {
+  return /^\d{1,4}$/.test(text.trim()) ? Number(text) : null;
+}
+
+/** A typed start time (hour 1 to 12, minute 0 to 59) as minutes after midnight, or null. */
+export function parseTypedStart(hourText: string, minuteText: string, pm: boolean): number | null {
+  const hour = wholeNumber(hourText);
+  const minute = minuteText.trim() === '' ? 0 : wholeNumber(minuteText);
+  if (hour === null || minute === null) return null;
+  if (hour < 1 || hour > 12 || minute > 59) return null;
+  return from12Hour(hour, minute, pm);
+}
+
+/** A typed length (hours and minutes, either may be empty) in minutes, or null if not a number. */
+export function parseTypedDuration(hoursText: string, minutesText: string): number | null {
+  if (hoursText.trim() === '' && minutesText.trim() === '') return null;
+  const hours = hoursText.trim() === '' ? 0 : wholeNumber(hoursText);
+  const minutes = minutesText.trim() === '' ? 0 : wholeNumber(minutesText);
+  if (hours === null || minutes === null) return null;
+  return hours * 60 + minutes;
 }
 
 /** A length of time in plain words: "45 min", "1 h", "1 h 30 min". */

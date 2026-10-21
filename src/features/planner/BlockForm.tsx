@@ -2,16 +2,30 @@ import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
-import { Button, Chip, ConfirmDialog, Text, TextField, spacing } from '../../ui';
+import {
+  Button,
+  Chip,
+  ConfirmDialog,
+  SegmentedControl,
+  Text,
+  TextField,
+  spacing,
+} from '../../ui';
 import type { Task } from '../tasks/types';
 import {
   DURATION_CHOICES,
+  MAX_DURATION,
+  MIN_DURATION,
   START_STEP,
   formatDuration,
   formatTime,
   overlappingBlocks,
+  parseTypedDuration,
+  parseTypedStart,
   shiftStart,
   suggestStart,
+  to12Hour,
+  withMeridiem,
 } from './logic';
 import type { PlanBlock, PlanBlockInput } from './types';
 
@@ -33,6 +47,18 @@ type Props = {
 
 const DEFAULT_DURATION = 60;
 
+const digits = (text: string) => text.replace(/\D/g, '');
+const twoDigits = (value: number) => String(value).padStart(2, '0');
+
+function startTexts(minutes: number) {
+  const { hour12, minute } = to12Hour(minutes);
+  return { hour: String(hour12), minute: twoDigits(minute) };
+}
+
+function durationTexts(minutes: number) {
+  return { hours: String(Math.floor(minutes / 60)), minutes: String(minutes % 60) };
+}
+
 /** The form opens with a fresh state each time because the screen gives it a new `key`. */
 export function BlockForm({
   visible,
@@ -51,8 +77,15 @@ export function BlockForm({
   const [start, setStart] = useState(
     () => block?.startMinutes ?? suggestStart(dayBlocks, DEFAULT_DURATION, nowMinutes),
   );
+  const [hourText, setHourText] = useState(() => startTexts(start).hour);
+  const [minuteText, setMinuteText] = useState(() => startTexts(start).minute);
+  const [lengthHours, setLengthHours] = useState(() => durationTexts(duration).hours);
+  const [lengthMinutes, setLengthMinutes] = useState(() => durationTexts(duration).minutes);
+  const [lengthHint, setLengthHint] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+
+  const pm = start >= 720;
 
   const durations = DURATION_CHOICES.includes(duration as (typeof DURATION_CHOICES)[number])
     ? [...DURATION_CHOICES]
@@ -63,10 +96,43 @@ export function BlockForm({
     block?.id,
   );
 
+  /** Sets the start time and rewrites the hour and minute boxes to match. */
+  function applyStart(next: number) {
+    setStart(next);
+    const texts = startTexts(next);
+    setHourText(texts.hour);
+    setMinuteText(texts.minute);
+  }
+
   function chooseDuration(next: number) {
     setDuration(next);
-    setStart((current) => shiftStart(current, 0, next));
+    const texts = durationTexts(next);
+    setLengthHours(texts.hours);
+    setLengthMinutes(texts.minutes);
+    setLengthHint(null);
+    applyStart(shiftStart(start, 0, next));
     setError(null);
+  }
+
+  function typeStart(nextHour: string, nextMinute: string, nextPm: boolean) {
+    const parsed = parseTypedStart(nextHour, nextMinute, nextPm);
+    if (parsed !== null) setStart(shiftStart(parsed, 0, duration));
+  }
+
+  function typeLength(nextHours: string, nextMinutes: string) {
+    const total = parseTypedDuration(nextHours, nextMinutes);
+    if (total === null) {
+      setLengthHint(null);
+    } else if (total < MIN_DURATION || total > MAX_DURATION) {
+      setLengthHint(
+        `Choose a length from ${formatDuration(MIN_DURATION)} to ${formatDuration(MAX_DURATION)}.`,
+      );
+    } else {
+      setLengthHint(null);
+      setDuration(total);
+      setStart(shiftStart(start, 0, total));
+      setError(null);
+    }
   }
 
   function chooseTask(task: Task) {
@@ -112,6 +178,47 @@ export function BlockForm({
             <Text variant="largeTitle" accessibilityLabel={`Starts at ${formatTime(start)}`}>
               {formatTime(start)}
             </Text>
+            <SegmentedControl<'am' | 'pm'>
+              accessibilityLabel="Morning or afternoon"
+              options={[
+                { value: 'am', label: 'AM' },
+                { value: 'pm', label: 'PM' },
+              ]}
+              value={pm ? 'pm' : 'am'}
+              onChange={(choice) =>
+                applyStart(shiftStart(withMeridiem(start, choice === 'pm'), 0, duration))
+              }
+            />
+            <View style={styles.row}>
+              <View style={styles.field}>
+                <TextField
+                  label="Hour (1 to 12)"
+                  value={hourText}
+                  onChangeText={(text) => {
+                    const clean = digits(text).slice(0, 2);
+                    setHourText(clean);
+                    typeStart(clean, minuteText, pm);
+                  }}
+                  onBlur={() => applyStart(start)}
+                  keyboardType="number-pad"
+                  maxLength={2}
+                />
+              </View>
+              <View style={styles.field}>
+                <TextField
+                  label="Minute (0 to 59)"
+                  value={minuteText}
+                  onChangeText={(text) => {
+                    const clean = digits(text).slice(0, 2);
+                    setMinuteText(clean);
+                    typeStart(hourText, clean, pm);
+                  }}
+                  onBlur={() => applyStart(start)}
+                  keyboardType="number-pad"
+                  maxLength={2}
+                />
+              </View>
+            </View>
             <View style={styles.row}>
               {[
                 { label: '−1 h', spoken: 'One hour earlier', delta: -60 },
@@ -133,7 +240,7 @@ export function BlockForm({
                   accessibilityLabel={step.spoken}
                   variant="secondary"
                   size="compact"
-                  onPress={() => setStart((current) => shiftStart(current, step.delta, duration))}
+                  onPress={() => applyStart(shiftStart(start, step.delta, duration))}
                   style={styles.step}
                 />
               ))}
@@ -154,6 +261,42 @@ export function BlockForm({
                 />
               ))}
             </View>
+            <Text variant="caption" muted>
+              Or type your own length
+            </Text>
+            <View style={styles.row}>
+              <View style={styles.field}>
+                <TextField
+                  label="Hours"
+                  value={lengthHours}
+                  onChangeText={(text) => {
+                    const clean = digits(text).slice(0, 2);
+                    setLengthHours(clean);
+                    typeLength(clean, lengthMinutes);
+                  }}
+                  keyboardType="number-pad"
+                  maxLength={2}
+                />
+              </View>
+              <View style={styles.field}>
+                <TextField
+                  label="Minutes"
+                  value={lengthMinutes}
+                  onChangeText={(text) => {
+                    const clean = digits(text).slice(0, 3);
+                    setLengthMinutes(clean);
+                    typeLength(lengthHours, clean);
+                  }}
+                  keyboardType="number-pad"
+                  maxLength={3}
+                />
+              </View>
+            </View>
+            {lengthHint ? (
+              <Text variant="caption" tone="danger" accessibilityLiveRegion="polite">
+                {lengthHint}
+              </Text>
+            ) : null}
             <Text variant="caption" muted>
               Ends at {formatTime(start + duration)}
             </Text>
@@ -218,4 +361,5 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', gap: spacing.sm },
   wrap: { flexWrap: 'wrap' },
   step: { flex: 1 },
+  field: { flex: 1 },
 });

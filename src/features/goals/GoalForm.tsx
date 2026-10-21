@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { KeyboardAvoidingView, Modal, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
-import { formatShortDate } from '../../lib/dates';
+import { formatShortDate, parseLocalDate, toLocalDateString } from '../../lib/dates';
 import { useTheme } from '../../theme/context';
 import {
   Button,
@@ -13,6 +13,7 @@ import {
   spacing,
   type SegmentOption,
 } from '../../ui';
+import { DatePickerSheet } from '../calendar/DatePickerSheet';
 import { StepRow } from './StepRow';
 import { useGoals } from './GoalsContext';
 import { goalProgress, targetChoiceFor, targetDateFor, type TargetChoice } from './logic';
@@ -36,6 +37,8 @@ export function GoalForm({ visible, goalId, onClose }: Props) {
   const [notes, setNotes] = useState(goal?.notes ?? '');
   const [startingChoice] = useState<TargetChoice>(() => targetChoiceFor(goal?.targetDate ?? null));
   const [choice, setChoice] = useState<TargetChoice>(startingChoice);
+  const [customDate, setCustomDate] = useState<string | null>(null);
+  const [pickingDate, setPickingDate] = useState(false);
   const [stepText, setStepText] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [stepError, setStepError] = useState<string | null>(null);
@@ -55,7 +58,7 @@ export function GoalForm({ visible, goalId, onClose }: Props) {
     return {
       title,
       notes,
-      targetDate: targetDateFor(choice, goal?.targetDate ?? null, new Date()),
+      targetDate: targetDateFor(choice, goal?.targetDate ?? null, new Date(), customDate),
     };
   }
 
@@ -124,6 +127,20 @@ export function GoalForm({ visible, goalId, onClose }: Props) {
               value={choice}
               onChange={setChoice}
             />
+            <Button
+              label={
+                choice === 'custom' && customDate
+                  ? `Target: ${longDate(customDate)}`
+                  : 'Pick a date on the calendar'
+              }
+              accessibilityLabel={
+                choice === 'custom' && customDate
+                  ? `Target date ${longDate(customDate)}. Change it`
+                  : 'Pick a target date on the calendar'
+              }
+              variant={choice === 'custom' ? 'primary' : 'secondary'}
+              onPress={() => setPickingDate(true)}
+            />
           </View>
 
           <Text variant="heading">Steps</Text>
@@ -187,6 +204,20 @@ export function GoalForm({ visible, goalId, onClose }: Props) {
           ) : null}
         </ScrollView>
 
+        {pickingDate ? (
+          <DatePickerSheet
+            title="Target date"
+            value={customDate ?? goal?.targetDate ?? null}
+            minDate={toLocalDateString(new Date())}
+            onPick={(date) => {
+              setCustomDate(date);
+              setChoice('custom');
+              setPickingDate(false);
+            }}
+            onClose={() => setPickingDate(false)}
+          />
+        ) : null}
+
         <ConfirmDialog
           visible={confirmingDelete}
           title="Delete this goal?"
@@ -203,6 +234,19 @@ export function GoalForm({ visible, goalId, onClose }: Props) {
       </KeyboardAvoidingView>
     </Modal>
   );
+}
+
+/** "Friday 6 November 2026". */
+function longDate(value: string): string {
+  const date = parseLocalDate(value);
+  return date
+    ? date.toLocaleDateString(undefined, {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : value;
 }
 
 const styles = StyleSheet.create({

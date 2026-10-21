@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { dayInfo, hasActivity, monthGrid, shiftMonth } from '../logic';
+import { dayInfo, hasActivity, monthGrid, monthName, shiftMonth } from '../logic';
 
 describe('monthGrid', () => {
   it('lays out October 2026 (starts on a Thursday) in whole Monday-first weeks', () => {
@@ -71,5 +71,15 @@ describe('dayInfo', () => {
   it('reports whether anything is on a day', () => {
     expect(hasActivity(dayInfo('2026-10-14', inputs))).toBe(true);
     expect(hasActivity(dayInfo('2026-10-16', inputs))).toBe(false);
+  });
+});
+
+describe('monthName', () => {
+  it('names months and wraps around the year', () => {
+    expect(monthName(0)).toBe('January');
+    expect(monthName(9)).toBe('October');
+    expect(monthName(11)).toBe('December');
+    expect(monthName(12)).toBe('January');
+    expect(monthName(-1)).toBe('December');
   });
 });
