@@ -184,3 +184,13 @@ Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading
 3. Optional later: home-screen widget, cloud sync (only if the app is shared), iOS from the same code, Play Store (`docs/RELEASE.md`).
 4. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.
 5. Housekeeping on GitHub: delete the temporary branches `bootstrap-logs` and `build-local`.
+
+## Phase 13: Home-screen widget (Android)
+
+Branch `feat/today-widget`. Not yet checked on a phone.
+
+- New local Expo module `modules/today-widget` (Kotlin, `AppWidgetProvider` with `RemoteViews`, no extra libraries). It draws text the app hands it: tasks done, focus tasks, next time block and a progress bar.
+- `src/features/widget/logic.ts` builds that text. By default it holds counts and times only. Task and block names appear only when the person picks "Show names" in Settings, because a widget can be read while the app is locked.
+- `WidgetSync` refreshes the widget whenever tasks, focus, blocks or the minute change. If the app has not run today, the widget asks to open Ace Notes rather than showing yesterday's numbers.
+- Settings has a "Home-screen widget" card (Android only) with the names choice and how to add the widget.
+- Removed the temporary module scaffold workflow.
