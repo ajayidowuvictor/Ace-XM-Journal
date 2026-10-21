@@ -38,7 +38,7 @@ function filledDatabases() {
   createTask(app, 'task-2', { title: 'Call mum', notes: '', dueDate: null, priority: 0 }, t(2));
   setTaskCompleted(app, 'task-2', true, t(3));
 
-  createHabit(app, 'habit-1', 'Read', t(1));
+  createHabit(app, 'habit-1', 'Read', t(1), [0, 2, 4]);
   setHabitDone(app, 'habit-1', '2026-10-12', true, t(2));
   setHabitDone(app, 'habit-1', '2026-10-13', true, t(2));
 
@@ -156,6 +156,24 @@ describe('restoring a backup', () => {
 });
 
 describe('parseBackupData', () => {
+  it('reads the days a habit repeats on, and gives older backups every day', () => {
+    const withDays = parseBackupData(
+      JSON.stringify({
+        app: 'ACE XM JOURNAL',
+        habits: [{ id: 'h', name: 'x', completedDates: [], days: [4, 0, 2], createdAt: 'a' }],
+      }),
+    );
+    expect(withDays?.habits[0].days).toEqual([0, 2, 4]);
+
+    const older = parseBackupData(
+      JSON.stringify({
+        app: 'ACE XM JOURNAL',
+        habits: [{ id: 'h', name: 'x', completedDates: [], createdAt: 'a' }],
+      }),
+    );
+    expect(older?.habits[0].days).toEqual([0, 1, 2, 3, 4, 5, 6]);
+  });
+
   it('refuses text that is not an export', () => {
     expect(parseBackupData('nope')).toBeNull();
     expect(parseBackupData('{}')).toBeNull();

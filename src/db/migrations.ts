@@ -104,6 +104,13 @@ export const migrations: readonly Migration[] = [
       ALTER TABLE tasks ADD COLUMN category TEXT NOT NULL DEFAULT 'none';
     `,
   },
+  {
+    version: 7,
+    // Which weekdays a habit repeats on, as digits (0 Monday to 6 Sunday). Every day by default.
+    sql: `
+      ALTER TABLE habits ADD COLUMN days TEXT NOT NULL DEFAULT '0123456';
+    `,
+  },
 ];
 
 /** Applies any migrations the database has not seen yet. Returns the resulting version. */

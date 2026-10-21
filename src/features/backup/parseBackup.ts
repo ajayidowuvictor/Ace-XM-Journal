@@ -1,3 +1,4 @@
+import { daysFromText } from '../habits/logic';
 import { toReminderTime, toRepeatRule, toTaskCategory } from '../tasks/repeat';
 import type { Priority } from '../tasks/types';
 import type { Mood } from '../journal/types';
@@ -81,6 +82,8 @@ export function parseBackupData(jsonText: string): BackupData | null {
           id: id(h.id),
           name: text(h.name),
           completedDates: texts(h.completedDates),
+          // Older backups have no days; a habit without them repeats every day.
+          days: daysFromText(Array.isArray(h.days) ? h.days.join('') : ''),
           createdAt: text(h.createdAt),
         };
       }),

@@ -37,6 +37,7 @@ const habit = (dates: string[]): Habit => ({
   id: 'h',
   name: 'h',
   completedDates: dates,
+  days: [0, 1, 2, 3, 4, 5, 6],
   createdAt: '2026-10-01T00:00:00.000Z',
 });
 

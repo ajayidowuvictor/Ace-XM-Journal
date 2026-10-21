@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from '@jest/globals';
 
-import { createHabit, deleteHabit, listHabits, renameHabit, setHabitDone } from '../habitsRepo';
+import { createHabit, deleteHabit, listHabits, setHabitDone, updateHabit } from '../habitsRepo';
 import { migrate } from '../migrations';
 import { createTestDatabase } from '../testing/testDatabase';
 import type { SqlDatabase } from '../types';
@@ -18,7 +18,9 @@ beforeEach(() => {
 describe('habits repository', () => {
   it('saves and lists a habit with no history', () => {
     createHabit(db, 'h1', 'Read', t1);
-    expect(listHabits(db)).toEqual([{ id: 'h1', name: 'Read', completedDates: [], createdAt: t1 }]);
+    expect(listHabits(db)).toEqual([
+      { id: 'h1', name: 'Read', completedDates: [], days: [0, 1, 2, 3, 4, 5, 6], createdAt: t1 },
+    ]);
   });
 
   it('records days done in date order and ignores repeats', () => {
@@ -48,8 +50,22 @@ describe('habits repository', () => {
 
   it('renames a habit', () => {
     createHabit(db, 'h1', 'Read', t1);
-    renameHabit(db, 'h1', 'Read 10 pages', t2);
+    updateHabit(db, 'h1', 'Read 10 pages', [0, 1, 2, 3, 4, 5, 6], t2);
     expect(listHabits(db)[0].name).toBe('Read 10 pages');
+  });
+
+  it('keeps the days a habit repeats on, and lets them change', () => {
+    createHabit(db, 'h1', 'Gym', t1, [4, 0, 2, 2]);
+    expect(listHabits(db)[0].days).toEqual([0, 2, 4]);
+    updateHabit(db, 'h1', 'Gym', [5, 6], t2);
+    expect(listHabits(db)[0].days).toEqual([5, 6]);
+  });
+
+  it('never stores an empty set of days', () => {
+    createHabit(db, 'h1', 'Gym', t1, []);
+    expect(listHabits(db)[0].days).toEqual([0, 1, 2, 3, 4, 5, 6]);
+    updateHabit(db, 'h1', 'Gym', [], t2);
+    expect(listHabits(db)[0].days).toEqual([0, 1, 2, 3, 4, 5, 6]);
   });
 
   it('removes a deleted habit and its history, keeping an empty marker', () => {

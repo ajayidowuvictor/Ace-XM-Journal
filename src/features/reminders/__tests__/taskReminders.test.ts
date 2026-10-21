@@ -4,6 +4,9 @@ import type { Task } from '../../tasks/types';
 import {
   MAX_TASK_REMINDERS,
   formatClock,
+  isPresetReminder,
+  reminderFromMinutes,
+  reminderMinutes,
   TASK_REMINDER_HIDDEN_BODY,
   TASK_REMINDER_TITLE,
   parseTaskNameChoice,
@@ -118,5 +121,22 @@ describe('formatClock', () => {
   it('leaves anything else as it is', () => {
     expect(formatClock('late')).toBe('late');
     expect(formatClock('25:00')).toBe('25:00');
+  });
+});
+
+describe('typed reminder times', () => {
+  it('tells quick times from typed ones', () => {
+    expect(isPresetReminder('08:00')).toBe(true);
+    expect(isPresetReminder('08:05')).toBe(false);
+  });
+
+  it('converts between stored times and minutes after midnight', () => {
+    expect(reminderMinutes('08:05')).toBe(485);
+    expect(reminderMinutes('23:59')).toBe(1439);
+    expect(reminderMinutes('24:00')).toBeNull();
+    expect(reminderMinutes('off')).toBeNull();
+    expect(reminderFromMinutes(485)).toBe('08:05');
+    expect(reminderFromMinutes(18 * 60 + 20)).toBe('18:20');
+    expect(reminderFromMinutes(0)).toBe('00:00');
   });
 });

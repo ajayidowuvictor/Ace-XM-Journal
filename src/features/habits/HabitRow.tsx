@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useTheme } from '../../theme/context';
 import { Checkbox, Text, minTouchTarget, radius, spacing } from '../../ui';
-import { currentStreak, lastDaysDone, longestStreak } from './logic';
+import { currentStreak, isScheduledOn, lastDaysDone, longestStreak, scheduleLabel } from './logic';
 import type { Habit } from './types';
 
 type Props = {
@@ -26,16 +26,26 @@ export function HabitRow({
 }: Props) {
   const { colors } = useTheme();
   const done = habit.completedDates.includes(today);
-  const streak = currentStreak(habit.completedDates, today);
-  const best = longestStreak(habit.completedDates);
+  const streak = currentStreak(habit.completedDates, today, habit.days);
+  const best = longestStreak(habit.completedDates, habit.days);
+  const everyDay = habit.days.length === 7;
+  const restDay = !isScheduledOn(habit.days, today) && !done;
 
-  const detail = showStreak
+  const unit = everyDay ? (streak === 1 ? 'day' : 'days') : streak === 1 ? 'time' : 'times';
+  const streakText = showStreak
     ? streak > 0
-      ? `${streak} day${streak === 1 ? '' : 's'} in a row  ·  best ${best}`
+      ? `${streak} ${unit} in a row  ·  best ${best}`
       : best > 0
         ? `No streak right now  ·  best ${best}`
         : 'Not started yet'
     : null;
+  const detail = [
+    streakText,
+    everyDay ? null : scheduleLabel(habit.days),
+    restDay ? 'Rest day today' : null,
+  ]
+    .filter((part): part is string => part !== null)
+    .join('  ·  ');
 
   const body = (
     <View style={styles.body}>

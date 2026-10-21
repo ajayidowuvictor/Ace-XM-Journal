@@ -45,3 +45,16 @@ export function shiftDateString(value: string, days: number): string | null {
   const date = parseLocalDate(value);
   return date ? addDays(date, days) : null;
 }
+
+/** A stored date in full, such as "Friday 6 November 2026". Returns the text itself if it is not a date. */
+export function formatFullDate(value: string, locale?: string): string {
+  const date = parseLocalDate(value);
+  return date
+    ? date.toLocaleDateString(locale, {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : value;
+}

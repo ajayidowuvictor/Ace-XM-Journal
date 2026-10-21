@@ -1,6 +1,6 @@
 import { shiftDateString } from '../../lib/dates';
 import type { Habit } from '../habits/types';
-import { currentStreak, doneInLastDays } from '../habits/logic';
+import { currentStreak, plannedInLastDays } from '../habits/logic';
 import type { JournalEntry } from '../journal/types';
 import { moodFor } from '../journal/logic';
 import { weeklySummary, type ReviewInputs, type WeeklySummary } from '../review/logic';
@@ -21,7 +21,7 @@ export function weeklyTrends(inputs: ReviewInputs, today: string, weeks = 8): We
 export type HabitRate = {
   id: string;
   name: string;
-  /** Days done out of the last `days` days. */
+  /** Planned days done, out of the planned days in the last `days` days (`days` below). */
   done: number;
   days: number;
   /** From 0 to 1. */
@@ -33,14 +33,14 @@ export type HabitRate = {
 export function habitRates(habits: readonly Habit[], today: string, days = 30): HabitRate[] {
   return habits
     .map<HabitRate>((habit) => {
-      const done = doneInLastDays(habit.completedDates, today, days);
+      const { planned, done } = plannedInLastDays(habit.completedDates, today, days, habit.days);
       return {
         id: habit.id,
         name: habit.name,
         done,
-        days,
-        rate: days > 0 ? done / days : 0,
-        streak: currentStreak(habit.completedDates, today),
+        days: planned,
+        rate: planned > 0 ? done / planned : 0,
+        streak: currentStreak(habit.completedDates, today, habit.days),
       };
     })
     .sort((a, b) => b.rate - a.rate || b.streak - a.streak || a.name.localeCompare(b.name));

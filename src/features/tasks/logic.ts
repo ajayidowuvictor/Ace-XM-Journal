@@ -58,10 +58,15 @@ export function todaysPriorities(tasks: readonly Task[], today: string): Task[] 
   return [...overdue, ...dueToday];
 }
 
-export type DueChoice = 'none' | 'today' | 'tomorrow' | 'week' | 'keep';
+export type DueChoice = 'none' | 'today' | 'tomorrow' | 'week' | 'keep' | 'custom';
 
 /** The due date a choice on the task form stands for. `keep` leaves an existing date as it is. */
-export function dueDateFor(choice: DueChoice, existing: string | null, now: Date): string | null {
+export function dueDateFor(
+  choice: DueChoice,
+  existing: string | null,
+  now: Date,
+  custom: string | null = null,
+): string | null {
   switch (choice) {
     case 'none':
       return null;
@@ -73,6 +78,8 @@ export function dueDateFor(choice: DueChoice, existing: string | null, now: Date
       return addDays(now, 7);
     case 'keep':
       return existing;
+    case 'custom':
+      return custom;
   }
 }
 
