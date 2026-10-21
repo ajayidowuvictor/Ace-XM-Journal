@@ -199,10 +199,10 @@ export default function SettingsScreen() {
             onChange={setWidgetNames}
           />
           <Text variant="caption" muted>
-            To add it, press and hold an empty spot on your home screen, tap Widgets, then choose Ace
-            Notes: Today. It shows how many tasks are done, your focus tasks and your next time block.
-            Names are hidden by default. If you show them, anyone who sees your home screen can read
-            them, even when Ace Notes is locked.
+            To add it, press and hold an empty spot on your home screen, tap Widgets, then choose
+            Ace Notes: Today. It shows how many tasks are done, your focus tasks and your next time
+            block. Names are hidden by default. If you show them, anyone who sees your home screen
+            can read them, even when Ace Notes is locked.
           </Text>
         </Card>
       ) : null}

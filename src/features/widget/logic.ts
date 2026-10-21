@@ -59,7 +59,9 @@ export function buildWidgetPayload({
 }: WidgetInputs): WidgetPayload {
   const progress = dayProgress(tasks, today);
   const headline =
-    progress.total === 0 ? 'Nothing planned yet' : `${progress.done} of ${progress.total} tasks done`;
+    progress.total === 0
+      ? 'Nothing planned yet'
+      : `${progress.done} of ${progress.total} tasks done`;
 
   const lines: string[] = [];
 
