@@ -32,12 +32,13 @@ export function milestoneCounts(goal: Pick<Goal, 'milestones'>) {
   };
 }
 
-export type TargetChoice = 'none' | 'month' | 'quarter' | 'half' | 'keep';
+export type TargetChoice = 'none' | 'month' | 'quarter' | 'half' | 'keep' | 'custom';
 
 export function targetDateFor(
   choice: TargetChoice,
   existing: string | null,
   now: Date,
+  custom: string | null = null,
 ): string | null {
   switch (choice) {
     case 'none':
@@ -50,6 +51,8 @@ export function targetDateFor(
       return addDays(now, 180);
     case 'keep':
       return existing;
+    case 'custom':
+      return custom;
   }
 }
 

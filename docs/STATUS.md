@@ -130,6 +130,14 @@ Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading
 - Restyled through the shared tokens and components so every screen follows: soft grey page and flat tiles in light mode, true black and charcoal tiles in dark mode, no card shadows or borders, pill buttons, bigger semibold titles with tight spacing, 24 pt margins and more space between blocks, Home greeting as a large title, no divider under the top bar. See `docs/DESIGN.md`.
 - _Tested by code only:_ colour contrast (WCAG AA) and text-size tests pass. _Not yet verified:_ how it looks on the phone. Nothing here could be previewed in the build environment, so spacing and wrapping of long titles need the owner's eye (largest text size especially).
 
+## Phase 11: clock times, block lengths and goal dates
+
+- **12-hour clock everywhere in the planner:** times read "1:30 PM" (never 13:30). The block form has an AM/PM switch, typed hour and minute boxes, and the earlier plus and minus buttons.
+- **Custom block length:** type hours and minutes (5 minutes to 12 hours) next to the quick choices.
+- **Goal target date:** the three quick choices stay, and "Pick a date on the calendar" opens a month calendar (new `DatePickerSheet`, no outside library; past dates cannot be chosen, and there are month and year arrows).
+- Tasks still use the quick due-date choices only; the same calendar could be added there.
+- _Tested by code only:_ the time and date logic. _Not yet verified:_ the forms on the phone (keyboard behaviour when typing times, calendar layout at large text sizes).
+
 ## Device testing history
 
 - Phase 2 build: first launch showed "Unmatched Route"; fixed with an entry route; retest passed.
