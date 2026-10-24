@@ -111,6 +111,13 @@ export const migrations: readonly Migration[] = [
       ALTER TABLE habits ADD COLUMN days TEXT NOT NULL DEFAULT '0123456';
     `,
   },
+  {
+    version: 8,
+    // The goal a task counts towards, or nothing. Tasks without a goal are unchanged.
+    sql: `
+      ALTER TABLE tasks ADD COLUMN goal_id TEXT;
+    `,
+  },
 ];
 
 /** Applies any migrations the database has not seen yet. Returns the resulting version. */

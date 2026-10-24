@@ -20,6 +20,7 @@ function task(overrides: Partial<Task> = {}): Task {
     repeat: 'daily',
     reminderTime: '08:00',
     category: 'routine',
+    goalId: null,
     completedAt: null,
     createdAt: '2026-10-01T00:00:00.000Z',
     updatedAt: '2026-10-01T00:00:00.000Z',

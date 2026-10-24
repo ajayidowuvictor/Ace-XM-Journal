@@ -7,6 +7,7 @@ import {
   deleteTask,
   listTasks,
   setTaskCompleted,
+  setTaskGoal,
   updateTask,
 } from '../../db/tasksRepo';
 import type { SqlDatabase } from '../../db/types';
@@ -25,6 +26,8 @@ type TasksValue = {
   addTask: (input: TaskInput) => { id: string | null; error: string | null };
   edit: (id: string, input: TaskInput) => string | null;
   setCompleted: (id: string, completed: boolean) => void;
+  /** Links a task to a goal, or to no goal when `goalId` is null. */
+  setGoal: (id: string, goalId: string | null) => void;
   remove: (id: string) => void;
   /** Re-reads everything from the database (used after all data is erased). */
   reload: () => void;
@@ -37,6 +40,7 @@ const TasksContext = createContext<TasksValue>({
   addTask: () => ({ id: null, error: null }),
   edit: () => null,
   setCompleted: () => {},
+  setGoal: () => {},
   remove: () => {},
   reload: () => {},
 });
@@ -117,6 +121,13 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     [run],
   );
 
+  const setGoal = useCallback(
+    (id: string, goalId: string | null) => {
+      run((database, now) => setTaskGoal(database, id, goalId, now));
+    },
+    [run],
+  );
+
   const remove = useCallback(
     (id: string) => {
       run((database, now) => deleteTask(database, id, now));
@@ -129,8 +140,8 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   }, [db]);
 
   const value = useMemo(
-    () => ({ tasks, error, add, addTask, edit, setCompleted, remove, reload }),
-    [tasks, error, add, addTask, edit, setCompleted, remove, reload],
+    () => ({ tasks, error, add, addTask, edit, setCompleted, setGoal, remove, reload }),
+    [tasks, error, add, addTask, edit, setCompleted, setGoal, remove, reload],
   );
 
   return <TasksContext.Provider value={value}>{children}</TasksContext.Provider>;

@@ -32,6 +32,7 @@ function filledDatabases() {
       repeat: 'monthly',
       reminderTime: '09:00',
       category: 'health',
+      goalId: 'goal-1',
     },
     t(1),
   );
@@ -172,6 +173,32 @@ describe('parseBackupData', () => {
       }),
     );
     expect(older?.habits[0].days).toEqual([0, 1, 2, 3, 4, 5, 6]);
+  });
+
+  it('reads which goal a task counts towards, and drops links to goals that are not there', () => {
+    const task = (id: string, extra: object) => ({
+      id,
+      title: id,
+      notes: '',
+      dueDate: null,
+      priority: 0,
+      completedAt: null,
+      createdAt: 'a',
+      updatedAt: 'a',
+      ...extra,
+    });
+    const parsed = parseBackupData(
+      JSON.stringify({
+        app: 'ACE XM JOURNAL',
+        tasks: [
+          task('linked', { goalId: 'g1' }),
+          task('dangling', { goalId: 'gone' }),
+          task('older', {}),
+        ],
+        goals: [{ id: 'g1', title: 'Goal', notes: '', createdAt: 'a', milestones: [] }],
+      }),
+    );
+    expect(parsed?.tasks.map((x) => x.goalId)).toEqual(['g1', null, null]);
   });
 
   it('refuses text that is not an export', () => {
