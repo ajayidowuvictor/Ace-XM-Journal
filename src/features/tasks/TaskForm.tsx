@@ -24,6 +24,7 @@ import {
   spacing,
   type SegmentOption,
 } from '../../ui';
+import { useGoals } from '../goals/GoalsContext';
 import { choiceFor, dueDateFor, type DueChoice } from './logic';
 import {
   CATEGORY_LABELS,
@@ -59,6 +60,7 @@ const PRIORITY_OPTIONS: readonly SegmentOption<`${Priority}`>[] = [
 /** The form opens with a fresh state each time because the screen gives it a new `key`. */
 export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
   const { colors } = useTheme();
+  const { goals } = useGoals();
   const now = new Date();
   const [title, setTitle] = useState(task?.title ?? '');
   const [notes, setNotes] = useState(task?.notes ?? '');
@@ -68,6 +70,7 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
   const [repeat, setRepeat] = useState<RepeatRule>(task?.repeat ?? 'none');
   const [reminder, setReminder] = useState<string>(reminderChoiceFor(task?.reminderTime ?? null));
   const [category, setCategory] = useState<TaskCategory>(task?.category ?? 'none');
+  const [goalId, setGoalId] = useState<string | null>(task?.goalId ?? null);
   const [customDate, setCustomDate] = useState<string | null>(null);
   const [pickingDate, setPickingDate] = useState(false);
   const [otherTime, setOtherTime] = useState(
@@ -126,6 +129,7 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
       repeat: dueDate ? repeat : 'none',
       reminderTime: dueDate && reminder !== 'off' ? reminder : null,
       category,
+      goalId,
     });
     if (problem) setError(problem);
   }
@@ -277,6 +281,38 @@ export function TaskForm({ visible, task, onSave, onDelete, onClose }: Props) {
                 ))}
               </View>
             </View>
+
+            {goals.some((goal) => !goal.completedAt || goal.id === goalId) ? (
+              <View style={styles.group}>
+                <Text variant="caption" muted>
+                  Goal
+                </Text>
+                <View style={styles.chips}>
+                  <Chip
+                    label="No goal"
+                    accessibilityLabel="Not part of a goal"
+                    selected={goalId === null}
+                    onPress={() => setGoalId(null)}
+                  />
+                  {goals
+                    .filter((goal) => !goal.completedAt || goal.id === goalId)
+                    .map((goal) => (
+                      <Chip
+                        key={goal.id}
+                        label={goal.title}
+                        accessibilityLabel={`Goal: ${goal.title}`}
+                        selected={goalId === goal.id}
+                        onPress={() => setGoalId(goal.id)}
+                      />
+                    ))}
+                </View>
+                {repeat !== 'none' ? (
+                  <Text variant="caption" muted>
+                    A repeating task counts towards the goal once. Its next copies are not linked.
+                  </Text>
+                ) : null}
+              </View>
+            ) : null}
           </Card>
 
           <Button label={saveLabel} onPress={save} />

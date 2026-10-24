@@ -15,6 +15,7 @@ describe('buildExport', () => {
           repeat: 'none',
           reminderTime: null,
           category: 'none',
+          goalId: null,
           completedAt: null,
           createdAt: 'x',
           updatedAt: 'x',

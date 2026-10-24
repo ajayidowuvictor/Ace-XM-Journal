@@ -1,15 +1,17 @@
 import { beforeEach, describe, expect, it } from '@jest/globals';
 
 import type { TaskInput } from '../../features/tasks/types';
-import { migrate } from '../migrations';
+import { migrate, migrations } from '../migrations';
 import {
   completeTask,
   createTask,
   deleteTask,
   listTasks,
   setTaskCompleted,
+  setTaskGoal,
   updateTask,
 } from '../tasksRepo';
+import { createGoal, deleteGoal } from '../goalsRepo';
 import type { SqlDatabase } from '../types';
 import { createTestDatabase } from '../testing/testDatabase';
 
@@ -43,6 +45,7 @@ describe('tasks repository', () => {
         repeat: 'none',
         reminderTime: null,
         category: 'none',
+        goalId: null,
         completedAt: null,
         createdAt: t1,
         updatedAt: t1,
@@ -178,5 +181,61 @@ describe('tasks repository', () => {
     completeTask(db, 'rep', '2026-10-14', t2, 'n1');
     expect(completeTask(db, 'rep', '2026-10-14', t2, 'n2')).toBeNull();
     expect(listTasks(db)).toHaveLength(3);
+  });
+});
+
+describe('linking tasks to goals', () => {
+  it('saves the goal a task counts towards and starts with none', () => {
+    createTask(db, 'a', input, t1);
+    createTask(db, 'b', { ...input, goalId: 'g1' }, t1);
+    expect(listTasks(db).map((task) => task.goalId)).toEqual([null, 'g1']);
+  });
+
+  it('links and unlinks a task', () => {
+    createTask(db, 'a', input, t1);
+    setTaskGoal(db, 'a', 'g1', t2);
+    expect(listTasks(db)[0]).toMatchObject({ goalId: 'g1', updatedAt: t2 });
+    setTaskGoal(db, 'a', null, t2);
+    expect(listTasks(db)[0].goalId).toBeNull();
+  });
+
+  it('keeps the link when a task is edited without one, and changes it when given', () => {
+    createTask(db, 'a', { ...input, goalId: 'g1' }, t1);
+    updateTask(db, 'a', { ...input, title: 'Changed' }, t2);
+    expect(listTasks(db)[0]).toMatchObject({ title: 'Changed', goalId: 'g1' });
+    updateTask(db, 'a', { ...input, goalId: 'g2' }, t2);
+    expect(listTasks(db)[0].goalId).toBe('g2');
+    updateTask(db, 'a', { ...input, goalId: null }, t2);
+    expect(listTasks(db)[0].goalId).toBeNull();
+  });
+
+  it('does not link the next copy of a repeating task', () => {
+    createTask(db, 'a', { ...input, repeat: 'daily', goalId: 'g1' }, t1);
+    completeTask(db, 'a', '2026-10-14', t2, 'b');
+    const tasks = listTasks(db);
+    expect(tasks.find((task) => task.id === 'a')?.goalId).toBe('g1');
+    expect(tasks.find((task) => task.id === 'b')?.goalId).toBeNull();
+  });
+
+  it('unlinks the tasks of a goal that is deleted, and leaves other tasks alone', () => {
+    createGoal(db, 'g1', { title: 'Run', notes: '', targetDate: null }, t1);
+    createGoal(db, 'g2', { title: 'Read', notes: '', targetDate: null }, t1);
+    createTask(db, 'a', { ...input, goalId: 'g1' }, t1);
+    createTask(db, 'b', { ...input, goalId: 'g2' }, t1);
+
+    deleteGoal(db, 'g1', t2);
+
+    const byId = Object.fromEntries(listTasks(db).map((task) => [task.id, task.goalId]));
+    expect(byId).toEqual({ a: null, b: 'g2' });
+  });
+
+  it('adds the goal column without touching existing tasks', () => {
+    const old = createTestDatabase();
+    migrate(old, migrations.filter((m) => m.version <= 7));
+    old.run(
+      `INSERT INTO tasks (id, title, notes, priority, created_at, updated_at) VALUES ('x', 'Old', '', 0, 'c', 'u')`,
+    );
+    migrate(old);
+    expect(listTasks(old)).toMatchObject([{ id: 'x', title: 'Old', goalId: null }]);
   });
 });

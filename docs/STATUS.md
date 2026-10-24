@@ -194,3 +194,16 @@ Branch `feat/today-widget`. Not yet checked on a phone.
 - `WidgetSync` refreshes the widget whenever tasks, focus, blocks or the minute change. If the app has not run today, the widget asks to open Ace Notes rather than showing yesterday's numbers.
 - Settings has a "Home-screen widget" card (Android only) with the names choice and how to add the widget.
 - Removed the temporary module scaffold workflow.
+
+## Phase 14: Tasks linked to goals
+
+Branch `feat/task-goal-link`, stacked on the widget branch. Not yet checked on a phone.
+
+- Database version 8 adds an optional `goal_id` to tasks. Existing tasks stay as they are (no goal).
+- A goal's progress now counts its steps and its linked tasks together. A goal marked achieved is always full.
+- Task form: a "Goal" row of choices (open goals plus "No goal").
+- Goal form: "Tasks for this goal" lists linked tasks with Unlink, and offers the six newest open tasks without a goal to add.
+- The Goals list shows "x of y tasks" next to the steps.
+- Deleting a goal unlinks its tasks; the tasks are kept.
+- A repeating task counts towards a goal once; its later copies are not linked.
+- Backups and exports carry the link. Older backups restore with no links, and a link to a goal missing from the backup is dropped.

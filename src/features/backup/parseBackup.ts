@@ -57,7 +57,7 @@ export function parseBackupData(jsonText: string): BackupData | null {
 
     const plans = root.dayPlans === undefined ? {} : obj(root.dayPlans);
 
-    return {
+    const parsed = {
       tasks: list(root.tasks).map((raw) => {
         const t = obj(raw);
         const createdAt = text(t.createdAt);
@@ -71,6 +71,8 @@ export function parseBackupData(jsonText: string): BackupData | null {
           repeat: toRepeatRule(t.repeat),
           reminderTime: toReminderTime(t.reminderTime),
           category: toTaskCategory(t.category),
+          // Older backups have no goal links.
+          goalId: textOrNull(t.goalId),
           completedAt: textOrNull(t.completedAt),
           createdAt,
           updatedAt: text(t.updatedAt, createdAt),
@@ -167,6 +169,15 @@ export function parseBackupData(jsonText: string): BackupData | null {
           updatedAt: text(n.updatedAt, createdAt),
         };
       }),
+    };
+
+    // A link to a goal that is not in the backup would point at nothing, so it is dropped.
+    const goalIds = new Set(parsed.goals.map((goal) => goal.id));
+    return {
+      ...parsed,
+      tasks: parsed.tasks.map((task) =>
+        task.goalId !== null && !goalIds.has(task.goalId) ? { ...task, goalId: null } : task,
+      ),
     };
   } catch {
     return null;
