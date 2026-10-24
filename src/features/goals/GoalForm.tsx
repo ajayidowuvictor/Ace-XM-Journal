@@ -199,9 +199,7 @@ export function GoalForm({ visible, goalId, onClose }: Props) {
           <Button label="Add step" variant="secondary" onPress={addStepNow} />
 
           <Text variant="heading">Tasks for this goal</Text>
-          <Text muted>
-            Finishing a task here moves the goal forward, together with its steps.
-          </Text>
+          <Text muted>Finishing a task here moves the goal forward, together with its steps.</Text>
           {linked.map((task) => (
             <View key={task.id} style={styles.taskRow}>
               <View style={styles.taskTitle}>

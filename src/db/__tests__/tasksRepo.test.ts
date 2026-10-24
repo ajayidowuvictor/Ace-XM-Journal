@@ -231,7 +231,10 @@ describe('linking tasks to goals', () => {
 
   it('adds the goal column without touching existing tasks', () => {
     const old = createTestDatabase();
-    migrate(old, migrations.filter((m) => m.version <= 7));
+    migrate(
+      old,
+      migrations.filter((m) => m.version <= 7),
+    );
     old.run(
       `INSERT INTO tasks (id, title, notes, priority, created_at, updated_at) VALUES ('x', 'Old', '', 0, 'c', 'u')`,
     );

@@ -21,7 +21,10 @@ export function validateMilestoneTitle(title: string): string | null {
 type LinkedTask = Pick<Task, 'completedAt'>;
 
 /** The tasks that count towards a goal, oldest first as given. */
-export function tasksForGoal<T extends Pick<Task, 'goalId'>>(tasks: readonly T[], goalId: string): T[] {
+export function tasksForGoal<T extends Pick<Task, 'goalId'>>(
+  tasks: readonly T[],
+  goalId: string,
+): T[] {
   return tasks.filter((task) => task.goalId === goalId);
 }
 
