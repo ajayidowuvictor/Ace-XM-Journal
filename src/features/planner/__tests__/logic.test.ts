@@ -26,6 +26,7 @@ import {
   suggestStart,
   timeRange,
   tomorrowHeadline,
+  tomorrowPlan,
   validateBlock,
   withFocus,
   withoutFocus,
@@ -409,5 +410,45 @@ describe('wrap-up text', () => {
     ];
     expect(findWrapUp(entries, TODAY)?.id).toBe('mine');
     expect(findWrapUp(entries, '2026-10-13')).toBeNull();
+  });
+});
+
+describe('tomorrowPlan', () => {
+  const TOMORROW = '2026-10-16';
+
+  it('uses the first written line as the task title, tidied up', () => {
+    expect(tomorrowPlan('\n   Call   Ada  about the\tinvoice \nThen rest', [], TOMORROW)).toEqual({
+      title: 'Call Ada about the invoice',
+      existingTaskId: null,
+    });
+  });
+
+  it('has nothing to plan when nothing is written', () => {
+    expect(tomorrowPlan('', [], TOMORROW)).toBeNull();
+    expect(tomorrowPlan('  \n \t ', [], TOMORROW)).toBeNull();
+  });
+
+  it('keeps a very long line within the title limit', () => {
+    const plan = tomorrowPlan('x'.repeat(500), [], TOMORROW);
+    expect(plan?.title.length).toBe(200);
+    expect(plan?.title.endsWith('…')).toBe(true);
+  });
+
+  it('reuses an open task due tomorrow with the same title, ignoring letter case', () => {
+    const tasks = [
+      task('Call Ada', { dueDate: TOMORROW }),
+      task('Other', { dueDate: TOMORROW }),
+    ];
+    expect(tomorrowPlan('call ada', tasks, TOMORROW)?.existingTaskId).toBe('Call Ada');
+  });
+
+  it('does not reuse a finished task, a task due another day, or a task with another title', () => {
+    const tasks = [
+      task('Call Ada', { dueDate: TOMORROW, completedAt: '2026-10-15T08:00:00.000Z' }),
+      task('Call Bola', { dueDate: '2026-10-17' }),
+      task('Call Ade', { dueDate: TOMORROW }),
+    ];
+    expect(tomorrowPlan('Call Ada', tasks, TOMORROW)?.existingTaskId).toBeNull();
+    expect(tomorrowPlan('Call Bola', tasks, TOMORROW)?.existingTaskId).toBeNull();
   });
 });

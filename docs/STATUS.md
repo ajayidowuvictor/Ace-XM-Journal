@@ -207,3 +207,11 @@ Branch `feat/task-goal-link`, stacked on the widget branch. Not yet checked on a
 - Deleting a goal unlinks its tasks; the tasks are kept.
 - A repeating task counts towards a goal once; its later copies are not linked.
 - Backups and exports carry the link. Older backups restore with no links, and a link to a goal missing from the backup is dropped.
+
+## Phase 15: Evening wrap-up, mood and tomorrow's focus
+
+Branch `feat/evening-wrap-up`. Not yet checked on a phone.
+
+- The wrap-up card on Home (shown from 5 PM) already saved "what went well" and "what matters tomorrow" to the journal. It now also takes a mood (1 to 5), saved on the wrap-up's journal entry.
+- New button "Make it tomorrow's focus": the first line of "what matters tomorrow" becomes a task due tomorrow and is added to tomorrow's focus (at most three). An open task due tomorrow with the same title is reused, so tapping twice never adds it twice. No database change.
+- Not built yet from the Version 2 list: focus timer, reminder actions (done/snooze), task checklists, automatic backup to a folder.

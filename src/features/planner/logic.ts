@@ -1,4 +1,4 @@
-import { groupTasks } from '../tasks/logic';
+import { MAX_TITLE_LENGTH, groupTasks } from '../tasks/logic';
 import type { Task } from '../tasks/types';
 import type { JournalEntry } from '../journal/types';
 import { MAX_FOCUS, type FocusRow, type PlanBlock, type PlanBlockInput } from './types';
@@ -325,6 +325,38 @@ export function parseWrapUp(body: string): WrapUp {
     wentWell: section(wentIndex, WENT_WELL, tomorrowIndex),
     tomorrow: section(tomorrowIndex, TOMORROW, wentIndex),
   };
+}
+
+export type TomorrowPlan = {
+  /** The task title taken from the wrap-up line. */
+  title: string;
+  /** An open task already due that day with the same title, so nothing is added twice. */
+  existingTaskId: string | null;
+};
+
+/**
+ * Turns the "What matters tomorrow" text into something to plan: its first non-empty line becomes
+ * the task title. Returns null when there is nothing written.
+ */
+export function tomorrowPlan(
+  text: string,
+  tasks: readonly Task[],
+  tomorrow: string,
+): TomorrowPlan | null {
+  const first = text
+    .split('\n')
+    .map((line) => line.trim().replace(/\s+/g, ' '))
+    .find((line) => line.length > 0);
+  if (!first) return null;
+  const title =
+    first.length > MAX_TITLE_LENGTH ? `${first.slice(0, MAX_TITLE_LENGTH - 1).trimEnd()}…` : first;
+  const existing = tasks.find(
+    (task) =>
+      task.completedAt === null &&
+      task.dueDate === tomorrow &&
+      task.title.trim().toLowerCase() === title.toLowerCase(),
+  );
+  return { title, existingTaskId: existing?.id ?? null };
 }
 
 export function wrapUpTitle(shortDate: string): string {

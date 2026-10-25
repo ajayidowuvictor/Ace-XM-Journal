@@ -29,6 +29,7 @@ import {
   focusTasks,
   minutesOfDay,
   tomorrowHeadline,
+  tomorrowPlan,
   withFocus,
   withoutFocus,
   wrapUpTitle,
@@ -39,6 +40,7 @@ import { useBlockEditor } from '@/features/planner/useBlockEditor';
 import { WrapUpCard } from '@/features/planner/WrapUpCard';
 import { useTasks } from '@/features/tasks/TasksContext';
 import { useTaskEditor } from '@/features/tasks/useTaskEditor';
+import type { Mood } from '@/features/journal/types';
 import type { Task } from '@/features/tasks/types';
 import { addDays, formatShortDate, parseLocalDate, toLocalDateString } from '@/lib/dates';
 import { formatLongDate, greetingForHour } from '@/lib/greeting';
@@ -145,13 +147,13 @@ export default function HomeScreen() {
     });
   }
 
-  function saveWrapUp(wentWell: string, next: string): boolean {
+  function saveWrapUp(wentWell: string, next: string, mood: Mood | null): boolean {
     const body = composeWrapUp({ wentWell, tomorrow: next });
     if (wrapUp) {
       return save(wrapUp.id, {
         title: wrapUp.title,
         body,
-        mood: wrapUp.mood,
+        mood,
         tags: wrapUp.tags,
       });
     }
@@ -159,10 +161,38 @@ export default function HomeScreen() {
       create({
         title: wrapUpTitle(formatShortDate(today)),
         body,
-        mood: null,
+        mood,
         tags: [WRAP_UP_TAG],
       }) !== null
     );
+  }
+
+  /** Puts the wrap-up's "what matters tomorrow" line into tomorrow's focus. Returns a message. */
+  function planTomorrow(text: string): string {
+    const plan = tomorrowPlan(text, tasks, tomorrow);
+    if (!plan) return 'Write one line first.';
+    const tomorrowIds = focusTasks(focus, tasks, tomorrow).map((task) => task.id);
+
+    let taskId = plan.existingTaskId;
+    let added = false;
+    if (!taskId) {
+      const result = addTask({ title: plan.title, notes: '', dueDate: tomorrow, priority: 0 });
+      if (result.error || !result.id) {
+        return result.error ?? 'Your change could not be saved. Please try again.';
+      }
+      taskId = result.id;
+      added = true;
+    }
+
+    if (tomorrowIds.includes(taskId)) return "It is already in tomorrow's focus.";
+    const next = withFocus(tomorrowIds, taskId);
+    if (!next) {
+      return added
+        ? "Added to tomorrow. Its focus list already has three, so it was not added there."
+        : "Tomorrow's focus already has three tasks.";
+    }
+    setFocus(tomorrow, next);
+    return "Added to tomorrow's focus.";
   }
 
   return (
@@ -313,6 +343,7 @@ export default function HomeScreen() {
           existing={wrapUp}
           journalReady={journalStatus === 'ready'}
           onSave={saveWrapUp}
+          onPlanTomorrow={planTomorrow}
         />
       ) : null}
 
