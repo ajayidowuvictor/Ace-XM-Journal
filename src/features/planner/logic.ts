@@ -1,4 +1,4 @@
-import { MAX_TITLE_LENGTH, groupTasks } from '../tasks/logic';
+import { MAX_TITLE_LENGTH as MAX_TASK_TITLE_LENGTH, groupTasks } from '../tasks/logic';
 import type { Task } from '../tasks/types';
 import type { JournalEntry } from '../journal/types';
 import { MAX_FOCUS, type FocusRow, type PlanBlock, type PlanBlockInput } from './types';
@@ -349,7 +349,9 @@ export function tomorrowPlan(
     .find((line) => line.length > 0);
   if (!first) return null;
   const title =
-    first.length > MAX_TITLE_LENGTH ? `${first.slice(0, MAX_TITLE_LENGTH - 1).trimEnd()}…` : first;
+    first.length > MAX_TASK_TITLE_LENGTH
+      ? `${first.slice(0, MAX_TASK_TITLE_LENGTH - 1).trimEnd()}…`
+      : first;
   const existing = tasks.find(
     (task) =>
       task.completedAt === null &&
