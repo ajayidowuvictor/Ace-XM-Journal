@@ -1,0 +1,82 @@
+commit: 1cdb267f346fb2e69604df0be1fc2f29f203f08a
+
+│ :react-native-gesture-ha…er:compileReleaseKotlin │      18.9s │     2.3% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-screens:bu…lWithDebInfo[arm64-v8a] │      18.2s │     2.2% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:checkReleaseDuplicateClasses                │      16.9s │     2.0% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo-constants:lintVitalAnalyzeRelease          │      16.7s │     2.0% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo-sqlite:compileReleaseKotlin                │      16.4s │     2.0% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo:compileReleaseKotlin                       │      16.3s │     2.0% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-worklets:generateReleaseLintModel  │      15.7s │     1.9% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-worklets:c…lWithDebInfo[arm64-v8a] │      15.2s │     1.8% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:mergeDexRelease                             │      15.0s │     1.8% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-screens:co…lWithDebInfo[arm64-v8a] │      15.0s │     1.8% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:mergeReleaseGlobalSynthetics                │      13.5s │     1.6% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo-sqlite:lintVitalAnalyzeRelease             │      12.5s │     1.5% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-safe-area-…lintVitalAnalyzeRelease │      11.6s │     1.4% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo:compileReleaseJavaWithJavac                │       8.2s │     1.0% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-safe-area-…tractReleaseAnnotations │       8.0s │     1.0% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-screens:co…ileReleaseJavaWithJavac │       8.0s │     1.0% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:mapReleaseSourceSetPaths                    │       7.3s │     0.9% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo-modules-core:confi…lWithDebInfo[arm64-v8a] │       7.2s │     0.9% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:processReleaseResources                     │       6.4s │     0.8% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo-sqlite:configureCM…lWithDebInfo[arm64-v8a] │       5.5s │     0.7% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:mergeReleaseJavaResource                    │       5.3s │     0.6% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-reanimated…ileReleaseJavaWithJavac │       5.3s │     0.6% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:configureCMakeRelWithDebInfo[arm64-v8a]     │       4.8s │     0.6% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo:generateReleaseLintModel                   │       4.7s │     0.6% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-gesture-ha…lWithDebInfo[arm64-v8a] │       4.4s │     0.5% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:compileReleaseArtProfile                    │       3.9s │     0.5% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo-modules-core:generateReleaseLintModel      │       3.9s │     0.5% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-worklets:compileReleaseKotlin      │       3.6s │     0.4% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:lintVitalAnalyzeRelease                     │       3.3s │     0.4% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:optimizeReleaseResources                    │       3.2s │     0.4% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:mergeReleaseNativeDebugMetadata             │       3.0s │     0.4% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-gesture-ha…lWithDebInfo[arm64-v8a] │       2.8s │     0.3% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:compileReleaseKotlin                        │       2.8s │     0.3% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-reanimated…lWithDebInfo[arm64-v8a] │       2.2s │     0.3% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:mergeReleaseNativeLibs                      │       2.2s │     0.3% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-worklets:c…ileReleaseJavaWithJavac │       2.0s │     0.2% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:processReleaseMainManifest                  │       1.9s │     0.2% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:packageRelease                              │       1.8s │     0.2% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :compileKotlin                                   │       1.6s │     0.2% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo-constants:javaPreCompileRelease            │       1.6s │     0.2% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:stripReleaseDebugSymbols                    │       1.4s │     0.2% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo-sqlite:mergeReleaseNativeLibs              │       1.4s │     0.2% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo-modules-core:bundleLibRuntimeToDirRelease  │       1.3s │     0.2% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-gesture-ha…ileReleaseJavaWithJavac │       1.1s │     0.1% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :react-native-gesture-ha…:mergeReleaseNativeLibs │       1.1s │     0.1% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :app:collectReleaseDependencies                  │       1.1s │     0.1% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+│ :expo-sqlite:generateReleaseLintModel            │       1.0s │     0.1% │ executed   │ ░░░░░░░░░░░░░░░░░░░░ │
+├──────────────────────────────────────────────────┼────────────┼──────────┼────────────┼──────────────────────┤
+│ TOTAL                                            │     832.1s │   100.0% │            │                      │
+└──────────────────────────────────────────────────┴────────────┴──────────┴────────────┴──────────────────────┘
+
+[UPLOAD_APPLICATION_ARCHIVE] Application archives:
+[UPLOAD_APPLICATION_ARCHIVE]   - /tmp/runner/eas-build-local-nodejs/84f21867-99f4-44ea-b6cf-3cd208523eef/build/android/app/build/outputs/apk/release/app-release.apk (55.4 MB)
+[UPLOAD_APPLICATION_ARCHIVE] Uploading application archive...
+[PREPARE_ARTIFACTS] Preparing artifacts
+[PREPARE_ARTIFACTS] Writing artifacts to /home/runner/work/Ace-XM-Journal/Ace-XM-Journal/ace-xm-journal.apk
+[SAVE_CACHE] Local builds do not support saving cache.
+
+Build successful
+You can find the build artifacts in /home/runner/work/Ace-XM-Journal/Ace-XM-Journal/ace-xm-journal.apk
+
+===== CHECK =====
+commit: 1cdb267f346fb2e69604df0be1fc2f29f203f08a
+-rw-r--r-- 1 runner runner 58109878 Oct 25 12:10 /home/runner/work/Ace-XM-Journal/Ace-XM-Journal/ace-xm-journal.apk
+-- zip test
+No errors detected in compressed data of /home/runner/work/Ace-XM-Journal/Ace-XM-Journal/ace-xm-journal.apk.
+-- package
+package: name='com.ajayidowuvictor.acexmjournal' versionCode='1' versionName='1.0.0' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'
+targetSdkVersion:'36'
+application-label:'Ace Notes'
+native-code: 'arm64-v8a'
+-- abis in apk
+lib/arm64-v8a/
+-- signature
+Verifies
+V2 Signer: certificate SHA-256 digest: bfa50fcbdd32828f82e9a3eaafc5b38215a67251cb75cb9af86f8ffea6acb797
+CERT MATCH: same signing certificate as earlier builds
+
+===== RELEASE =====
+https://github.com/ajayidowuvictor/Ace-XM-Journal/releases/tag/test-1cdb267
