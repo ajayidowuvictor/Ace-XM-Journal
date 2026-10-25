@@ -24,6 +24,7 @@ function task(id: string, title: string, overrides: Partial<Task> = {}): Task {
     repeat: 'none',
     reminderTime: null,
     category: 'none',
+    goalId: null,
     completedAt: null,
     createdAt: '2026-10-01T00:00:00.000Z',
     updatedAt: '2026-10-01T00:00:00.000Z',
@@ -41,7 +42,13 @@ const goal: Goal = {
   milestones: [{ id: 'm1', goalId: 'g1', title: 'Buy new shoes', completedAt: null }],
 };
 
-const habit: Habit = { id: 'h1', name: 'Read the Bible', completedDates: [], createdAt: 'x' };
+const habit: Habit = {
+  id: 'h1',
+  name: 'Read the Bible',
+  completedDates: [],
+  days: [0, 1, 2, 3, 4, 5, 6],
+  createdAt: 'x',
+};
 
 const entry: JournalEntry = {
   id: 'e1',

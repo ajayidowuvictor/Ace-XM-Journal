@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/widget_root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@drawable/today_widget_background"
+  android:orientation="vertical"
+  android:padding="16dp">
+
+  <TextView
+    android:id="@+id/widget_title"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/today_widget_name"
+    android:textColor="@color/today_widget_muted"
+    android:textSize="13sp" />
+
+  <TextView
+    android:id="@+id/widget_headline"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:maxLines="2"
+    android:text="@string/today_widget_empty"
+    android:textColor="@color/today_widget_text"
+    android:textSize="18sp"
+    android:textStyle="bold" />
+
+  <ProgressBar
+    android:id="@+id/widget_progress"
+    style="?android:attr/progressBarStyleHorizontal"
+    android:layout_width="match_parent"
+    android:layout_height="6dp"
+    android:layout_marginTop="8dp"
+    android:max="100"
+    android:progress="0"
+    android:progressTint="@color/today_widget_accent"
+    android:progressBackgroundTint="@color/today_widget_track" />
+
+  <TextView
+    android:id="@+id/widget_line_1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:textColor="@color/today_widget_text"
+    android:textSize="14sp"
+    android:visibility="gone" />
+
+  <TextView
+    android:id="@+id/widget_line_2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:textColor="@color/today_widget_text"
+    android:textSize="14sp"
+    android:visibility="gone" />
+
+  <TextView
+    android:id="@+id/widget_line_3"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:maxLines="1"
+    android:ellipsize="end"
+    android:textColor="@color/today_widget_text"
+    android:textSize="14sp"
+    android:visibility="gone" />
+
+  <TextView
+    android:id="@+id/widget_footer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="6dp"
+    android:maxLines="1"
+    android:textColor="@color/today_widget_muted"
+    android:textSize="11sp"
+    android:visibility="gone" />
+</LinearLayout>

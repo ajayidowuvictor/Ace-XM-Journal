@@ -64,7 +64,7 @@ function HabitsPanel() {
       {habits.length === 0 && !error ? (
         <EmptyState
           title="No habits yet"
-          message="Add a habit you want to repeat every day, then tick it off as you go."
+          message="Add a habit and choose the days it repeats on, then tick it off as you go."
           actionLabel="Add a habit"
           onAction={() => editor.open(null)}
         />
@@ -103,7 +103,9 @@ function HabitsPanel() {
                       ? 'some habits done'
                       : day.status === 'none'
                         ? 'no habits done'
-                        : 'not yet'
+                        : day.status === 'rest'
+                          ? 'no habits planned'
+                          : 'not yet'
                 }`}
                 style={styles.weekDay}
               >

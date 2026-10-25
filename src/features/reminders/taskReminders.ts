@@ -23,11 +23,38 @@ export type ReminderTimeChoice = 'off' | '08:00' | '12:00' | '17:00' | '20:00';
 
 export const REMINDER_TIME_CHOICES: readonly { value: ReminderTimeChoice; label: string }[] = [
   { value: 'off', label: 'None' },
-  { value: '08:00', label: '8:00' },
-  { value: '12:00', label: '12:00' },
-  { value: '17:00', label: '17:00' },
-  { value: '20:00', label: '20:00' },
+  { value: '08:00', label: '8 AM' },
+  { value: '12:00', label: '12 PM' },
+  { value: '17:00', label: '5 PM' },
+  { value: '20:00', label: '8 PM' },
 ];
+
+/** True for the quick reminder times; any other stored time was typed by the person. */
+export function isPresetReminder(time: string): boolean {
+  return REMINDER_TIME_CHOICES.some((choice) => choice.value === time);
+}
+
+/** A stored "HH:MM" reminder time as minutes after midnight, or null if it is not a time. */
+export function reminderMinutes(time: string): number | null {
+  const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(time);
+  return match ? Number(match[1]) * 60 + Number(match[2]) : null;
+}
+
+/** Minutes after midnight as the stored "HH:MM" reminder time. */
+export function reminderFromMinutes(minutes: number): string {
+  const hour = Math.floor(minutes / 60) % 24;
+  return `${String(hour).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+}
+
+/** A stored "HH:MM" time as people say it: "8 AM", "5 PM", "2:30 PM". Anything else is returned as is. */
+export function formatClock(time: string): string {
+  const match = /^([01]\d|2[0-3]):([0-5]\d)$/.exec(time);
+  if (!match) return time;
+  const hour = Number(match[1]);
+  const suffix = hour < 12 ? 'AM' : 'PM';
+  const twelve = hour % 12 === 0 ? 12 : hour % 12;
+  return match[2] === '00' ? `${twelve} ${suffix}` : `${twelve}:${match[2]} ${suffix}`;
+}
 
 /** The form choice for a stored time. A time the form cannot offer is shown as it is. */
 export function reminderChoiceFor(time: string | null): string {
@@ -68,7 +95,7 @@ export function planTaskReminders(
   return planned.slice(0, limit);
 }
 
-export const TASK_REMINDER_TITLE = 'ACE XM JOURNAL';
+export const TASK_REMINDER_TITLE = 'Ace Notes';
 export const TASK_REMINDER_HIDDEN_BODY = 'You have a task to do now.';
 export const TASK_REMINDER_SHOWN_BODY = 'Task reminder';
 

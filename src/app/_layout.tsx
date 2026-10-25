@@ -18,6 +18,7 @@ import { NotesProvider } from '@/features/notes/NotesContext';
 import { PlannerProvider } from '@/features/planner/PlannerContext';
 import { TaskRemindersSync } from '@/features/reminders/TaskRemindersSync';
 import { TasksProvider } from '@/features/tasks/TasksContext';
+import { WidgetSync } from '@/features/widget/WidgetSync';
 import { ThemeProvider } from '@/theme/ThemeProvider';
 import { useAppFonts } from '@/theme/useAppFonts';
 import { useTheme } from '@/theme/context';
@@ -82,6 +83,7 @@ export default function RootLayout() {
           <HabitsProvider>
             <GoalsProvider>
               <PlannerProvider>
+                <WidgetSync />
                 <JournalProvider>
                   <NotesProvider>
                     <LockProvider>

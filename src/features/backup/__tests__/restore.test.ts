@@ -32,13 +32,14 @@ function filledDatabases() {
       repeat: 'monthly',
       reminderTime: '09:00',
       category: 'health',
+      goalId: 'goal-1',
     },
     t(1),
   );
   createTask(app, 'task-2', { title: 'Call mum', notes: '', dueDate: null, priority: 0 }, t(2));
   setTaskCompleted(app, 'task-2', true, t(3));
 
-  createHabit(app, 'habit-1', 'Read', t(1));
+  createHabit(app, 'habit-1', 'Read', t(1), [0, 2, 4]);
   setHabitDone(app, 'habit-1', '2026-10-12', true, t(2));
   setHabitDone(app, 'habit-1', '2026-10-13', true, t(2));
 
@@ -156,6 +157,50 @@ describe('restoring a backup', () => {
 });
 
 describe('parseBackupData', () => {
+  it('reads the days a habit repeats on, and gives older backups every day', () => {
+    const withDays = parseBackupData(
+      JSON.stringify({
+        app: 'ACE XM JOURNAL',
+        habits: [{ id: 'h', name: 'x', completedDates: [], days: [4, 0, 2], createdAt: 'a' }],
+      }),
+    );
+    expect(withDays?.habits[0].days).toEqual([0, 2, 4]);
+
+    const older = parseBackupData(
+      JSON.stringify({
+        app: 'ACE XM JOURNAL',
+        habits: [{ id: 'h', name: 'x', completedDates: [], createdAt: 'a' }],
+      }),
+    );
+    expect(older?.habits[0].days).toEqual([0, 1, 2, 3, 4, 5, 6]);
+  });
+
+  it('reads which goal a task counts towards, and drops links to goals that are not there', () => {
+    const task = (id: string, extra: object) => ({
+      id,
+      title: id,
+      notes: '',
+      dueDate: null,
+      priority: 0,
+      completedAt: null,
+      createdAt: 'a',
+      updatedAt: 'a',
+      ...extra,
+    });
+    const parsed = parseBackupData(
+      JSON.stringify({
+        app: 'ACE XM JOURNAL',
+        tasks: [
+          task('linked', { goalId: 'g1' }),
+          task('dangling', { goalId: 'gone' }),
+          task('older', {}),
+        ],
+        goals: [{ id: 'g1', title: 'Goal', notes: '', createdAt: 'a', milestones: [] }],
+      }),
+    );
+    expect(parsed?.tasks.map((x) => x.goalId)).toEqual(['g1', null, null]);
+  });
+
   it('refuses text that is not an export', () => {
     expect(parseBackupData('nope')).toBeNull();
     expect(parseBackupData('{}')).toBeNull();

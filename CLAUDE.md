@@ -1,8 +1,8 @@
-# ACE XM JOURNAL: Engineering rules
+# Ace Notes: Engineering rules
 
 ## Product
 
-- Name is always written **ACE XM JOURNAL**. Android first, iOS later from the same codebase.
+- Name is always written **Ace Notes** (renamed from ACE XM JOURNAL by the owner on 2026-10-17). The old name stays only in technical identifiers that must not change: the app ID, the `.acexmbackup` file type, and the `app: 'ACE XM JOURNAL'` marker inside export and backup files (changing it would stop old backups restoring). Android first, iOS later from the same codebase.
 - First release is local-only (no accounts, no cloud). Journal data is encrypted on the device.
 - App ID: `com.ajayidowuvictor.acexmjournal`.
 

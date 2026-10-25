@@ -9,6 +9,14 @@ import {
   todaySummary,
   weekConsistency,
   validateHabitName,
+  ALL_DAYS,
+  cleanDays,
+  daysFromText,
+  daysToText,
+  isScheduledOn,
+  plannedInLastDays,
+  scheduleLabel,
+  validateHabitDays,
 } from '../logic';
 
 const TODAY = '2026-10-14';
@@ -156,5 +164,102 @@ describe('lastDaysDone', () => {
       false,
       false,
     ]);
+  });
+});
+
+describe('habit days', () => {
+  // 2026-10-14 is a Wednesday. Days are 0 Monday to 6 Sunday.
+  const MON_WED_FRI = [0, 2, 4];
+
+  it('cleans, validates and stores day lists', () => {
+    expect(cleanDays([4, 0, 0, 9, -1, 2.5, 2])).toEqual([0, 2, 4]);
+    expect(validateHabitDays([])).toBe('Choose at least one day.');
+    expect(validateHabitDays([3])).toBeNull();
+    expect(daysToText([4, 0, 2])).toBe('024');
+    expect(daysFromText('024')).toEqual([0, 2, 4]);
+    expect(daysFromText('')).toEqual([...ALL_DAYS]);
+    expect(daysFromText('xyz')).toEqual([...ALL_DAYS]);
+    expect(daysFromText(null)).toEqual([...ALL_DAYS]);
+  });
+
+  it('knows which dates a habit is planned for', () => {
+    expect(isScheduledOn(MON_WED_FRI, '2026-10-14')).toBe(true); // Wednesday
+    expect(isScheduledOn(MON_WED_FRI, '2026-10-15')).toBe(false); // Thursday
+    expect(isScheduledOn(MON_WED_FRI, '2026-10-18')).toBe(false); // Sunday
+    expect(isScheduledOn([6], '2026-10-18')).toBe(true);
+  });
+
+  it('describes a schedule in words', () => {
+    expect(scheduleLabel(ALL_DAYS)).toBe('Every day');
+    expect(scheduleLabel([0, 1, 2, 3, 4])).toBe('Weekdays');
+    expect(scheduleLabel([5, 6])).toBe('Weekends');
+    expect(scheduleLabel([4, 0, 2])).toBe('Mon, Wed, Fri');
+  });
+
+  it('keeps a streak alive over rest days', () => {
+    // Done Mon 12, Wed 14... check on Wed 14 and on Thu 15 (a rest day).
+    const dates = ['2026-10-09', '2026-10-12', '2026-10-14'];
+    expect(currentStreak(dates, '2026-10-14', MON_WED_FRI)).toBe(3);
+    expect(currentStreak(dates, '2026-10-15', MON_WED_FRI)).toBe(3);
+    expect(currentStreak(dates, '2026-10-16', MON_WED_FRI)).toBe(3);
+  });
+
+  it('breaks a streak when a planned day was missed', () => {
+    // Fri 9 done, Mon 12 missed, Wed 14 done.
+    const dates = ['2026-10-09', '2026-10-14'];
+    expect(currentStreak(dates, '2026-10-14', MON_WED_FRI)).toBe(1);
+  });
+
+  it('does not break today while a planned day is still open', () => {
+    const dates = ['2026-10-09', '2026-10-12'];
+    expect(currentStreak(dates, '2026-10-14', MON_WED_FRI)).toBe(2);
+    // The next day, Wednesday was missed, so the streak is gone.
+    expect(currentStreak(dates, '2026-10-15', MON_WED_FRI)).toBe(0);
+  });
+
+  it('counts an extra day done on a rest day', () => {
+    const dates = ['2026-10-12', '2026-10-13', '2026-10-14'];
+    expect(currentStreak(dates, '2026-10-14', MON_WED_FRI)).toBe(3);
+  });
+
+  it('finds the longest run over planned days only', () => {
+    const dates = ['2026-10-05', '2026-10-07', '2026-10-09', '2026-10-12', '2026-10-16'];
+    // Mon 5, Wed 7, Fri 9, Mon 12 in a row; Wed 14 missed; Fri 16 alone.
+    expect(longestStreak(dates, MON_WED_FRI)).toBe(4);
+    expect(longestStreak([], MON_WED_FRI)).toBe(0);
+  });
+
+  it('counts planned days in a window', () => {
+    const dates = ['2026-10-12', '2026-10-14'];
+    // Last 7 days ending Wed 14: Thu 8 to Wed 14 has Fri 9, Mon 12, Wed 14 planned.
+    expect(plannedInLastDays(dates, '2026-10-14', 7, MON_WED_FRI)).toEqual({
+      planned: 3,
+      done: 2,
+    });
+    expect(plannedInLastDays(dates, '2026-10-14', 7)).toEqual({ planned: 7, done: 2 });
+  });
+
+  it('only counts habits planned for today in the summary', () => {
+    const habits = [
+      { completedDates: ['2026-10-15'], days: [3] }, // Thursday, done
+      { completedDates: [], days: [3] }, // Thursday, open
+      { completedDates: [], days: [0] }, // Monday only: rest today
+    ];
+    expect(todaySummary(habits, '2026-10-15')).toEqual({ done: 1, total: 2, progress: 0.5 });
+  });
+
+  it('marks days with no planned habits as rest in the week', () => {
+    const week = weekConsistency([{ completedDates: ['2026-10-12'], days: [0] }], '2026-10-14');
+    expect(week.days.map((d) => d.status)).toEqual([
+      'all',
+      'rest',
+      'rest',
+      'future',
+      'future',
+      'future',
+      'future',
+    ]);
+    expect(week.possible).toBe(1);
+    expect(week.done).toBe(1);
   });
 });

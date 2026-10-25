@@ -1,4 +1,5 @@
 import { addDays } from '../../lib/dates';
+import type { Task } from '../tasks/types';
 import type { Goal } from './types';
 
 export const MAX_TITLE_LENGTH = 120;
@@ -17,12 +18,31 @@ export function validateMilestoneTitle(title: string): string | null {
   return null;
 }
 
-/** Progress from 0 to 1: the share of steps done, or 0/1 for a goal with no steps. */
-export function goalProgress(goal: Pick<Goal, 'milestones' | 'completedAt'>): number {
+type LinkedTask = Pick<Task, 'completedAt'>;
+
+/** The tasks that count towards a goal, oldest first as given. */
+export function tasksForGoal<T extends Pick<Task, 'goalId'>>(
+  tasks: readonly T[],
+  goalId: string,
+): T[] {
+  return tasks.filter((task) => task.goalId === goalId);
+}
+
+/**
+ * Progress from 0 to 1: the share of steps and linked tasks that are done together, or 0 for a
+ * goal with neither. A goal marked as achieved is always 1.
+ */
+export function goalProgress(
+  goal: Pick<Goal, 'milestones' | 'completedAt'>,
+  linked: readonly LinkedTask[] = [],
+): number {
   if (goal.completedAt) return 1;
-  const total = goal.milestones.length;
+  const total = goal.milestones.length + linked.length;
   if (total === 0) return 0;
-  return goal.milestones.filter((m) => m.completedAt).length / total;
+  const done =
+    goal.milestones.filter((m) => m.completedAt).length +
+    linked.filter((task) => task.completedAt).length;
+  return done / total;
 }
 
 export function milestoneCounts(goal: Pick<Goal, 'milestones'>) {
@@ -32,12 +52,24 @@ export function milestoneCounts(goal: Pick<Goal, 'milestones'>) {
   };
 }
 
-export type TargetChoice = 'none' | 'month' | 'quarter' | 'half' | 'keep';
+export function taskCounts(linked: readonly LinkedTask[]) {
+  return { done: linked.filter((task) => task.completedAt).length, total: linked.length };
+}
+
+/** Open tasks not yet linked to any goal, newest first: the ones that can be added to a goal. */
+export function linkableTasks(tasks: readonly Task[]): Task[] {
+  return tasks
+    .filter((task) => task.goalId === null && task.completedAt === null)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export type TargetChoice = 'none' | 'month' | 'quarter' | 'half' | 'keep' | 'custom';
 
 export function targetDateFor(
   choice: TargetChoice,
   existing: string | null,
   now: Date,
+  custom: string | null = null,
 ): string | null {
   switch (choice) {
     case 'none':
@@ -50,6 +82,8 @@ export function targetDateFor(
       return addDays(now, 180);
     case 'keep':
       return existing;
+    case 'custom':
+      return custom;
   }
 }
 

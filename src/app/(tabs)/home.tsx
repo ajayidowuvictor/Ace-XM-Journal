@@ -182,8 +182,8 @@ export default function HomeScreen() {
       }
     >
       <View style={styles.header}>
-        <Text variant="title">{displayName ? `${greeting}, ${displayName}` : greeting}</Text>
-        <Text variant="secondary" muted>
+        <Text variant="largeTitle">{displayName ? `${greeting}, ${displayName}` : greeting}</Text>
+        <Text variant="body" muted>
           {formatLongDate(day === 'today' ? now : (parseLocalDate(tomorrow) ?? now))}
         </Text>
       </View>
@@ -223,7 +223,7 @@ export default function HomeScreen() {
       />
 
       <Card variant="hero">
-        <Text variant="subheading">{headline}</Text>
+        <Text variant="title">{headline}</Text>
         {day === 'today' && progress.total > 0 ? (
           <ProgressBar
             value={progress.progress}
@@ -348,7 +348,7 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  header: { gap: spacing.xs, paddingTop: spacing.sm },
+  header: { gap: spacing.xs, paddingTop: spacing.md, paddingBottom: spacing.sm },
   shortcuts: { flexDirection: 'row', gap: spacing.sm, paddingTop: spacing.sm },
   shortcut: { flex: 1 },
 });

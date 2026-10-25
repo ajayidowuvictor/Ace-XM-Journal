@@ -1,3 +1,4 @@
+import { daysToText } from '../features/habits/logic';
 import type { BackupData } from '../features/backup/types';
 import type { SqlDatabase } from './types';
 import { clearAppTables, clearJournalTables } from './wipeRepo';
@@ -18,8 +19,8 @@ export function restoreAppData(db: SqlDatabase, data: BackupData, nowIso: string
 
     for (const t of data.tasks) {
       db.run(
-        `INSERT INTO tasks (id, title, notes, due_date, priority, repeat, reminder_time, category, completed_at, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO tasks (id, title, notes, due_date, priority, repeat, reminder_time, category, goal_id, completed_at, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           t.id,
           t.title,
@@ -29,6 +30,7 @@ export function restoreAppData(db: SqlDatabase, data: BackupData, nowIso: string
           t.repeat,
           t.reminderTime,
           t.category,
+          t.goalId,
           t.completedAt,
           t.createdAt,
           t.updatedAt,
@@ -37,9 +39,10 @@ export function restoreAppData(db: SqlDatabase, data: BackupData, nowIso: string
     }
 
     for (const h of data.habits) {
-      db.run('INSERT INTO habits (id, name, created_at, updated_at) VALUES (?, ?, ?, ?)', [
+      db.run('INSERT INTO habits (id, name, days, created_at, updated_at) VALUES (?, ?, ?, ?, ?)', [
         h.id,
         h.name,
+        daysToText(h.days),
         h.createdAt,
         h.createdAt,
       ]);

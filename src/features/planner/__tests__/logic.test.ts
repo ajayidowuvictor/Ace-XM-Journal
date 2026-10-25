@@ -13,6 +13,11 @@ import {
   focusTasks,
   formatDuration,
   formatTime,
+  from12Hour,
+  parseTypedDuration,
+  parseTypedStart,
+  to12Hour,
+  withMeridiem,
   minutesOfDay,
   overlappingBlocks,
   parseWrapUp,
@@ -50,6 +55,7 @@ function task(id: string, overrides: Partial<Task> = {}): Task {
     repeat: 'none',
     reminderTime: null,
     category: 'none',
+    goalId: null,
     completedAt: null,
     createdAt: `2026-10-0${id.length}T00:00:00.000Z`,
     updatedAt: 'x',
@@ -61,9 +67,53 @@ const TODAY = '2026-10-15';
 
 describe('time wording', () => {
   it('formats clock times', () => {
-    expect(formatTime(0)).toBe('0:00');
-    expect(formatTime(545)).toBe('9:05');
-    expect(formatTime(13 * 60 + 30)).toBe('13:30');
+    expect(formatTime(0)).toBe('12:00 AM');
+    expect(formatTime(545)).toBe('9:05 AM');
+    expect(formatTime(12 * 60)).toBe('12:00 PM');
+    expect(formatTime(13 * 60 + 30)).toBe('1:30 PM');
+    expect(formatTime(23 * 60 + 59)).toBe('11:59 PM');
+  });
+
+  it('wraps a time past midnight onto the next morning', () => {
+    expect(formatTime(24 * 60)).toBe('12:00 AM');
+    expect(formatTime(25 * 60 + 15)).toBe('1:15 AM');
+  });
+
+  it('splits and joins 12-hour clock parts', () => {
+    expect(to12Hour(0)).toEqual({ hour12: 12, minute: 0, pm: false });
+    expect(to12Hour(13 * 60 + 5)).toEqual({ hour12: 1, minute: 5, pm: true });
+    expect(from12Hour(12, 0, false)).toBe(0);
+    expect(from12Hour(12, 0, true)).toBe(720);
+    expect(from12Hour(6, 45, true)).toBe(18 * 60 + 45);
+    for (let m = 0; m < 1440; m += 5) {
+      const { hour12, minute, pm } = to12Hour(m);
+      expect(from12Hour(hour12, minute, pm)).toBe(m);
+    }
+  });
+
+  it('moves a time between morning and afternoon', () => {
+    expect(withMeridiem(9 * 60 + 30, true)).toBe(21 * 60 + 30);
+    expect(withMeridiem(21 * 60 + 30, false)).toBe(9 * 60 + 30);
+    expect(withMeridiem(12 * 60, false)).toBe(0);
+    expect(withMeridiem(9 * 60, false)).toBe(9 * 60);
+  });
+
+  it('reads a typed start time', () => {
+    expect(parseTypedStart('6', '20', true)).toBe(18 * 60 + 20);
+    expect(parseTypedStart('12', '', false)).toBe(0);
+    expect(parseTypedStart('0', '10', false)).toBeNull();
+    expect(parseTypedStart('13', '10', false)).toBeNull();
+    expect(parseTypedStart('5', '60', false)).toBeNull();
+    expect(parseTypedStart('', '10', false)).toBeNull();
+    expect(parseTypedStart('x', '10', false)).toBeNull();
+  });
+
+  it('reads a typed length', () => {
+    expect(parseTypedDuration('2', '')).toBe(120);
+    expect(parseTypedDuration('', '50')).toBe(50);
+    expect(parseTypedDuration('1', '25')).toBe(85);
+    expect(parseTypedDuration('', '')).toBeNull();
+    expect(parseTypedDuration('a', '5')).toBeNull();
   });
 
   it('formats lengths of time in plain words', () => {
@@ -74,7 +124,7 @@ describe('time wording', () => {
   });
 
   it('shows a block as a time range', () => {
-    expect(timeRange(block('a', 9 * 60, 90))).toBe('9:00 to 10:30');
+    expect(timeRange(block('a', 9 * 60, 90))).toBe('9:00 AM to 10:30 AM');
   });
 
   it('reads minutes after midnight from a date', () => {

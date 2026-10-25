@@ -5,21 +5,22 @@ import {
   createHabit,
   deleteHabit,
   listHabits,
-  renameHabit,
   setHabitDone,
+  updateHabit,
 } from '../../db/habitsRepo';
 import type { SqlDatabase } from '../../db/types';
 import { toLocalDateString } from '../../lib/dates';
 import { newId } from '../../lib/id';
-import { validateHabitName } from './logic';
+import { validateHabitDays, validateHabitName } from './logic';
 import type { Habit } from './types';
 
 type HabitsValue = {
   habits: Habit[];
   error: string | null;
-  /** Saves a new habit. Returns an error message if the name is not valid, otherwise null. */
-  add: (name: string) => string | null;
-  rename: (id: string, name: string) => string | null;
+  /** Saves a new habit. Returns an error message if the name or days are not valid, otherwise null. */
+  add: (name: string, days: readonly number[]) => string | null;
+  /** Changes a habit's name and the days it repeats on. */
+  edit: (id: string, name: string, days: readonly number[]) => string | null;
   /** Marks the habit done or not done for today (the device's local date). */
   setDoneToday: (id: string, done: boolean) => void;
   remove: (id: string) => void;
@@ -31,7 +32,7 @@ const HabitsContext = createContext<HabitsValue>({
   habits: [],
   error: null,
   add: () => null,
-  rename: () => null,
+  edit: () => null,
   setDoneToday: () => {},
   remove: () => {},
   reload: () => {},
@@ -71,21 +72,25 @@ export function HabitsProvider({ children }: { children: ReactNode }) {
   );
 
   const add = useCallback(
-    (name: string) => {
-      const problem = validateHabitName(name);
+    (name: string, days: readonly number[]) => {
+      const problem = validateHabitName(name) ?? validateHabitDays(days);
       if (problem) return problem;
       const clean = name.trim();
-      return run((database, now) => createHabit(database, newId(), clean, now)) ? null : SAVE_ERROR;
+      return run((database, now) => createHabit(database, newId(), clean, now, days))
+        ? null
+        : SAVE_ERROR;
     },
     [run],
   );
 
-  const rename = useCallback(
-    (id: string, name: string) => {
-      const problem = validateHabitName(name);
+  const edit = useCallback(
+    (id: string, name: string, days: readonly number[]) => {
+      const problem = validateHabitName(name) ?? validateHabitDays(days);
       if (problem) return problem;
       const clean = name.trim();
-      return run((database, now) => renameHabit(database, id, clean, now)) ? null : SAVE_ERROR;
+      return run((database, now) => updateHabit(database, id, clean, days, now))
+        ? null
+        : SAVE_ERROR;
     },
     [run],
   );
@@ -110,8 +115,8 @@ export function HabitsProvider({ children }: { children: ReactNode }) {
   }, [db]);
 
   const value = useMemo(
-    () => ({ habits, error, add, rename, setDoneToday, remove, reload }),
-    [habits, error, add, rename, setDoneToday, remove, reload],
+    () => ({ habits, error, add, edit, setDoneToday, remove, reload }),
+    [habits, error, add, edit, setDoneToday, remove, reload],
   );
 
   return <HabitsContext.Provider value={value}>{children}</HabitsContext.Provider>;

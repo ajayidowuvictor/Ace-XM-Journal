@@ -15,12 +15,21 @@ describe('buildExport', () => {
           repeat: 'none',
           reminderTime: null,
           category: 'none',
+          goalId: null,
           completedAt: null,
           createdAt: 'x',
           updatedAt: 'x',
         },
       ],
-      habits: [{ id: 'h1', name: 'Read', completedDates: ['2026-10-14'], createdAt: 'x' }],
+      habits: [
+        {
+          id: 'h1',
+          name: 'Read',
+          completedDates: ['2026-10-14'],
+          days: [0, 2, 4],
+          createdAt: 'x',
+        },
+      ],
       goals: [],
       entries: [
         {
@@ -49,6 +58,7 @@ describe('buildExport', () => {
   it('includes every kind of data exactly as stored, including quotes and new lines', () => {
     expect(parsed.tasks[0].title).toBe('Pay rent');
     expect(parsed.habits[0].completedDates).toEqual(['2026-10-14']);
+    expect(parsed.habits[0].days).toEqual([0, 2, 4]);
     expect(parsed.goals).toEqual([]);
     expect(parsed.journalEntries[0].title).toBe('Day "one"');
     expect(parsed.journalEntries[0].body).toBe('Line 1\nLine 2');

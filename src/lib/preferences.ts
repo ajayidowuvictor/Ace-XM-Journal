@@ -15,6 +15,8 @@ export const PREF_KEYS = {
   lastBackup: 'last-backup-at',
   backupSnooze: 'backup-nudge-snooze',
   appDataMoved: 'app-data-encrypted',
+  sounds: 'ui-sounds',
+  widgetNames: 'widget-names',
 } as const;
 
 /** Reads a stored preference. Returns null if nothing is stored or storage is unavailable. */

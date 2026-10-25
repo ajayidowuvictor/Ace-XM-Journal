@@ -37,6 +37,7 @@ function doneTask(id: string, completedAt: string): Task {
     repeat: 'none',
     reminderTime: null,
     category: 'none',
+    goalId: null,
     completedAt,
     createdAt: '2026-01-01T00:00:00.000Z',
     updatedAt: '2026-01-01T00:00:00.000Z',
@@ -81,6 +82,7 @@ describe('habitRates', () => {
       id: 'a',
       name: 'Walk',
       completedDates: ['2026-10-16', '2026-10-15', '2026-10-01'],
+      days: [0, 1, 2, 3, 4, 5, 6],
       createdAt: 'x',
     },
     {
@@ -90,9 +92,10 @@ describe('habitRates', () => {
         { length: 10 },
         (_, i) => `2026-10-${String(i + 1).padStart(2, '0')}`,
       ),
+      days: [0, 1, 2, 3, 4, 5, 6],
       createdAt: 'x',
     },
-    { id: 'c', name: 'Pray', completedDates: [], createdAt: 'x' },
+    { id: 'c', name: 'Pray', completedDates: [], days: [0, 1, 2, 3, 4, 5, 6], createdAt: 'x' },
   ];
 
   it('works out days done, rate and streak, best first', () => {

@@ -40,6 +40,8 @@ export type Task = {
   /** Local time `HH:MM` for a reminder on the due date, or null for no reminder. */
   reminderTime: string | null;
   category: TaskCategory;
+  /** The goal this task counts towards, or null. */
+  goalId: string | null;
   /** UTC timestamp (ISO 8601) when completed, or null while still open. */
   completedAt: string | null;
   createdAt: string;
@@ -57,4 +59,6 @@ export type TaskInput = {
   reminderTime?: string | null;
   /** Left out means "no category" when adding and "unchanged" when editing. */
   category?: TaskCategory;
+  /** Left out means "no goal" when adding and "unchanged" when editing. */
+  goalId?: string | null;
 };

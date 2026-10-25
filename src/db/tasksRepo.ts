@@ -16,13 +16,14 @@ type Row = {
   repeat: string;
   reminder_time: string | null;
   category: string;
+  goal_id: string | null;
   completed_at: string | null;
   created_at: string;
   updated_at: string;
 };
 
 const COLUMNS =
-  'id, title, notes, due_date, priority, repeat, reminder_time, category, completed_at, created_at, updated_at';
+  'id, title, notes, due_date, priority, repeat, reminder_time, category, goal_id, completed_at, created_at, updated_at';
 
 function toTask(row: Row): Task {
   return {
@@ -34,6 +35,7 @@ function toTask(row: Row): Task {
     repeat: toRepeatRule(row.repeat),
     reminderTime: toReminderTime(row.reminder_time),
     category: toTaskCategory(row.category),
+    goalId: row.goal_id,
     completedAt: row.completed_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -49,8 +51,8 @@ export function listTasks(db: SqlDatabase): Task[] {
 
 export function createTask(db: SqlDatabase, id: string, input: TaskInput, nowIso: string): void {
   db.run(
-    `INSERT INTO tasks (id, title, notes, due_date, priority, repeat, reminder_time, category, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO tasks (id, title, notes, due_date, priority, repeat, reminder_time, category, goal_id, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       id,
       input.title,
@@ -60,13 +62,14 @@ export function createTask(db: SqlDatabase, id: string, input: TaskInput, nowIso
       input.repeat ?? 'none',
       input.reminderTime ?? null,
       input.category ?? 'none',
+      input.goalId ?? null,
       nowIso,
       nowIso,
     ],
   );
 }
 
-/** Saves the edited fields. A repeat rule, reminder time or category that is left out stays as it was. */
+/** Saves the edited fields. A repeat rule, reminder time, category or goal that is left out stays as it was. */
 export function updateTask(db: SqlDatabase, id: string, input: TaskInput, nowIso: string): void {
   db.run(
     `UPDATE tasks SET title = ?, notes = ?, due_date = ?, priority = ?, updated_at = ?
@@ -88,6 +91,23 @@ export function updateTask(db: SqlDatabase, id: string, input: TaskInput, nowIso
       id,
     ]);
   }
+  if (input.goalId !== undefined) {
+    db.run('UPDATE tasks SET goal_id = ? WHERE id = ? AND deleted_at IS NULL', [input.goalId, id]);
+  }
+}
+
+/** Links a task to a goal, or to no goal when `goalId` is null. */
+export function setTaskGoal(
+  db: SqlDatabase,
+  id: string,
+  goalId: string | null,
+  nowIso: string,
+): void {
+  db.run('UPDATE tasks SET goal_id = ?, updated_at = ? WHERE id = ? AND deleted_at IS NULL', [
+    goalId,
+    nowIso,
+    id,
+  ]);
 }
 
 export function setTaskCompleted(

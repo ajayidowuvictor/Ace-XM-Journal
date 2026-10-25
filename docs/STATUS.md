@@ -4,6 +4,8 @@ Last updated: 2026-10-17
 
 ## Current phase
 
+Renamed to **Ace Notes** on 2026-10-17 (visible name, headers, lock screen, notifications, privacy page). Unchanged on purpose: app ID, `.acexmbackup`, the `ACE XM JOURNAL` marker inside export and backup files, repository and package names. Older documents in `docs/` still use the old name.
+
 Feature-complete for the first (local-only) release, all in pull request #12 (which includes the polish pass, so pull request #11 closes with it). Everything is built and passes the automatic checks (type check, lint, format, tests). What remains is the owner's check of the final build on the phone, listed under "Not yet verified". Test builds are made free on GitHub (`.github/workflows/android-local.yml`) because Expo's free build allowance ran out until 1 Nov 2026.
 
 ## Phase 1 (design and Today planner): merged
@@ -114,6 +116,35 @@ Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading
 - **Settings:** appearance, optional daily reminder (fixed text, never your words), export to a plain JSON file (with warning), erase all data (two confirmations), privacy page. _Seen on a phone: reminder time can be chosen, export opened the share sheet, privacy page reads correctly, erase asked for DELETE and reported that everything was erased. Not yet confirmed: that the reminder notification actually arrives._
 - **Branding:** app icon, adaptive icon and splash derived from the owner's logo emblem. _Icon seen on the phone's home screen; splash not yet confirmed._
 
+## Phase 9: pop-up reminders and sounds
+
+- **Reminders pop up:** the daily, task and test reminders now use new Android channels (`daily-reminder-v2`, `task-reminders-v2`) with high importance, a soft chime and a short double vibration. Android fixes a channel's importance when it is first made, so the old quiet channels are deleted and the daily reminder is set again once per app start so it moves to the new channel. A handler also shows a reminder that arrives while the app is open.
+- **Sounds:** three short, quiet sounds were synthesised by `scripts/make_sounds.py` (no outside audio): `complete` (soft two-note tick when a task or habit is ticked), `unlock` (single note after a correct PIN or fingerprint) and `chime` (three-note rising chime for reminders). They respect the phone's silent mode and volume, mix with other audio, and have a Settings > Sounds On/Off switch (default On). Uses `expo-audio`.
+- **Check reminders** (Settings) now also has a 5-second pop-up test and tells the person what the phone allows (notifications allowed or not; whether the phone set reminders to pop-up, quiet or off). Added after the first Phase 9 build reported no pop-up at all.
+- **Microphone permission removed:** adding `expo-audio` had added `RECORD_AUDIO` and a media-playback service to the app. The `expo-audio` plugin options in `app.json` now turn these off (the app only plays short sounds, never records). To be confirmed in the next build's manifest.
+- **Owner check (2026-10-18):** after installing the build with the 5-second test, the owner reported "it works" (the pop-up now appears). The first Phase 9 build had shown nothing; the cause was not identified, so it is unknown whether a phone setting or the build was responsible. Sounds were not itemised in that report.
+- _Tested by code only:_ channel settings, handler and sound logic are unit-tested with the phone libraries mocked. _Not yet verified:_ that the sounds are pleasant by ear (the author has not heard them), that a reminder shows as a banner on the Infinix phone (it may also have its own per-app "pop up" switch under Settings > Apps > Ace Notes > Notifications), and that the test reminder uses the chime.
+
+## Phase 10: Apple-style look
+
+- Restyled through the shared tokens and components so every screen follows: soft grey page and flat tiles in light mode, true black and charcoal tiles in dark mode, no card shadows or borders, pill buttons, bigger semibold titles with tight spacing, 24 pt margins and more space between blocks, Home greeting as a large title, no divider under the top bar. See `docs/DESIGN.md`.
+- _Tested by code only:_ colour contrast (WCAG AA) and text-size tests pass. _Not yet verified:_ how it looks on the phone. Nothing here could be previewed in the build environment, so spacing and wrapping of long titles need the owner's eye (largest text size especially).
+
+## Phase 11: clock times, block lengths and goal dates
+
+- **12-hour clock everywhere in the planner:** times read "1:30 PM" (never 13:30). The block form has an AM/PM switch, typed hour and minute boxes, and the earlier plus and minus buttons.
+- **Custom block length:** type hours and minutes (5 minutes to 12 hours) next to the quick choices.
+- **Goal target date:** the three quick choices stay, and "Pick a date on the calendar" opens a month calendar (new `DatePickerSheet`, no outside library; past dates cannot be chosen, and there are month and year arrows).
+- Tasks still use the quick due-date choices only; the same calendar could be added there.
+- _Tested by code only:_ the time and date logic. _Not yet verified:_ the forms on the phone (keyboard behaviour when typing times, calendar layout at large text sizes).
+
+## Phase 12: flexible schedules
+
+- **Task due dates:** besides the quick choices there is a calendar ("Pick a date on the calendar"). Past dates cannot be chosen.
+- **Task reminder times:** an "Other time" choice opens typed hour, minute and AM/PM, so a task can remind at any time.
+- **Habit days:** a habit repeats on the weekdays you choose (chips Mon to Sun, plus Every day and Weekdays; at least one day). Streaks count only those days, so rest days never break them; the Today list and weekly consistency count only habits planned for that day, and rest days show as empty in the week. Stored in a new `days` column (database version 7, default every day, so existing habits are unchanged). Backups and exports now carry `days`; older backups restore as every day.
+- _Tested by code only:_ schedule and streak logic, saving, restoring. _Not yet verified:_ the forms on the phone and the database upgrade on the real phone's data (an encrypted backup first is wise).
+
 ## Device testing history
 
 - Phase 2 build: first launch showed "Unmatched Route"; fixed with an entry route; retest passed.
@@ -126,6 +157,7 @@ Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading
 
 - Phase 8: that existing tasks, habits, goals, day plans and journal survive the move into the encrypted file on the phone, and that new items survive closing and reopening. The real SQLCipher open, SecureStore and deletion of the old file are device-only. The owner should make an encrypted backup first.
 - Phase 7: dark mode on every screen, largest text size, the splash screen.
+- Phase 9: sounds by ear, pop-up banner and chime on the phone (see Phase 9).
 - That the daily 20:00 reminder and a task reminder arrive at their times (the 1-minute test notification did arrive).
 - That the journal still works after "Erase all my data" (new entry, close the app, reopen).
 - That the encryption of the journal is effective on the device (only the app's behaviour was seen).
@@ -152,3 +184,26 @@ Branch `feat/polish`. Not yet checked by CI or seen on a phone. Found by reading
 3. Optional later: home-screen widget, cloud sync (only if the app is shared), iOS from the same code, Play Store (`docs/RELEASE.md`).
 4. Decide whether saving the weekly review twice should update the existing entry instead of adding a second one.
 5. Housekeeping on GitHub: delete the temporary branches `bootstrap-logs` and `build-local`.
+
+## Phase 13: Home-screen widget (Android)
+
+Branch `feat/today-widget`. Not yet checked on a phone.
+
+- New local Expo module `modules/today-widget` (Kotlin, `AppWidgetProvider` with `RemoteViews`, no extra libraries). It draws text the app hands it: tasks done, focus tasks, next time block and a progress bar.
+- `src/features/widget/logic.ts` builds that text. By default it holds counts and times only. Task and block names appear only when the person picks "Show names" in Settings, because a widget can be read while the app is locked.
+- `WidgetSync` refreshes the widget whenever tasks, focus, blocks or the minute change. If the app has not run today, the widget asks to open Ace Notes rather than showing yesterday's numbers.
+- Settings has a "Home-screen widget" card (Android only) with the names choice and how to add the widget.
+- Removed the temporary module scaffold workflow.
+
+## Phase 14: Tasks linked to goals
+
+Branch `feat/task-goal-link`, stacked on the widget branch. Not yet checked on a phone.
+
+- Database version 8 adds an optional `goal_id` to tasks. Existing tasks stay as they are (no goal).
+- A goal's progress now counts its steps and its linked tasks together. A goal marked achieved is always full.
+- Task form: a "Goal" row of choices (open goals plus "No goal").
+- Goal form: "Tasks for this goal" lists linked tasks with Unlink, and offers the six newest open tasks without a goal to add.
+- The Goals list shows "x of y tasks" next to the steps.
+- Deleting a goal unlinks its tasks; the tasks are kept.
+- A repeating task counts towards a goal once; its later copies are not linked.
+- Backups and exports carry the link. Older backups restore with no links, and a link to a goal missing from the backup is dropped.

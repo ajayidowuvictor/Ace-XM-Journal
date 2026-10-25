@@ -7,7 +7,9 @@ import {
   REMINDER_BODY,
   REMINDER_TITLE,
   TEST_BODY,
+  describeImportance,
   describeScheduled,
+  parseReminderChoice,
   reminderTime,
   type ReminderChoice,
 } from './logic';
@@ -18,10 +20,29 @@ import {
   taskReminderContent,
 } from './taskReminders';
 
-const CHANNEL_ID = 'daily-reminder';
-const TASK_CHANNEL_ID = 'task-reminders';
+// Android fixes a channel's importance and sound when it is first made, so the earlier channels
+// ("daily-reminder", "task-reminders", which only made a quiet entry in the list) are replaced by
+// new ones that pop up on screen and use the soft chime.
+const CHANNEL_ID = 'daily-reminder-v2';
+const TASK_CHANNEL_ID = 'task-reminders-v2';
+const OLD_CHANNEL_IDS = ['daily-reminder', 'task-reminders'];
+const CHIME = 'chime.wav';
 const DAILY_ID = 'daily-reminder';
 const TEST_ID = 'test-reminder';
+
+/** Makes (or updates the name of) a reminder channel and removes the old quiet ones. */
+async function prepareChannel(id: string, name: string): Promise<void> {
+  await Promise.all(
+    OLD_CHANNEL_IDS.map((old) => Notifications.deleteNotificationChannelAsync(old)),
+  );
+  await Notifications.setNotificationChannelAsync(id, {
+    name,
+    importance: Notifications.AndroidImportance.HIGH,
+    sound: CHIME,
+    enableVibrate: true,
+    vibrationPattern: [0, 180, 120, 180],
+  });
+}
 
 export type ReminderResult = 'ok' | 'denied' | 'error';
 
@@ -43,10 +64,7 @@ export async function applyReminder(choice: ReminderChoice): Promise<ReminderRes
     if (!time) return 'ok';
 
     if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
-        name: 'Daily reminder',
-        importance: Notifications.AndroidImportance.DEFAULT,
-      });
+      await prepareChannel(CHANNEL_ID, 'Daily reminder');
     }
 
     let permission = await Notifications.getPermissionsAsync();
@@ -94,10 +112,7 @@ export async function refreshTaskReminders(
     if (planned.length === 0) return 'ok';
 
     if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync(TASK_CHANNEL_ID, {
-        name: 'Task reminders',
-        importance: Notifications.AndroidImportance.DEFAULT,
-      });
+      await prepareChannel(TASK_CHANNEL_ID, 'Task reminders');
     }
 
     let permission = await Notifications.getPermissionsAsync();
@@ -122,14 +137,14 @@ export async function refreshTaskReminders(
   }
 }
 
-/** Sends one test notification to this phone about a minute from now. */
-export async function scheduleTestReminder(now: Date = new Date()): Promise<ReminderResult> {
+/** Sends one test notification to this phone, by default about a minute from now. */
+export async function scheduleTestReminder(
+  now: Date = new Date(),
+  delaySeconds = 60,
+): Promise<ReminderResult> {
   try {
     if (Platform.OS === 'android') {
-      await Notifications.setNotificationChannelAsync(CHANNEL_ID, {
-        name: 'Daily reminder',
-        importance: Notifications.AndroidImportance.DEFAULT,
-      });
+      await prepareChannel(CHANNEL_ID, 'Daily reminder');
     }
     let permission = await Notifications.getPermissionsAsync();
     if (!permission.granted) permission = await Notifications.requestPermissionsAsync();
@@ -140,13 +155,36 @@ export async function scheduleTestReminder(now: Date = new Date()): Promise<Remi
       content: { title: REMINDER_TITLE, body: TEST_BODY },
       trigger: {
         type: Notifications.SchedulableTriggerInputTypes.DATE,
-        date: new Date(now.getTime() + 60_000),
+        date: new Date(now.getTime() + delaySeconds * 1000),
         channelId: CHANNEL_ID,
       },
     });
     return 'ok';
   } catch {
     return 'error';
+  }
+}
+
+/** What the phone currently allows for reminders: permission and the pop-up setting. */
+export async function reminderDiagnosis(): Promise<string | null> {
+  try {
+    const permission = await Notifications.getPermissionsAsync();
+    const parts = [
+      permission.granted
+        ? 'Notifications are allowed for this app.'
+        : 'Notifications are NOT allowed for this app.',
+    ];
+    if (Platform.OS === 'android') {
+      const channel = await Notifications.getNotificationChannelAsync(CHANNEL_ID);
+      parts.push(
+        channel
+          ? `Your phone has set reminders to: ${describeImportance(channel.importance)}.`
+          : 'The reminder channel has not been made yet; send a test first.',
+      );
+    }
+    return parts.join(' ');
+  } catch {
+    return null;
   }
 }
 
@@ -161,5 +199,34 @@ export async function scheduledSummary(): Promise<string | null> {
     );
   } catch {
     return null;
+  }
+}
+
+let restored = false;
+
+/**
+ * Once per start: makes the daily reminder use the current (pop-up, chime) channel. Reminders
+ * scheduled by an earlier version still point at the old quiet channel until they are set again.
+ */
+export async function restoreDailyReminder(): Promise<void> {
+  if (restored) return;
+  restored = true;
+  const choice = parseReminderChoice(readPreference(PREF_KEYS.reminder));
+  if (choice !== 'off') await applyReminder(choice);
+}
+
+/** Lets a reminder that arrives while the app is open still show on screen and chime. */
+export function installNotificationHandler(): void {
+  try {
+    Notifications.setNotificationHandler({
+      handleNotification: async () => ({
+        shouldShowBanner: true,
+        shouldShowList: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false,
+      }),
+    });
+  } catch {
+    // Without it the phone's own behaviour applies.
   }
 }

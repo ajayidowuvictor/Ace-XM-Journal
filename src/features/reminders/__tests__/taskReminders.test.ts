@@ -3,6 +3,10 @@ import { describe, expect, it } from '@jest/globals';
 import type { Task } from '../../tasks/types';
 import {
   MAX_TASK_REMINDERS,
+  formatClock,
+  isPresetReminder,
+  reminderFromMinutes,
+  reminderMinutes,
   TASK_REMINDER_HIDDEN_BODY,
   TASK_REMINDER_TITLE,
   parseTaskNameChoice,
@@ -22,6 +26,7 @@ function task(id: string, overrides: Partial<Task> = {}): Task {
     repeat: 'none',
     reminderTime: '08:30',
     category: 'none',
+    goalId: null,
     completedAt: null,
     createdAt: '2026-10-01T00:00:00.000Z',
     updatedAt: '2026-10-01T00:00:00.000Z',
@@ -101,5 +106,38 @@ describe('reminder wording', () => {
   it('maps a stored time to a form choice', () => {
     expect(reminderChoiceFor(null)).toBe('off');
     expect(reminderChoiceFor('17:00')).toBe('17:00');
+  });
+});
+
+describe('formatClock', () => {
+  it('writes times the way people say them', () => {
+    expect(formatClock('08:00')).toBe('8 AM');
+    expect(formatClock('12:00')).toBe('12 PM');
+    expect(formatClock('00:00')).toBe('12 AM');
+    expect(formatClock('17:00')).toBe('5 PM');
+    expect(formatClock('20:00')).toBe('8 PM');
+    expect(formatClock('14:30')).toBe('2:30 PM');
+  });
+
+  it('leaves anything else as it is', () => {
+    expect(formatClock('late')).toBe('late');
+    expect(formatClock('25:00')).toBe('25:00');
+  });
+});
+
+describe('typed reminder times', () => {
+  it('tells quick times from typed ones', () => {
+    expect(isPresetReminder('08:00')).toBe(true);
+    expect(isPresetReminder('08:05')).toBe(false);
+  });
+
+  it('converts between stored times and minutes after midnight', () => {
+    expect(reminderMinutes('08:05')).toBe(485);
+    expect(reminderMinutes('23:59')).toBe(1439);
+    expect(reminderMinutes('24:00')).toBeNull();
+    expect(reminderMinutes('off')).toBeNull();
+    expect(reminderFromMinutes(485)).toBe('08:05');
+    expect(reminderFromMinutes(18 * 60 + 20)).toBe('18:20');
+    expect(reminderFromMinutes(0)).toBe('00:00');
   });
 });

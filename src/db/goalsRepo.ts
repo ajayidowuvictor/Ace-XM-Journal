@@ -77,6 +77,8 @@ export function deleteGoal(db: SqlDatabase, id: string, nowIso: string): void {
        WHERE goal_id = ? AND deleted_at IS NULL`,
       [nowIso, nowIso, id],
     );
+    // The tasks stay; they just stop counting towards a goal that is gone.
+    db.run('UPDATE tasks SET goal_id = NULL, updated_at = ? WHERE goal_id = ?', [nowIso, id]);
   });
 }
 

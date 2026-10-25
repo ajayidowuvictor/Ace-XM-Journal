@@ -1,6 +1,7 @@
 import Constants from 'expo-constants';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
+import { Platform } from 'react-native';
 
 import { buildExport, exportFileName } from '@/features/export/buildExport';
 import { shareExport } from '@/features/export/shareExport';
@@ -25,11 +26,14 @@ import {
   type TaskNameChoice,
 } from '@/features/reminders/taskReminders';
 import { WipeDialog } from '@/features/settings/WipeDialog';
+import { WIDGET_NAME_OPTIONS, type WidgetNames } from '@/features/widget/logic';
+import { setWidgetNames, useWidgetNames } from '@/features/widget/widgetNames';
 import { useEraseAll } from '@/features/settings/useEraseAll';
 import { usePlanner } from '@/features/planner/PlannerContext';
 import { useTasks } from '@/features/tasks/TasksContext';
 import { toLocalDateString } from '@/lib/dates';
 import { PREF_KEYS, readPreference, writePreference } from '@/lib/preferences';
+import { playSound, setSoundsEnabled, soundsEnabled } from '@/lib/sounds';
 import { THEME_PREFERENCES, type ThemePreference } from '@/theme/schemes';
 import { useTheme } from '@/theme/context';
 import {
@@ -68,11 +72,19 @@ export default function SettingsScreen() {
   const [taskNames, setTaskNames] = useState<TaskNameChoice>(() =>
     parseTaskNameChoice(readPreference(PREF_KEYS.taskNames)),
   );
+  const [sounds, setSounds] = useState<'on' | 'off'>(() => (soundsEnabled() ? 'on' : 'off'));
+  const widgetNames = useWidgetNames();
   const [exportNote, setExportNote] = useState<string | null>(null);
   const [exporting, setExporting] = useState(false);
   const [confirmingExport, setConfirmingExport] = useState(false);
   const [confirmingWipe, setConfirmingWipe] = useState(false);
   const [wipeNote, setWipeNote] = useState<string | null>(null);
+
+  function chooseSounds(choice: 'on' | 'off') {
+    setSounds(choice);
+    setSoundsEnabled(choice === 'on');
+    if (choice === 'on') playSound('complete');
+  }
 
   function chooseTaskNames(choice: TaskNameChoice) {
     setTaskNames(choice);
@@ -160,6 +172,40 @@ export default function SettingsScreen() {
           System follows your phone&apos;s light or dark setting.
         </Text>
       </Card>
+
+      <Card>
+        <Text variant="heading">Sounds</Text>
+        <SegmentedControl<'on' | 'off'>
+          accessibilityLabel="Sounds"
+          options={[
+            { value: 'on', label: 'On' },
+            { value: 'off', label: 'Off' },
+          ]}
+          value={sounds}
+          onChange={chooseSounds}
+        />
+        <Text variant="caption" muted>
+          A soft tick when you finish a task or unlock the app. Silent when your phone is on silent.
+        </Text>
+      </Card>
+
+      {Platform.OS === 'android' ? (
+        <Card>
+          <Text variant="heading">Home-screen widget</Text>
+          <SegmentedControl<WidgetNames>
+            accessibilityLabel="Names on the home-screen widget"
+            options={WIDGET_NAME_OPTIONS}
+            value={widgetNames}
+            onChange={setWidgetNames}
+          />
+          <Text variant="caption" muted>
+            To add it, press and hold an empty spot on your home screen, tap Widgets, then choose
+            Ace Notes: Today. It shows how many tasks are done, your focus tasks and your next time
+            block. Names are hidden by default. If you show them, anyone who sees your home screen
+            can read them, even when Ace Notes is locked.
+          </Text>
+        </Card>
+      ) : null}
 
       <Card>
         <Text variant="heading">Daily reminder</Text>
@@ -250,7 +296,7 @@ export default function SettingsScreen() {
 
       <Card>
         <Text variant="heading">About</Text>
-        <Text>ACE XM JOURNAL</Text>
+        <Text>Ace Notes</Text>
         <Text muted>Version {Constants.expoConfig?.version ?? '1.0.0'}</Text>
       </Card>
 

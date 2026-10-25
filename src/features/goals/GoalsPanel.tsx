@@ -2,12 +2,14 @@ import { Pressable } from 'react-native';
 
 import { formatShortDate } from '../../lib/dates';
 import { Button, Card, EmptyState, ErrorState, ProgressBar, Text } from '../../ui';
+import { useTasks } from '../tasks/TasksContext';
 import { useGoals } from './GoalsContext';
-import { goalProgress, milestoneCounts, sortGoals } from './logic';
+import { goalProgress, milestoneCounts, sortGoals, taskCounts, tasksForGoal } from './logic';
 import { useGoalEditor } from './useGoalEditor';
 
 export function GoalsPanel() {
   const { goals, error } = useGoals();
+  const { tasks } = useTasks();
   const editor = useGoalEditor();
 
   return (
@@ -26,11 +28,16 @@ export function GoalsPanel() {
       ) : null}
 
       {sortGoals(goals).map((goal) => {
-        const progress = goalProgress(goal);
-        const { done, total } = milestoneCounts(goal);
+        const linked = tasksForGoal(tasks, goal.id);
+        const progress = goalProgress(goal, linked);
+        const steps = milestoneCounts(goal);
+        const linkedCounts = taskCounts(linked);
         const details = [
           goal.completedAt ? 'Achieved' : null,
-          total > 0 ? `${done} of ${total} steps` : null,
+          steps.total > 0 ? `${steps.done} of ${steps.total} steps` : null,
+          linkedCounts.total > 0
+            ? `${linkedCounts.done} of ${linkedCounts.total} ${linkedCounts.total === 1 ? 'task' : 'tasks'}`
+            : null,
           goal.targetDate ? `Target ${formatShortDate(goal.targetDate)}` : null,
         ].filter((part): part is string => part !== null);
 

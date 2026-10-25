@@ -26,7 +26,7 @@ export default function OnboardingScreen() {
     <Screen>
       <View style={styles.header}>
         <Text variant="caption" tone="primary" style={styles.brand}>
-          ACE XM JOURNAL
+          Ace Notes
         </Text>
         <Text variant="title">Your calm, private space to plan, reflect and grow.</Text>
       </View>

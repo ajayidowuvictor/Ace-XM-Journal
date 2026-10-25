@@ -22,6 +22,26 @@ export function shiftMonth(year: number, monthIndex: number, delta: number) {
   return { year: date.getFullYear(), monthIndex: date.getMonth() };
 }
 
+const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+] as const;
+
+/** The English name of a month (`monthIndex` 0 to 11). */
+export function monthName(monthIndex: number): string {
+  return MONTH_NAMES[((monthIndex % 12) + 12) % 12];
+}
+
 export type DayInfo = {
   tasksDue: number;
   habitsDone: number;
