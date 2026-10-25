@@ -188,7 +188,7 @@ export default function HomeScreen() {
     const next = withFocus(tomorrowIds, taskId);
     if (!next) {
       return added
-        ? "Added to tomorrow. Its focus list already has three, so it was not added there."
+        ? 'Added to tomorrow. Its focus list already has three, so it was not added there.'
         : "Tomorrow's focus already has three tasks.";
     }
     setFocus(tomorrow, next);

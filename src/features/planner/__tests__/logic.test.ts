@@ -435,10 +435,7 @@ describe('tomorrowPlan', () => {
   });
 
   it('reuses an open task due tomorrow with the same title, ignoring letter case', () => {
-    const tasks = [
-      task('Call Ada', { dueDate: TOMORROW }),
-      task('Other', { dueDate: TOMORROW }),
-    ];
+    const tasks = [task('Call Ada', { dueDate: TOMORROW }), task('Other', { dueDate: TOMORROW })];
     expect(tomorrowPlan('call ada', tasks, TOMORROW)?.existingTaskId).toBe('Call Ada');
   });
 
